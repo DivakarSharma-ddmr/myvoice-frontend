@@ -80,15 +80,32 @@ export const trustSections: TrustSection[] = [
   { title: 'Anti-fraud & quality checks', body: 'We use advanced validation (including IPQS) and a one-account-per-person rule to keep responses genuine and the community fair for everyone.' },
 ];
 
-export type Testimonial = { name: string; place: string; tag: string; secs: string; quote: string };
-// PLACEHOLDER (business-critical): invented people/quotes/clips for layout only.
-export const testimonials: Testimonial[] = [
-  { name: 'Elena', place: 'Cluj, Romania', tag: '2 yrs a member', secs: '34', quote: 'The payouts always land in my PayPal exactly when they say — no chasing, no excuses.' },
-  { name: 'Marcus', place: 'Berlin, Germany', tag: 'Top voicer', secs: '28', quote: 'It’s the only panel where I actually feel like my answers go somewhere real.' },
-  { name: 'Sofia', place: 'Madrid, Spain', tag: '€40 cashed out', secs: '41', quote: 'Did a 10-minute survey on my coffee habits and had €1.50 the same week.' },
-  { name: 'Daniel', place: 'Manchester, UK', tag: 'Profile pro', secs: '22', quote: 'What sold me was the transparency — I can see every cent pending and approved.' },
-  { name: 'Amélie', place: 'Lyon, France', tag: 'Charity donor', secs: '37', quote: 'Cashed out €40 in gift cards last month. No catch, no nonsense.' },
-  { name: 'Tomáš', place: 'Brno, Czechia', tag: 'Daily streak', secs: '19', quote: 'Easy to do on my phone during the commute. Small rewards that quietly add up.' },
+// Real panel-member testimonials. Per the member's request, quotes and video
+// clips are NOT paired 1:1 and members are attributed generically ("Verified
+// MyVoice member") — no names/locations are shown. Swap to named attribution
+// later only with each member's consent.
+//
+// Real video clips live in /public/assets/videos/member-01.mp4 … member-13.mp4.
+export const memberVideos: string[] = Array.from(
+  { length: 13 },
+  (_, i) => `/assets/videos/member-${String(i + 1).padStart(2, '0')}.mp4`,
+);
+
+// Real member quotes (verbatim, lightly trimmed). Shown in the scrolling band.
+export const memberQuotes: string[] = [
+  'MyVoice gives me a place to share my opinions and learn from different survey topics. I’m glad to be part of the community, and I believe new members will find it useful too.',
+  'MyVoice is helpful when you need a simple way to earn occasional rewards in your free time. I like that regular people can answer surveys and get something back for their opinions.',
+  'Getting started with MyVoice by DataDiggers was easy: I created my account, confirmed my email, and completed my profile. Once your profile is ready, you can receive surveys that match your information.',
+  'I started using MyVoice because it felt trustworthy and open. The surveys let me share real feedback about products, services, and the market in a simple way.',
+  'MyVoice helps companies understand how people use their products and services. As a member, I like knowing that my answers can support better decisions while I’m also rewarded for taking part.',
+  'I enjoy MyVoice because the surveys are interesting, clear, and do not take too long to complete. It is a friendly platform where members can participate, answer questions, and earn rewards.',
+  'I have used MyVoice by DataDiggers for several years and have redeemed rewards many times. I like that once I reach the payout threshold, I can request my reward and receive it by email.',
+  'MyVoice by DataDiggers is an online survey community where members receive invitations to participate in research. It gives people the chance to share their opinions and be rewarded for eligible surveys.',
+  'MyVoice has helped me speak openly about how I feel on different topics. I like that my opinion can count, and that I can earn rewards while participating in research.',
+  'Surveys help collect opinions that represent real people, and MyVoice gives members a chance to be part of that process. I like being able to share my views, make my voice count, and receive rewards for my time.',
+  'MyVoice is a platform I’m happy to support because it gives members a way to participate in research and share their opinions. I like being part of a community where people’s voices matter.',
+  'I like MyVoice because the questions are simple, direct, and connected to real topics like communities, organizations, global events, and everyday life. Answering surveys feels meaningful because I know my feedback is part of research.',
+  'MyVoice helps connect people’s feedback with companies that want to improve their products and services. I value being part of a research community where member opinions are listened to and appreciated.',
 ];
 
 export const insideTiles: { title: string; body: string; tint: 'lteal' | 'syel' }[] = [

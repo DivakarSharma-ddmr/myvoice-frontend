@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/Card';
 import { PillTitle } from '@/components/site/PillTitle';
 import { TrustBar } from '@/components/site/TrustBar';
 import { FinalCta } from '@/components/site/FinalCta';
+import { TestimonialReel } from '@/components/site/TestimonialReel';
 import { Accordion } from '@/components/ui/Accordion';
 import { ProgressBar } from '@/components/ui/Progress';
 import {
@@ -13,7 +14,6 @@ import {
   insideTiles,
   faqs,
   communityMonth,
-  testimonials,
 } from '@/lib/mockData';
 
 function HeroMock() {
@@ -194,54 +194,5 @@ export default function HomePage() {
 
       <FinalCta />
     </>
-  );
-}
-
-// Auto-scrolling testimonial reel (CSS marquee). Quotes/clips are placeholders.
-function TestimonialReel() {
-  const reel = [...testimonials, ...testimonials];
-  const band = [...testimonials, ...testimonials];
-  return (
-    <section className="py-10">
-      <div className="px-6 md:px-11">
-        <PillTitle kicker="From the community" title="Real members, real rewards"
-          sub="Hear it straight from panelists across 30+ countries — short clips from people who’ve been paid." />
-      </div>
-      {/* video reel */}
-      <div className="mt-8 overflow-hidden" style={{ maskImage: 'linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)', WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)' }}>
-        <div className="flex w-max animate-bmarq gap-[18px] px-6 md:px-11" style={{ animationDuration: '38s' }}>
-          {reel.map((v, i) => (
-            <div key={i} className="relative h-[340px] w-[200px] shrink-0 overflow-hidden rounded-2xl2 border border-bd shadow-card"
-              style={{ background: 'repeating-linear-gradient(135deg,#E8F3F3 0 14px,#DCEEEE 14px 28px)' }}>
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(31,79,79,0) 40%,rgba(31,79,79,.78) 100%)' }} />
-              <div className="absolute left-3 top-3 rounded-md bg-white/80 px-2 py-0.5 font-mono text-[10px] text-[#5b7d7b]">video · 0:{v.secs}</div>
-              <div className="absolute left-1/2 top-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 animate-bpulse place-items-center rounded-full bg-white/90 shadow-card">
-                <span className="ml-0.5 text-lg text-teal">▶</span>
-              </div>
-              <div className="absolute inset-x-3.5 bottom-3.5 text-white">
-                <span className="inline-flex rounded-full bg-yel/95 px-2.5 py-0.5 text-[11px] font-extrabold text-ink">{v.tag}</span>
-                <div className="mt-2 text-base font-extrabold">{v.name}</div>
-                <div className="text-xs font-semibold text-[#CFE7E3]">{v.place}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      {/* text banner */}
-      <div className="mt-6 overflow-hidden bg-dteal py-4.5" style={{ paddingTop: 18, paddingBottom: 18, maskImage: 'linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)', WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)' }}>
-        <div className="flex w-max animate-bmarq gap-14 pl-14">
-          {band.map((q, i) => (
-            <div key={i} className="flex shrink-0 items-center gap-4">
-              <span className="whitespace-nowrap text-base font-semibold text-white">“{q.quote}”</span>
-              <span className="whitespace-nowrap text-[13px] font-extrabold text-yel">{q.name} · {q.place.split(',').pop()?.trim()}</span>
-              <span className="text-white/30">•</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <p className="mt-4.5 px-6 text-center text-[13px] text-[#98A2B3]" style={{ marginTop: 18 }}>
-        Clips and quotes shown are placeholders — drop in real member videos to go live.
-      </p>
-    </section>
   );
 }
