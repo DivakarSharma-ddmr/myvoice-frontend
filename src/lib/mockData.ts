@@ -201,22 +201,24 @@ export const quests: Quest[] = [
 ];
 
 export type SurveyState = 'rec' | 'closing' | 'avail' | 'quota' | 'screen' | 'pending' | 'done';
-export type Survey = { id: number; topic: string; icon: string; time: number; reward: number; xp: number; state: SurveyState };
+// projectId / surveyId are the real research-platform identifiers shown to members
+// in place of the category name. Wire these to the live project & survey IDs.
+export type Survey = { id: number; topic: string; projectId: string; surveyId: string; icon: string; time: number; reward: number; xp: number; state: SurveyState };
 export const dashboardSurveys: Survey[] = [
-  { id: 1, topic: 'Shopping Habits', icon: 'u2-cart', time: 8, reward: 1.2, xp: 60, state: 'rec' },
-  { id: 2, topic: 'Consumer Technology', icon: 'u1-gaming', time: 10, reward: 1.5, xp: 70, state: 'rec' },
+  { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: 60, state: 'rec' },
+  { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: 70, state: 'rec' },
 ];
 export const allSurveys: Survey[] = [
-  { id: 1, topic: 'Shopping Habits', icon: 'u2-cart', time: 8, reward: 1.2, xp: 60, state: 'rec' },
-  { id: 2, topic: 'Consumer Technology', icon: 'u1-gaming', time: 10, reward: 1.5, xp: 70, state: 'rec' },
-  { id: 3, topic: 'Travel & Holidays', icon: 'n-map', time: 12, reward: 1.8, xp: 80, state: 'closing' },
-  { id: 4, topic: 'Streaming & Media', icon: 'u1-music', time: 6, reward: 0.9, xp: 45, state: 'avail' },
-  { id: 5, topic: 'Banking Services', icon: 'u2-money', time: 9, reward: 1.4, xp: 65, state: 'quota' },
-  { id: 6, topic: 'Health & Wellbeing', icon: 'u1-health', time: 11, reward: 1.6, xp: 75, state: 'screen' },
-  { id: 7, topic: 'Grocery Shopping', icon: 'u1-cooking', time: 7, reward: 1.1, xp: 55, state: 'pending' },
-  { id: 8, topic: 'Automotive', icon: 'u1-car', time: 10, reward: 1.5, xp: 70, state: 'done' },
+  { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: 60, state: 'rec' },
+  { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: 70, state: 'rec' },
+  { id: 3, topic: 'Travel & Holidays', projectId: 'P-10431', surveyId: 'S-58240', icon: 'n-map', time: 12, reward: 1.8, xp: 80, state: 'avail' },
+  { id: 4, topic: 'Streaming & Media', projectId: 'P-10433', surveyId: 'S-58251', icon: 'u1-music', time: 6, reward: 0.9, xp: 45, state: 'avail' },
+  { id: 5, topic: 'Banking Services', projectId: 'P-10435', surveyId: 'S-58262', icon: 'u2-money', time: 9, reward: 1.4, xp: 65, state: 'quota' },
+  { id: 6, topic: 'Health & Wellbeing', projectId: 'P-10437', surveyId: 'S-58270', icon: 'u1-health', time: 11, reward: 1.6, xp: 75, state: 'screen' },
+  { id: 7, topic: 'Grocery Shopping', projectId: 'P-10439', surveyId: 'S-58288', icon: 'u1-cooking', time: 7, reward: 1.1, xp: 55, state: 'pending' },
+  { id: 8, topic: 'Automotive', projectId: 'P-10440', surveyId: 'S-58291', icon: 'u1-car', time: 10, reward: 1.5, xp: 70, state: 'done' },
 ];
-export const surveyFilters = ['All', 'Short surveys', 'Highest reward', 'Closing soon', 'Recommended'];
+export const surveyFilters = ['All', 'Short surveys', 'Highest reward', 'Recommended'];
 export const surveyStateMeta: Record<SurveyState, { label: string; fg: string; bg: string }> = {
   rec: { label: 'Recommended for you', fg: '#336666', bg: '#E8F3F3' },
   closing: { label: 'Closing soon', fg: '#B4541E', bg: '#FCE9DD' },

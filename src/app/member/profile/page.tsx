@@ -1,16 +1,9 @@
 'use client';
-import { useState } from 'react';
-import { useMember } from '@/components/member/MemberProvider';
 import { Mascot } from '@/components/ui/Mascot';
 import { Ring, ProgressBar } from '@/components/ui/Progress';
 import { profileCategories } from '@/lib/mockData';
 
-const DEVICES = ['Smartphone', 'Laptop', 'Tablet', 'Smartwatch', 'Smart speaker', 'Games console'];
-
 export default function ProfilePage() {
-  const [picked, setPicked] = useState<number[]>([0, 1]);
-  const toggle = (i: number) => setPicked((p) => (p.includes(i) ? p.filter((x) => x !== i) : [...p, i]));
-
   return (
     <div className="space-y-5">
       {/* Hero */}
@@ -54,32 +47,6 @@ export default function ProfilePage() {
         })}
       </div>
 
-      {/* Conversational question */}
-      <h2 className="text-[17px] font-extrabold">Quick question</h2>
-      <div className="rounded-2xl2 border border-bd bg-white p-5 md:p-6">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-extrabold text-teal">TECHNOLOGY · 2 of 5</span>
-          <span className="text-xs text-mute">You can skip anytime</span>
-        </div>
-        <div className="my-2.5"><ProgressBar pct={40} color="#336666" height={6} /></div>
-        <h3 className="mt-2.5 text-[19px] font-extrabold">Which devices do you personally own?</h3>
-        <div className="mt-3.5 flex flex-wrap gap-2.5">
-          {DEVICES.map((o, i) => {
-            const sel = picked.includes(i);
-            return (
-              <button key={i} onClick={() => toggle(i)}
-                className="rounded-full border-[1.5px] px-4 py-2.5 text-sm font-semibold"
-                style={{ borderColor: sel ? '#336666' : '#F1ECDB', background: sel ? '#E8F3F3' : '#fff' }}>
-                {sel ? '✓ ' : ''}{o}
-              </button>
-            );
-          })}
-        </div>
-        <div className="mt-4 flex gap-2.5">
-          <button className="rounded-[11px] border border-bd bg-white px-5 py-3 text-sm font-bold text-mute">Back</button>
-          <button className="flex-1 rounded-[11px] bg-yel py-3 text-sm font-bold text-ink">Save &amp; continue</button>
-        </div>
-      </div>
     </div>
   );
 }

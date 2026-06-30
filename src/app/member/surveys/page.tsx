@@ -47,7 +47,7 @@ export default function SurveysPage() {
               <div className="flex items-center gap-3">
                 <CapIcon name={sv.icon} size={46} radius={13} />
                 <div className="min-w-0 flex-1">
-                  <div className="text-base font-extrabold">{sv.topic}</div>
+                  <div className="text-base font-extrabold">Project {sv.projectId} · Survey {sv.surveyId}</div>
                   <div className="mt-0.5 text-xs text-mute">⏱ {sv.time} min · {m.fmt(sv.reward)} · +{sv.xp} XP</div>
                 </div>
                 <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold" style={{ color: meta.fg, background: meta.bg }}>{meta.label}</span>

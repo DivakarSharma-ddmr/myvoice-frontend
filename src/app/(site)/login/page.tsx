@@ -33,15 +33,6 @@ export default function LoginPage() {
             </div>
             {/* Connect to POST /api/auth/login */}
             <Link href="/member/dashboard" className="block w-full rounded-xl bg-yel py-3.5 text-center text-[15px] font-bold text-ink">Log in</Link>
-            <div className="my-4.5 flex items-center gap-3" style={{ margin: '18px 0' }}>
-              <div className="h-px flex-1 bg-bd" />
-              <span className="text-xs text-[#98A2B3]">or</span>
-              <div className="h-px flex-1 bg-bd" />
-            </div>
-            <div className="flex gap-2.5">
-              <button className="flex-1 rounded-xl border border-bd bg-white py-3 text-sm font-bold">Continue with Google</button>
-              <button className="flex-1 rounded-xl border border-bd bg-white py-3 text-sm font-bold">Apple</button>
-            </div>
             <p className="mt-4.5 text-center text-sm text-mute" style={{ marginTop: 18 }}>
               New here? <Link href="/join" className="font-bold text-teal">Join free</Link>
             </p>

@@ -15,7 +15,6 @@ const NAV: [string, string, string][] = [
   ['Rewards', 'u2-gift', '/member/rewards'],
   ['Profile', 'u1-work', '/member/profile'],
   ['Community', 'u2-pets', '/member/community'],
-  ['Referrals', 'u2-handshake', '/member/referrals'],
   ['Help Center', 'u2-idea', '/member/help'],
   ['Settings', 'u2-gear', '/member/settings'],
 ];

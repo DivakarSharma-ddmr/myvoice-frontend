@@ -72,7 +72,7 @@ export default function DashboardPage() {
               <div key={sv.id} className="mb-2.5 flex items-center gap-3 rounded-2xl border border-bd bg-white p-3.5">
                 <CapIcon name={sv.icon} size={42} />
                 <div className="min-w-0 flex-1">
-                  <div className="text-[15px] font-bold">{sv.topic}</div>
+                  <div className="text-[15px] font-bold">Project {sv.projectId} · Survey {sv.surveyId}</div>
                   <div className="text-xs text-mute">⏱ {sv.time} min · {m.fmt(sv.reward)} · +{sv.xp} XP</div>
                 </div>
                 <button onClick={() => m.openSurvey({ id: sv.id, topic: sv.topic, reward: sv.reward, xp: sv.xp }, null)}
