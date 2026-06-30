@@ -1,7 +1,13 @@
 /* Minimal service worker — enables installability + a basic offline cache.
    Strategy: network-first for navigations (so deploys stay fresh), and
-   stale-while-revalidate for same-origin static assets. */
-const CACHE = 'myvoice-v1';
+   stale-while-revalidate for same-origin static assets.
+
+   CACHE is stamped with a unique build id at build time (see
+   scripts/stamp-sw.mjs). A fresh id on every deploy changes this file's bytes,
+   so the browser installs the new SW; the `activate` handler then purges every
+   cache whose name isn't the current build, so stale assets never survive a
+   deploy. `__BUILD_ID__` is the un-stamped dev fallback. */
+const CACHE = '__BUILD_ID__';
 
 self.addEventListener('install', (e) => {
   self.skipWaiting();
