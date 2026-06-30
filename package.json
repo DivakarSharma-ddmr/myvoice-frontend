@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "MyVoice by DataDiggers — public website + member platform frontend (static, mock-data, backend-ready).",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build && node scripts/stamp-sw.mjs",

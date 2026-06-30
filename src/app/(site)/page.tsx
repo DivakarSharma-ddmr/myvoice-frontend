@@ -7,6 +7,7 @@ import { FinalCta } from '@/components/site/FinalCta';
 import { TestimonialReel } from '@/components/site/TestimonialReel';
 import { Accordion } from '@/components/ui/Accordion';
 import { ProgressBar } from '@/components/ui/Progress';
+import { asset } from '@/lib/asset';
 import {
   howItWorksSteps,
   whyItMatters,
@@ -149,11 +150,14 @@ export default function HomePage() {
         <div className="mt-9 grid grid-cols-2 gap-4 lg:grid-cols-4">
           {insideTiles.map((t, i) => (
             <div key={i} className="overflow-hidden rounded-2xl2 border border-bd bg-white">
-              <div className={`flex h-[130px] items-center justify-center ${t.tint === 'lteal' ? 'bg-lteal' : 'bg-syel'}`}>
-                <div className="flex h-[74px] w-[74%] flex-col justify-center rounded-xl bg-white p-3 shadow-card">
-                  <div className="h-2 w-1/2 rounded-full bg-[#EDEFEA]" />
-                  <div className="mt-1.5 h-2 w-4/5 rounded-full bg-[#EDEFEA]" />
-                </div>
+              <div className={`flex h-[130px] items-center justify-center overflow-hidden p-3 ${t.tint === 'lteal' ? 'bg-lteal' : 'bg-syel'}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={asset(t.img)}
+                  alt={`${t.title} screen`}
+                  loading="lazy"
+                  className="h-full w-full rounded-xl border border-bd object-cover object-top shadow-card"
+                />
               </div>
               <div className="p-4">
                 <h3 className="text-[15px] font-bold">{t.title}</h3>
