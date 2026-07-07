@@ -3,6 +3,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { PageHero } from '@/components/site/PillTitle';
 import { Accordion } from '@/components/ui/Accordion';
 import { faqs } from '@/lib/mockData';
+import { REGISTER_URL } from '@/lib/links';
 
 export const metadata: Metadata = {
   title: 'FAQ',
@@ -23,7 +24,7 @@ export default function FaqPage() {
           <p className="mt-1.5 text-sm text-soft">Reach our support team and we’ll get back to you, usually within one business day.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2.5">
             <LinkButton href="/faq" variant="dark" pill>Contact support</LinkButton>
-            <LinkButton href="/join" pill>Join free →</LinkButton>
+            <LinkButton href={REGISTER_URL} pill>Join free →</LinkButton>
           </div>
         </div>
       </section>

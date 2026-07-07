@@ -8,6 +8,7 @@ import { TestimonialReel } from '@/components/site/TestimonialReel';
 import { Accordion } from '@/components/ui/Accordion';
 import { ProgressBar } from '@/components/ui/Progress';
 import { asset } from '@/lib/asset';
+import { REGISTER_URL } from '@/lib/links';
 import {
   howItWorksSteps,
   whyItMatters,
@@ -65,7 +66,7 @@ export default function HomePage() {
               Take surveys you actually relate to, and turn your honest feedback into real rewards — with a community that values your time.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <LinkButton href="/join" variant="dark" pill>Join free →</LinkButton>
+              <LinkButton href={REGISTER_URL} variant="dark" pill>Join free →</LinkButton>
               <LinkButton href="/how-it-works" variant="secondary" pill>How it works</LinkButton>
             </div>
             <p className="mt-3.5 text-[13px] font-semibold text-[#7a8f8d]">Free forever · GDPR-compliant · Powered by DataDiggers</p>

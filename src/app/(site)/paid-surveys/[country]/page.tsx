@@ -6,6 +6,7 @@ import { LinkButton } from '@/components/ui/Button';
 import { Accordion } from '@/components/ui/Accordion';
 import { FinalCta } from '@/components/site/FinalCta';
 import { countries } from '@/lib/mockData';
+import { REGISTER_URL } from '@/lib/links';
 
 const slugify = (c: string) => c.toLowerCase().replace(/ /g, '-');
 const fromSlug = (slug: string) => countries.find((c) => slugify(c) === slug);
@@ -52,7 +53,7 @@ export default function CountryPage({ params }: { params: { country: string } })
           Join MyVoice for free, take surveys matched to your profile, and earn rewards you can redeem locally in {co}.
         </p>
         <div className="relative mt-6 flex flex-wrap gap-3">
-          <LinkButton href="/join" variant="dark" pill>Join free in {co} →</LinkButton>
+          <LinkButton href={REGISTER_URL} variant="dark" pill>Join free in {co} →</LinkButton>
           <LinkButton href="/how-it-works" variant="secondary" pill>How it works</LinkButton>
         </div>
       </section>

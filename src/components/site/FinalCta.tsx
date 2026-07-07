@@ -1,4 +1,5 @@
 import { LinkButton } from '@/components/ui/Button';
+import { REGISTER_URL } from '@/lib/links';
 
 export function FinalCta() {
   return (
@@ -10,7 +11,7 @@ export function FinalCta() {
         </h2>
         <p className="relative mt-2.5 text-base font-medium text-[#5a4a12] md:text-[17px]">Join free in under two minutes.</p>
         <div className="relative mt-6 flex justify-center">
-          <LinkButton href="/join" variant="dark" pill className="!bg-ink !text-white px-9 py-4 text-base">
+          <LinkButton href={REGISTER_URL} variant="dark" pill className="!bg-ink !text-white px-9 py-4 text-base">
             Join MyVoice free
           </LinkButton>
         </div>

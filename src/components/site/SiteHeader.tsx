@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { asset } from '@/lib/asset';
 import { clsx } from '@/lib/clsx';
+import { LOGIN_URL, REGISTER_URL } from '@/lib/links';
 
 const NAV = [
   ['How it works', '/how-it-works'],
@@ -44,11 +45,11 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2 md:gap-3">
-          <Link href="/login" className="hidden text-sm font-bold text-teal sm:block">
+          <Link href={LOGIN_URL} className="hidden text-sm font-bold text-teal sm:block">
             Login
           </Link>
           <Link
-            href="/join"
+            href={REGISTER_URL}
             className="rounded-full bg-yel px-4 py-2.5 text-sm font-bold text-ink md:px-5"
           >
             Join free
@@ -83,7 +84,7 @@ export function SiteHeader() {
               </Link>
             ))}
             <Link
-              href="/login"
+              href={LOGIN_URL}
               onClick={() => setOpen(false)}
               className="rounded-2xl px-4 py-3 text-[15px] font-semibold text-[#33635f] sm:hidden"
             >
