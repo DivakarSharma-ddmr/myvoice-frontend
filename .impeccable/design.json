@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-02T00:00:00.000Z",
+  "title": "Design System: MyVoice by DataDiggers",
+  "extensions": {
+    "colorMeta": {
+      "teal": { "role": "primary", "displayName": "Deep Muted Teal", "canonical": "#336666", "tonalRamp": ["#0F1F1F", "#173030", "#1F4F4F", "#2C6A64", "#336666", "#52706E", "#8AA9A6", "#C7DAD8"] },
+      "yel": { "role": "secondary", "displayName": "Signal Yellow", "canonical": "#FFCC33", "tonalRamp": ["#4A3A00", "#6B5400", "#8A6D12", "#B8930E", "#E0B21C", "#FFCC33", "#FFE28A", "#FFF4CC"] },
+      "ink": { "role": "neutral", "displayName": "Teal-Black Ink", "canonical": "#1C2526", "tonalRamp": ["#0C1112", "#141B1C", "#1C2526", "#2E3B3C", "#4A5859", "#667778", "#9FADAD", "#D3DBDB"] },
+      "canvas": { "role": "neutral", "displayName": "Warm Canvas", "canonical": "#EEEFEB", "tonalRamp": ["#33342F", "#55564F", "#797A72", "#A0A199", "#C4C5BE", "#DDDED8", "#EEEFEB", "#F7F7F3"] },
+      "green": { "role": "tertiary", "displayName": "Success Green", "canonical": "#22A06B", "tonalRamp": ["#0A3323", "#0F4A33", "#166B49", "#1C875D", "#22A06B", "#4FBF8C", "#8AD9B7", "#C9EFDD"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines only; Forest Teal, balanced wrap, ~52px ceiling." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles across site and platform." },
+      "title": { "displayName": "Title", "purpose": "Card titles, survey names, nav labels." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy; measure capped 65-75ch." },
+      "label": { "displayName": "Label", "purpose": "Metadata, chips, timestamps." }
+    },
+    "shadows": [
+      { "name": "soft", "value": "0 12px 30px -18px rgba(31,79,79,.3)", "purpose": "Default resting lift — header, pills, chips." },
+      { "name": "card", "value": "0 18px 40px -26px rgba(31,79,79,.4)", "purpose": "Floating cards and panels." },
+      { "name": "lift", "value": "0 30px 70px -34px rgba(31,79,79,.45)", "purpose": "Hero floating elements and hover-elevated states; sparingly." }
+    ],
+    "motion": [
+      { "name": "bfloat", "value": "translateY(0 -> -9px) 6s ease-in-out infinite", "purpose": "Gentle float on hero wallet/survey cards." },
+      { "name": "mcheer", "value": "translateY + scale bob 1.7s ease-in-out infinite", "purpose": "Mascot celebration — small doses only." },
+      { "name": "reduced-motion", "value": "all animation/transition durations collapse to 0.001ms", "purpose": "prefers-reduced-motion honored globally in globals.css." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (Signal Yellow)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single loudest control on a screen — primary CTA, reward, wallet.",
+      "html": "<button class=\"ds-btn-primary\">Redeem reward</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #FFCC33; color: #1C2526; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 12px 20px; border: none; border-radius: 12px; cursor: pointer; transition: filter .18s ease, transform .18s ease; } .ds-btn-primary:hover { filter: brightness(0.95); } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 3px solid rgba(51,102,102,.45); outline-offset: 2px; }"
+    },
+    {
+      "name": "Dark Button (Teal)",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "The credible teal CTA — often the true primary action on trust-forward pages.",
+      "html": "<button class=\"ds-btn-dark\">Join free →</button>",
+      "css": ".ds-btn-dark { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #336666; color: #fff; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 12px 24px; border: none; border-radius: 9999px; cursor: pointer; transition: background .18s ease, transform .18s ease; } .ds-btn-dark:hover { background: #1F4F4F; } .ds-btn-dark:active { transform: scale(0.98); } .ds-btn-dark:focus-visible { outline: 3px solid rgba(51,102,102,.45); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button (Outline Teal)",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Quieter alternative action; white with teal outline.",
+      "html": "<button class=\"ds-btn-secondary\">How it works</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #fff; color: #336666; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px; padding: 12px 20px; border: 1px solid #336666; border-radius: 12px; cursor: pointer; transition: background .18s ease; } .ds-btn-secondary:hover { background: rgba(232,243,243,.4); } .ds-btn-secondary:focus-visible { outline: 3px solid rgba(51,102,102,.45); outline-offset: 2px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "White surface lifting off the warm canvas; warm 1px border; generous rounding.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Shopping Habits</div><div class=\"ds-card-meta\">8 min · €1.20</div></div>",
+      "css": ".ds-card { background: #fff; border: 1px solid #F1ECDB; border-radius: 22px; padding: 20px; } .ds-card-title { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px; color: #1C2526; } .ds-card-meta { margin-top: 4px; font-size: 12px; color: #667085; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "White field, warm border, teal focus.",
+      "html": "<input class=\"ds-input\" placeholder=\"you@example.com\" />",
+      "css": ".ds-input { width: 100%; background: #fff; color: #1C2526; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 14px; padding: 12px 14px; border: 1px solid #F1ECDB; border-radius: 12px; outline: none; transition: border-color .15s ease; } .ds-input::placeholder { color: #667085; } .ds-input:focus { border-color: #336666; } .ds-input:focus-visible { outline: 3px solid rgba(51,102,102,.45); outline-offset: 2px; }"
+    },
+    {
+      "name": "Header Nav Pill",
+      "kind": "nav",
+      "refersTo": "nav-pill",
+      "description": "Floating translucent white pill header with blur, warm border, soft shadow.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav-brand\">MyVoice</span><nav class=\"ds-nav-links\"><a class=\"ds-nav-link ds-active\">How it works</a><a class=\"ds-nav-link\">Rewards</a><a class=\"ds-nav-link\">Trust</a></nav><button class=\"ds-nav-cta\">Join free</button></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; gap: 24px; background: rgba(255,255,255,.9); backdrop-filter: blur(10px); border: 1px solid #F0ECD9; border-radius: 9999px; box-shadow: 0 12px 30px -18px rgba(31,79,79,.3); padding: 10px 12px 10px 20px; } .ds-nav-brand { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 800; color: #1F4F4F; } .ds-nav-links { display: flex; gap: 24px; } .ds-nav-link { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 14px; font-weight: 600; color: #33635F; text-decoration: none; cursor: pointer; } .ds-nav-link:hover { color: #336666; } .ds-nav-link.ds-active { font-weight: 700; color: #336666; } .ds-nav-cta { background: #FFCC33; color: #1C2526; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 14px; padding: 10px 20px; border: none; border-radius: 9999px; cursor: pointer; }"
+    },
+    {
+      "name": "FAQ Accordion Row",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "White row with a teal + glyph that rotates to close; signature FAQ/help pattern.",
+      "html": "<div class=\"ds-acc\"><button class=\"ds-acc-head\"><span>How do rewards work?</span><span class=\"ds-acc-plus\">+</span></button></div>",
+      "css": ".ds-acc { background: #fff; border: 1px solid #F1ECDB; border-radius: 16px; overflow: hidden; } .ds-acc-head { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px; background: none; border: none; text-align: left; cursor: pointer; } .ds-acc-head > span:first-child { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-weight: 700; font-size: 15px; color: #1C2526; } .ds-acc-plus { flex-shrink: 0; font-size: 20px; color: #336666; transition: transform .2s ease; } .ds-acc[aria-expanded=\"true\"] .ds-acc-plus { transform: rotate(45deg); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Trusted Neighbor",
+    "overview": "MyVoice is a survey panel repositioning away from the 'paid survey site' category and toward a trusted global research community. The visual system should feel like a neighbor you already trust — warm, human, unmistakably real — while quietly signalling that serious research infrastructure sits behind it. Warmth earns the first look; credibility earns the sign-up. A confident teal does the heavy lifting against soft warm-neutral surfaces, with a single bright signal yellow reserved for the moments that matter.",
+    "keyCharacteristics": [
+      "Confident teal + warm neutrals, with yellow as a rare, high-value signal.",
+      "Generous rounding (18-28px) and soft, teal-tinted diffuse shadows.",
+      "Human warmth (real member faces, gentle motion) subordinated to trust.",
+      "Restraint: one accent, one voice, plenty of quiet surface."
+    ],
+    "rules": [
+      { "name": "The Signal Yellow Rule", "body": "Yellow appears on <=10% of any screen and only on things a member should act on or celebrate. If yellow is decorating, demote it to #FFF4CC or remove it.", "section": "colors" },
+      { "name": "The No-Gray-On-Warm Rule", "body": "Never place #667085 mute-gray body text on cream/sand/tinted surfaces; use Soft Teal #52706E instead.", "section": "colors" },
+      { "name": "The One-Family Rule", "body": "No second display or body typeface. Hierarchy comes from Plus Jakarta Sans weights (400/500/700/800). Inter is the only sanctioned companion, dense UI only.", "section": "typography" },
+      { "name": "The No-Eyebrow Rule", "body": "No tiny tracked uppercase kicker above section headings; let the headline lead.", "section": "typography" },
+      { "name": "The Teal-Tint Shadow Rule", "body": "Every shadow is tinted with rgba(31,79,79,...) deep teal, never black or neutral gray.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do reserve Signal Yellow #FFCC33 for the primary action, rewards, and wallet moments (<=10% of a screen).",
+      "Do use Soft Teal #52706E for secondary text on warm/cream surfaces; keep Mute #667085 for white surfaces only.",
+      "Do tint every shadow with deep teal rgba(31,79,79,...).",
+      "Do build hierarchy from Plus Jakarta Sans weights, not new fonts.",
+      "Do hold WCAG 2.2 AA: 4.5:1 body contrast, visible focus, status by icon+label not color alone.",
+      "Do keep corners generous (18-28px) and surfaces quiet; let one thing per screen be loud."
+    ],
+    "donts": [
+      "Don't slide back toward the survey-farm aesthetic: no flashing $$$, banner clutter, countdown pressure, or stock thumbs-up imagery.",
+      "Don't over-gamify: no confetti-on-everything, heavy mascot presence, or points theater that hides real earnings.",
+      "Don't ship the generic AI SaaS-cream template: no tiny tracked uppercase eyebrows, identical icon-card grids, or hero-metric block.",
+      "Don't over-correct into cold enterprise research gray (Ipsos/Nielsen stiffness).",
+      "Don't put mute-gray text on cream/sand; don't use gray or black shadows; don't nest cards; don't exceed a ~52px display headline.",
+      "Don't use color as the only signal for survey/reward state — always pair with an icon or label."
+    ]
+  }
+}
