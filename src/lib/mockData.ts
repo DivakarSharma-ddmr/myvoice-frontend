@@ -293,11 +293,6 @@ export const memberTips: [string, string][] = [
   ['Answer honestly', 'Consistent answers keep your account in good standing.'],
   ['Check in daily', 'A streak earns bonus tickets and XP.'],
 ];
-export const announcements: [string, string, string][] = [
-  ['New reward: Amazon gift cards', 'Now available in 12 more countries.', '2 days ago'],
-  ['Faster reward approvals', 'Most rewards now verified within 48h.', '1 week ago'],
-  ['Scheduled maintenance', 'Jun 20, 02:00–04:00 UTC.', '1 week ago'],
-];
 
 // Referrals
 export const referralSteps: [string, string][] = [
@@ -323,26 +318,10 @@ export const referralStats: [string, string][] = [
 // Help center
 export const helpCategories: [string, string, string][] = [
   ['u1-work', 'Account', 'Login, profile, deletion'],
-  ['u1-share', 'Surveys', 'Matching, screen-outs, quotas'],
-  ['u2-gift', 'Rewards', 'Balance, payouts, timing'],
   ['u2-shield', 'Privacy', 'Data, GDPR, consent'],
-  ['u2-gear', 'Technical', 'Bugs and device issues'],
   ['n-headphones', 'Contact', 'Reach our support team'],
 ];
 export const helpTopics = ['Topic: Rewards', 'Topic: Surveys', 'Topic: Account', 'Topic: Privacy', 'Topic: Technical'];
-export const helpTickets: [string, string, string, string, string][] = [
-  ['#48213', 'Reward not received', 'Resolved', '#22A06B', '#E7F6EF'],
-  ['#48118', 'Survey kept loading', 'In progress', '#8a6d12', '#FFF4CC'],
-];
-
-// Settings
-export const notificationToggles: { key: string; label: string; sub: string; on: boolean }[] = [
-  { key: 'surveys', label: 'New surveys', sub: 'Get notified when a survey matches you', on: true },
-  { key: 'rewards', label: 'Reward updates', sub: 'Approvals, redemptions and payouts', on: true },
-  { key: 'profile', label: 'Profile reminders', sub: 'Nudges to complete profile sections', on: true },
-  { key: 'draws', label: 'Community draws', sub: 'Draw entries and results', on: false },
-  { key: 'updates', label: 'Product updates', sub: 'New features and announcements', on: false },
-];
 
 // Onboarding
 export const onboardingSteps: [string, string, string][] = [
