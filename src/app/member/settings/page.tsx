@@ -26,7 +26,7 @@ export default function SettingsPage() {
       {/* Privacy */}
       <div className="rounded-2xl2 border border-bd bg-white p-5">
         <h3 className="text-base font-extrabold">Privacy &amp; consent</h3>
-        <p className="mt-1.5 text-[13px] leading-snug text-mute">Manage how your data is used. Your answers are only ever used for research, and you can export or delete your data anytime.</p>
+        <p className="mt-1.5 text-[13px] leading-snug text-mute">Manage how your data is used. Your answers are only ever used for research, and you can delete your data anytime.</p>
         <div className="mt-3.5 flex flex-wrap gap-2.5">
           {['Manage consent', 'Privacy policy'].map((b, i) => (
             <button key={i} className="rounded-[10px] border border-teal px-4 py-2.5 text-[13px] font-bold"
