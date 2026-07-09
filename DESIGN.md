@@ -219,6 +219,9 @@ The system is **soft-layered, not flat and not heavy.** Depth is conveyed with d
 ### Accordion (signature)
 White rows, `rounded-2xl` (16px), 1px Border-Sand, a `+` glyph in Teal that rotates 45° to `×` on open. Answer copy in Mute at `text-sm leading-relaxed`. Used for FAQ across site and help center.
 
+### Support chat window
+The Help Center pairs the async **Contact support** form (left, ~1.1fr) with a **"Chat with us"** window (right, ~1fr) in a `lg:grid-cols-[1.1fr_1fr]` layout. The chat window is a *window frame inside* the card (the one sanctioned exception to no-nesting, because it must read as a distinct live surface, not a second card): `rounded-xl` (12px), 1px Border-Sand, `overflow-hidden`. Header bar on `#E8F3F3` (Light Teal) with a small mascot/agent avatar, a green presence dot, agent name in Forest Teal, and a plain-language availability line (support hours, not a fake "typing…"). Message bubbles are `rounded-2xl` with a squared inner corner: **agent** = Light-Teal fill / Deep-Teal text on the left; **member** = Teal fill / white text on the right. Input row is a pill field + a Signal-Yellow **Send** button (the card's only yellow — Send is the CTA). In the static build the window is a non-interactive placeholder for the real chat widget; keep the availability caption honest (e.g. business hours + timezone) rather than promising instant replies.
+
 ## 6. Do's and Don'ts
 
 ### Do:

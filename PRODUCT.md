@@ -40,6 +40,20 @@ rewards-farming app. The frontend is a static, mock-data build that is deliberat
 backend-ready — every content surface flows through a single mock-data layer meant to be
 swapped for the real API (survey routing, reward fulfilment, member data).
 
+## Member Support & Platform Scope
+
+Member support is two-track and deliberately honest about response time: an **async Contact
+support form** (Help Center, ~1 business day) plus a **live chat** ("Chat with us") that
+reuses the existing chat widget from the old platform — its stated availability is standard
+business hours (9 AM–6 PM, Bucharest time), never a fake "instant" promise. Help Center topics
+are kept lean (Account, Privacy, Contact) rather than an exhaustive category wall.
+
+Not every surface belongs on the web platform. **Notification preferences live in the mobile
+app, not the web** — push/notification settings are a device concern, so the web Settings page
+carries only account details, privacy/consent, and account deletion. This continues the broader
+direction of trimming non-essential engagement surfaces (removed the Community Announcements
+card and gamified extras) in favor of operational clarity.
+
 ## Brand Personality
 
 **Warm, credible, respectful.** Three words: *trustworthy, approachable, fair.*
