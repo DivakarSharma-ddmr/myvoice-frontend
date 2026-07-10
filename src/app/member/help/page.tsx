@@ -6,20 +6,15 @@ import { member, helpCategories, helpTopics } from '@/lib/mockData';
 export default function HelpPage() {
   return (
     <div className="space-y-4">
-      {/* Search hero */}
+      {/* Welcome banner */}
       <div className="flex items-center gap-4 rounded-2xl2 p-6" style={{ background: 'linear-gradient(120deg,#E8F3F3,#FFF6DA)' }}>
         <div className="hidden sm:block"><Mascot size={88} pose="announce" /></div>
         <div className="flex-1">
           <h2 className="text-[22px] font-extrabold text-dteal">How can we help, {member.name}?</h2>
-          <div className="mt-3 flex gap-2.5">
-            <input placeholder="Search help articles…" className="flex-1 rounded-xl border border-bd bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
-            <button className="rounded-xl bg-teal px-5 py-3 text-sm font-bold text-white">Search</button>
-          </div>
         </div>
       </div>
 
       {/* Topics */}
-      <h2 className="text-[17px] font-extrabold">Browse by topic</h2>
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
         {helpCategories.map((c, i) => (
           <div key={i} className="cursor-pointer rounded-2xl border border-bd bg-white p-[18px]">
