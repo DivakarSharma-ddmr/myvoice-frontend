@@ -46,7 +46,11 @@ Member support is two-track and deliberately honest about response time: an **as
 support form** (Help Center, ~1 business day) plus a **live chat** ("Chat with us") that
 reuses the existing chat widget from the old platform — its stated availability is standard
 business hours (9 AM–6 PM, Bucharest time), never a fake "instant" promise. Help Center topics
-are kept lean (Account, Privacy, Contact) rather than an exhaustive category wall.
+are kept lean (Account, Privacy, Contact) rather than an exhaustive category wall — surfaced as
+three unlabeled topic cards directly under the welcome banner (the "Browse by topic" heading was
+dropped as redundant). The Help Center has **no search field**: the earlier hero search box was a
+non-functional static mock, so it was removed rather than ship a dead control (operational honesty).
+The hero is now a slim welcome banner (mascot + "How can we help, {name}?" greeting only).
 
 Not every surface belongs on the web platform. **Notification preferences live in the mobile
 app, not the web** — push/notification settings are a device concern, so the web Settings page
