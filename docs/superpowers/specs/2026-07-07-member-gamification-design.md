@@ -1,5 +1,15 @@
 # MyVoice Member Platform — Gamification Design Spec
 
+> **Partly superseded, 2026-07-22.** The levels table, XP sources, badge set and quest pools are
+> now defined by `content/source/Level, XP, Badges, Quests rules.md`, transcribed into
+> `src/lib/gamification.ts`. **Two rules in this document are wrong and must not be implemented:**
+> XP is effort-based (`25 + 5 × estimated minutes`), not payout-based (`reward € × 50`); and Click
+> Draw entries come from screenout, quota-full and survey-closed outcomes, not from completed
+> surveys, quests or redemptions. Also superseded: 12 levels became 13 (0–12), badges went from a
+> curated ~20 to a defined 27, and the quest structure became 3 daily slots plus 1 weekly plus 1
+> monthly, with no seasonal layer. The priorities, guardrails and open compliance questions here
+> still stand. See `2026-07-22-help-settings-community-design.md`.
+
 **Status:** Draft for review. Numbers throughout are illustrative starting points, not final — adjust freely, then share back for insertion into `PRODUCT.md` / `DESIGN.md`.
 **Scope:** Logged-in member platform only (dashboard, surveys, rewards, profile). Does not apply to or change the public marketing site's tone/personality.
 **Author context:** Drafted with the user through structured brainstorming on 2026-07-07.

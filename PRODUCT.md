@@ -52,11 +52,60 @@ dropped as redundant). The Help Center has **no search field**: the earlier hero
 non-functional static mock, so it was removed rather than ship a dead control (operational honesty).
 The hero is now a slim welcome banner (mascot + "How can we help, {name}?" greeting only).
 
+The Help Center carries the **real member FAQ** — 32 questions across 6 categories, generated
+from the source document rather than retyped, so the platform and the published FAQ cannot drift
+apart. A **keyword search** sits under the greeting; it folds diacritics, so a member typing
+"parola" finds "parolă". The Account and Privacy topic cards **deep-link into the matching
+Settings group** rather than being decoration.
+
 Not every surface belongs on the web platform. **Notification preferences live in the mobile
 app, not the web** — push/notification settings are a device concern, so the web Settings page
 carries only account details, privacy/consent, and account deletion. This continues the broader
 direction of trimming non-essential engagement surfaces (removed the Community Announcements
 card and gamified extras) in favor of operational clarity.
+
+## Account Data & Editability
+
+Members can see every field we hold on them, but not all of them are member-editable.
+**Year of birth, gender and country are read-only**, shown with a lock and a route to support.
+They drive survey targeting, so member-side editing would let someone re-target themselves into
+better-paying quotas and would corrupt historical data. This is a deliberate product rule, not a
+missing feature. Name, phone, address, post code, both email addresses and the profile picture
+are freely editable.
+
+**Changing the PayPal address requires confirming the new address.** Payouts keep going to the
+current address until the member clicks the link sent to the new one. Money-moving fields do not
+change on a single unverified edit.
+
+## Click Draw
+
+Click Draw entries are earned **only from surveys that end in screenout, quota full, or survey
+closed** — never from completed surveys, quests, streaks or redemptions. Completions pay their
+reward directly; the draw exists for the attempts that did not pay.
+
+This is a **fraud control as much as a courtesy**. It compensates members for genuine attempts
+without creating any incentive to farm completions, which is exactly the click-farm behaviour a
+research panel has to avoid. Member-facing copy should carry that intent — fair and factual —
+rather than framing entries as a consolation prize.
+
+The prize structure is fixed by the signed regulation: **11 prizes monthly, 1 × €50 and 10 × €10,
+€150 in total**, drawn at random via random.org, one prize per person per month. A month's draw
+runs before the end of the *following* month, so winner lists are always a month behind.
+
+Winners are published with **full name and country** on a member-only page. Section 8 of the
+regulation secures consent for that. This does not contradict anonymising the public testimonial
+videos: the videos are public marketing visible to anyone, the winners list sits behind member
+login. Different audiences, different calculus. The winners page must never be linked from, or
+rendered on, any public route.
+
+## Gamification Data
+
+The levels, XP sources, badges and quest pools are **internal operational data, not a promise to
+members**. They are not a legal commitment, they may change at any time, and the master table is
+never shown. Members earn levels, bonuses and badges through their activity; the mechanics are
+handled in code, and members see only what we choose to surface — their current level and label,
+their progress, and the badges they have earned. They do not see the perk ladder, the XP
+formulas, the exact completion rules, or a preview of what the next level grants.
 
 ## Brand Personality
 

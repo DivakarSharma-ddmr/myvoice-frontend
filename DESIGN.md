@@ -220,7 +220,25 @@ The system is **soft-layered, not flat and not heavy.** Depth is conveyed with d
 White rows, `rounded-2xl` (16px), 1px Border-Sand, a `+` glyph in Teal that rotates 45° to `×` on open. Answer copy in Mute at `text-sm leading-relaxed`. Used for FAQ across site and help center.
 
 ### Help Center layout
-The Help Center opens with a **slim welcome banner** — a `rounded-2xl2` teal→cream gradient card holding the announce-pose mascot and a single greeting (`How can we help, {name}?`). It carries **no search field** (the earlier hero search box was a non-functional static mock and was removed rather than shown as a dead control — operational honesty). Directly below sit the three topic cards (Account / Privacy / Contact) with **no "Browse by topic" heading** — the cards speak for themselves. Then the Contact + Chat two-column row.
+The Help Center opens with a **two-column row** at `lg:grid-cols-[1.15fr_1fr]`. On the left, a `rounded-2xl2` teal→cream gradient card holds the announce-pose mascot, the greeting (`How can we help, {name}?`) and a **working search field** beneath it. On the right, an **FAQs launcher card** lists the six categories with a question count each.
+
+The search field earns its place now that it actually searches — the earlier hero search box was removed precisely because it was a dead control, and this one only returned when there was real content behind it. Results appear in a bordered list directly under the input, each showing the question and its category; selecting one opens the reading panel at that answer. An empty result set says so plainly and points at the contact form.
+
+Directly below sit the three topic cards (Account / Privacy / Contact) with **no "Browse by topic" heading**. All three are real controls — `<a>` for the two that navigate into Settings, `<button>` for the one that scrolls — never a `div` with `cursor-pointer`. Then the Contact + Chat two-column row.
+
+### FAQ reading panel
+A dialog over the page, `max-w-[880px]`, `max-h-[85vh]`, scrolling internally. A category rail sits on the left from `md:` up and collapses to a `<select>` on mobile; the active rail row is a Light-Teal pill in Teal text. Answers use the signature `+`-rotates-to-`×` accordion.
+
+Why a panel rather than expanding inside the card: the longest category holds twelve questions and several answers run past 400 words. Nesting that inside a narrow right-hand column makes the card lurch in height on every click and squeezes long answers into a gutter. The panel keeps the launcher calm and gives the prose full width.
+
+Dialog behaviour is non-negotiable: `role="dialog"`, `aria-modal="true"`, labelled by its heading, focus moved in on open and restored to the trigger on close, focus trapped while open, Escape closes, background scroll locked.
+
+### Legal document layout
+The `/legal/*` shell is deliberately outside both the `(site)` and `member` route groups, so the public footer and the member platform can both link to it without either shell wrapping the text. A minimal header carries the logo and a route back to the account.
+
+Each document renders as a balanced title, an Effective / Last revised line in Soft Teal, a **sticky section index** on the left from `lg:` up, and sections divided by warm hairlines with `scroll-mt-24` so anchor links clear the header. Wide tables scroll inside their own `overflow-x-auto` container — the page body never scrolls sideways.
+
+A **print stylesheet** is part of the design, not an afterthought: members and regulators do print these. `.no-print` drops the header and section index, the background goes white, and link URLs are not appended after anchors.
 
 ### Support chat window
 The Help Center pairs the async **Contact support** form (left, ~1.1fr) with a **"Chat with us"** window (right, ~1fr) in a `lg:grid-cols-[1.1fr_1fr]` layout. The chat window is a *window frame inside* the card (the one sanctioned exception to no-nesting, because it must read as a distinct live surface, not a second card): `rounded-xl` (12px), 1px Border-Sand, `overflow-hidden`. Header bar on `#E8F3F3` (Light Teal) with a small mascot/agent avatar, a green presence dot, agent name in Forest Teal, and a plain-language availability line (support hours, not a fake "typing…"). Message bubbles are `rounded-2xl` with a squared inner corner: **agent** = Light-Teal fill / Deep-Teal text on the left; **member** = Teal fill / white text on the right. Input row is a pill field + a Signal-Yellow **Send** button (the card's only yellow — Send is the CTA). In the static build the window is a non-interactive placeholder for the real chat widget; keep the availability caption honest (e.g. business hours + timezone) rather than promising instant replies.
