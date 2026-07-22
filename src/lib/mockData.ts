@@ -300,35 +300,22 @@ export const surveyStateMeta: Record<SurveyState, { label: string; fg: string; b
   done: { label: 'Completed', fg: '#22A06B', bg: '#E7F6EF' },
 };
 
-export type Badge = { icon: string; label: string; earned: boolean };
+export type Badge = { id: string; label: string; earned: boolean };
 
 // The real 27-badge set from the rules document. Only the LABEL and earned
 // state are member-facing — the trigger conditions stay internal.
-// NOTE: the profile grid now renders 27 tiles and runs long. Redesigning that
-// gallery belongs to the phase-two gamification UI spec, not here.
 // PLACEHOLDER (business-critical): which badges this member has actually earned.
 const EARNED_BADGE_IDS = new Set([
   'verified-voice', 'profile-starter', 'profile-pioneer', 'halfway-heard',
   'invitation-accepted', 'first-check-in', 'three-day-rhythm', 'seven-day-voice',
   'every-attempt-counts', 'draw-debut',
 ]);
-// Thematic icon per badge, from the Captain MyVoice set in public/assets/cap.
-// The set has 26 icons for 27 badges so a few repeat, but a grid of identical
-// glyphs reads as unfinished placeholder art. Bespoke Captain artwork per badge
-// (the `art` concept on each entry in gamification.ts) is phase-two work.
-const BADGE_ICONS: Record<string, string> = {
-  'verified-voice': 'u2-shield', 'reward-ready': 'u2-money', 'profile-starter': 'u1-work',
-  'profile-pioneer': 'n-map', 'halfway-heard': 'u2-target', 'full-picture': 'r1-celebrate',
-  'new-chapter': 'n-compass', 'invitation-accepted': 'u1-share', 'survey-scout': 'u1-search',
-  'every-attempt-counts': 'r2-cool', 'quota-navigator': 'u2-calculator', 'back-on-track': 'u1-car',
-  'confirmed-contribution': 'u2-idea', 'first-earnings': 'u2-money', 'reward-step-up': 'u2-gift',
-  'quick-take': 'u1-gaming', 'thoughtful-ten': 'u1-cooking', 'deep-dive': 'n-compass',
-  'feedback-loop': 'n-headphones', 'first-check-in': 'u1-calendar', 'daily-sweep': 'u2-target',
-  'three-day-rhythm': 'u1-calendar', 'seven-day-voice': 'r2-cool', 'shield-activated': 'u2-shield',
-  'cashout-ready': 'u2-calculator', 'first-redemption': 'u2-gift', 'draw-debut': 'r1-celebrate',
-};
+// Artwork is now the bespoke Captain illustration drawn for each badge (the
+// `art` description on every entry in gamification.ts), sliced out of the
+// "Final Badges" sheet into public/assets/badges/<id>.png. The id carries
+// straight through to the filename, so there is no icon mapping to drift.
 export const badges: Badge[] = BADGES.map((b) => ({
-  icon: BADGE_ICONS[b.id] ?? 'u2-target',
+  id: b.id,
   label: b.label,
   earned: EARNED_BADGE_IDS.has(b.id),
 }));

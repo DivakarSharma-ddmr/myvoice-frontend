@@ -125,7 +125,9 @@ currently hold, never how it was earned or what the next level adds. The bonus d
 levels grant are never shown at all: member-facing draw copy states the signed regulation's rule
 and nothing else. **Badges are the exception that stays visible** — the full 27-badge set is
 shown, earned and unearned, because a badge label is a goal, not a mechanic. The trigger
-conditions behind each badge remain internal.
+conditions behind each badge remain internal. Every badge and every level now carries its own
+commissioned Captain illustration rather than a repeated glyph from the generic icon set — the
+artwork is the part of the gamification that members are *meant* to see.
 
 Daily quests **rotate** — a fixed check-in anchor, a survey slot, and one from the wider pool —
 and the UI says so ("a new set arrives every morning"), so an unfinished quest reads as *there

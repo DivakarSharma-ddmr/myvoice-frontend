@@ -247,6 +247,26 @@ Locked tiles keep their label at full Mute contrast and carry the lock in `grays
 40% opacity on the art alone, with an `sr-only` "earned" / "not earned yet" suffix. Never fade a
 label past 4.5:1 to signal state.
 
+Each badge has **its own Captain illustration** — the `art` line in the rules document, drawn
+and delivered as a contact sheet, sliced by `scripts/extract-emoji-sheets.mjs` into
+`public/assets/badges/<badge-id>.png`. The filename is the badge id, so there is no icon map to
+drift out of step. Tiles render at 72px in the gallery and 60px on the dashboard card: the art is
+detailed, and the generic icon set's 52px does not carry it. Backgrounds are cut out by flooding
+inwards from the edges, never by keying on white — that would punch holes through every speech
+bubble and sheet of paper in the set.
+
+### Level medallion
+The XP ring on the dashboard hero holds a 92px medallion that flips continuously between the
+level number and that level's Captain artwork, 4.5s a side, 750ms on a `rotateY` with
+`backface-visibility: hidden`. **The number is the front face and the initial state** — the
+server-rendered HTML, a paused tab, a screenshot and a reduced-motion member all get the fact
+rather than the decoration. Under `prefers-reduced-motion` the interval never starts; killing the
+transition alone would leave the state still snapping between faces.
+
+Level art is centre-cropped to square rather than letterboxed, because a padded landscape image
+inscribed in a circle shows mostly background bars. The crop also drops the source sheet's corner
+number chips, which would otherwise sit inside the medallion competing with the number face.
+
 ### Search suggestion chips
 Under an empty search field, pressable pill chips (white, hairline border, Teal bold 12px) on a
 `Try` label in Soft Teal — never static hint text. They are real `<button>`s that run the search,

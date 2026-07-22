@@ -5,6 +5,7 @@ import { Mascot } from '@/components/ui/Mascot';
 import { CapIcon, IconLabel } from '@/components/ui/CapIcon';
 import { Ring, ProgressBar } from '@/components/ui/Progress';
 import { BadgeTile } from '@/components/member/BadgeTile';
+import { LevelMedallion } from '@/components/member/LevelMedallion';
 import { badges, draw, profileCompletion, weeklyQuest } from '@/lib/mockData';
 import { streakGraceDays } from '@/lib/gamification';
 
@@ -25,9 +26,8 @@ export default function DashboardPage() {
         <div aria-hidden className="absolute -right-8 -top-10 h-44 w-44 rounded-full bg-yel/[.12]" />
         <div className="relative grid h-[120px] w-[120px] shrink-0 place-items-center">
           <Ring pct={xpPct} size={120} />
-          <div className="absolute flex flex-col items-center">
-            <span className="text-[11px] font-bold text-[#BFE0E0]">LEVEL</span>
-            <span className="text-[34px] font-extrabold leading-none text-white">{m.level}</span>
+          <div className="absolute">
+            <LevelMedallion level={m.level} />
           </div>
         </div>
         <div className="relative flex-1 text-center sm:text-left">
@@ -148,7 +148,7 @@ export default function DashboardPage() {
             <>
               <div className="mt-4 grid grid-cols-3 gap-x-2.5 gap-y-3.5">
                 {earnedBadges.slice(0, 6).map((b) => (
-                  <BadgeTile key={b.label} badge={b} />
+                  <BadgeTile key={b.id} badge={b} size={60} />
                 ))}
               </div>
               {earnedBadges.length > 6 && (

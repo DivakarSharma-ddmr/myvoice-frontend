@@ -38,9 +38,9 @@ export default function BadgesPage() {
       <section className="rounded-2xl2 border border-bd bg-white p-5">
         <h3 className="text-base font-extrabold">Earned ({earned.length})</h3>
         {earned.length ? (
-          <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-x-3 gap-y-5">
+          <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-x-3 gap-y-5">
             {earned.map((b) => (
-              <BadgeTile key={b.label} badge={b} size={56} />
+              <BadgeTile key={b.id} badge={b} size={72} />
             ))}
           </div>
         ) : (
@@ -57,9 +57,9 @@ export default function BadgesPage() {
           <p className="mt-1 max-w-[52ch] text-[13px] leading-snug text-mute">
             These unlock as you go. You do not have to chase them — taking part is what earns them.
           </p>
-          <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(96px,1fr))] gap-x-3 gap-y-5">
+          <div className="mt-4 grid grid-cols-[repeat(auto-fill,minmax(112px,1fr))] gap-x-3 gap-y-5">
             {locked.map((b) => (
-              <BadgeTile key={b.label} badge={b} size={56} />
+              <BadgeTile key={b.id} badge={b} size={72} />
             ))}
           </div>
         </section>

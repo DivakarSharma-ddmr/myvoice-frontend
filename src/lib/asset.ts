@@ -16,3 +16,17 @@ export function asset(path: string): string {
 export function capIcon(name: string): string {
   return asset(`/assets/cap/${name}.png`);
 }
+
+/**
+ * Bespoke Captain artwork per badge, sliced from the "Final Badges" sheet by
+ * scripts/extract-emoji-sheets.mjs. Filename is the badge id from
+ * gamification.ts, so there is no second mapping to keep in step.
+ */
+export function badgeArt(id: string): string {
+  return asset(`/assets/badges/${id}.png`);
+}
+
+/** Level artwork, 0–12, from the "Final Levels" sheet. */
+export function levelArt(level: number): string {
+  return asset(`/assets/levels/${level}.png`);
+}

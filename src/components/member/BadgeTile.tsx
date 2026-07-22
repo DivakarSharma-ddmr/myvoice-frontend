@@ -1,4 +1,4 @@
-import { CapIcon } from '@/components/ui/CapIcon';
+import { badgeArt } from '@/lib/asset';
 import type { Badge } from '@/lib/mockData';
 
 // Locked badges keep their label and stay visible: the set reads as something
@@ -7,17 +7,25 @@ import type { Badge } from '@/lib/mockData';
 export function BadgeTile({ badge, size = 52 }: { badge: Badge; size?: number }) {
   return (
     <div className="text-center">
-      <div
-        className="mx-auto overflow-hidden rounded-[14px]"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={badgeArt(badge.id)}
+        alt=""
+        aria-hidden
+        draggable={false}
+        width={size}
+        height={size}
+        loading="lazy"
+        decoding="async"
+        className="mx-auto block"
         style={{
           width: size,
           height: size,
+          objectFit: 'contain',
           filter: badge.earned ? 'none' : 'grayscale(1)',
           opacity: badge.earned ? 1 : 0.4,
         }}
-      >
-        <CapIcon name={badge.icon} size={size} radius={14} />
-      </div>
+      />
       {/* Locked labels stay at Mute (4.5:1 on white) rather than fading further
           — the lock is carried by the grayscale art, not by unreadable text. */}
       <div
