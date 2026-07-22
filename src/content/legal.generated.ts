@@ -482,7 +482,7 @@ export const legalDocs: Record<string, LegalDoc> = {
   },
   "terms": {
     "slug": "terms",
-    "title": "TERMS AND CONDITIONS FOR PANEL MEMBERSHIP, SURVEY PARTICIPATION AND USE OF SERVICES",
+    "title": "Terms and conditions for panel membership, survey participation and use of services",
     "effective": "April 19th, 2019",
     "revised": "April 18th, 2022",
     "sections": [
@@ -1134,7 +1134,7 @@ export const legalDocs: Record<string, LegalDoc> = {
   },
   "click-draw": {
     "slug": "click-draw",
-    "title": "Terms and Conditions Raffle ”The Click Draw”",
+    "title": "Terms and Conditions Raffle “The Click Draw”",
     "sections": [
       {
         "heading": "Section 1. The raffle organizer",

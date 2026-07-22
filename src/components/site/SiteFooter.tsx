@@ -4,7 +4,7 @@ import { asset } from '@/lib/asset';
 const COLS: [string, [string, string][]][] = [
   ['MyVoice', [['About', '/why-join'], ['How it works', '/how-it-works'], ['Rewards', '/rewards'], ['Why join', '/why-join']]],
   ['Help', [['FAQ', '/faq'], ['Contact support', '/faq'], ['Survey issues', '/faq'], ['Reward issues', '/faq']]],
-  ['Trust', [['Privacy', '/trust-privacy'], ['Terms', '/trust-privacy'], ['Cookies', '/trust-privacy'], ['Data protection', '/trust-privacy']]],
+  ['Trust', [['Privacy', '/legal/privacy'], ['Terms', '/legal/terms'], ['Cookies', '/legal/cookies'], ['Data protection', '/trust-privacy']]],
 ];
 
 export function SiteFooter() {

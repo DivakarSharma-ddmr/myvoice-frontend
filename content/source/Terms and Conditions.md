@@ -1,6 +1,6 @@
-#### **TERMS AND CONDITIONS FOR PANEL MEMBERSHIP,**
+#### **Terms and conditions for panel membership,**
 
-#### **SURVEY PARTICIPATION AND USE OF SERVICES**
+#### **survey participation and use of services**
 
 **Effective Date:** April 19th, 2019
 

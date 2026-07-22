@@ -59,3 +59,16 @@ body {
   outline-offset: 2px;
   border-radius: 6px;
 }
+
+/* Legal documents must print cleanly — members and regulators do print them. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+  }
+  a[href]::after {
+    content: '';
+  }
+}
