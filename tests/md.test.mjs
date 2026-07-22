@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { parseTable, extractLinks, cleanText } from '../scripts/lib/md.mjs';
+import { parseTable, extractLinks, cleanText, splitLabelledClauses } from '../scripts/lib/md.mjs';
 
 test('parseTable reads a table and drops the alignment row', () => {
   const md = [
@@ -41,4 +41,23 @@ test('cleanText removes escape noise and bold markers', () => {
 
 test('cleanText collapses whitespace and trims', () => {
   assert.equal(cleanText('  a   b \n c  '), 'a b c');
+});
+
+test('splitLabelledClauses regroups labelled sub-clauses without losing words', () => {
+  const text =
+    'Participation requires the following conditions: Qualifying Surveys: Every screenout counts. ' +
+    'Unlimited entries per month: There is no cap. Attempt limit per survey: Only once each.';
+  const out = splitLabelledClauses(text);
+  assert.ok(out, 'expected a split');
+  assert.equal(out.items.length, 3);
+  assert.match(out.intro, /following conditions:$/);
+  assert.match(out.items[0], /^Qualifying Surveys: Every screenout counts\.$/);
+  assert.match(out.items[2], /^Attempt limit per survey: Only once each\.$/);
+
+  const words = (s) => s.replace(/\s+/g, ' ').trim();
+  assert.equal(words([out.intro, ...out.items].join(' ')), words(text));
+});
+
+test('splitLabelledClauses leaves ordinary prose alone', () => {
+  assert.equal(splitLabelledClauses('A sentence. Another sentence. And a third one here.'), null);
 });

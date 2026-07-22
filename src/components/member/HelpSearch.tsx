@@ -22,7 +22,7 @@ export function HelpSearch({
         type="search"
         value={q}
         onChange={(e) => setQ(e.target.value)}
-        placeholder="Search the FAQs — try “balance” or “password”"
+        placeholder="Search the FAQs"
         autoComplete="off"
         className="w-full rounded-[11px] border border-bd bg-white px-3.5 py-3 text-sm outline-none focus:border-teal"
       />

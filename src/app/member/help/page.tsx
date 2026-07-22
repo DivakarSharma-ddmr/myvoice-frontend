@@ -19,7 +19,9 @@ export default function HelpPage() {
   return (
     <div className="space-y-4">
       {/* Greeting + search, beside the FAQ launcher */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.15fr_1fr]">
+      {/* items-start so the greeting card keeps its natural height instead of
+          stretching to match the taller FAQ card and leaving dead gradient. */}
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-[1.15fr_1fr]">
         <div
           className="rounded-2xl2 p-6"
           style={{ background: 'linear-gradient(120deg,#E8F3F3,#FFF6DA)' }}

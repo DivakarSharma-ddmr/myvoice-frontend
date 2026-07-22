@@ -270,8 +270,23 @@ const EARNED_BADGE_IDS = new Set([
   'invitation-accepted', 'first-check-in', 'three-day-rhythm', 'seven-day-voice',
   'every-attempt-counts', 'draw-debut',
 ]);
+// Thematic icon per badge, from the Captain MyVoice set in public/assets/cap.
+// The set has 26 icons for 27 badges so a few repeat, but a grid of identical
+// glyphs reads as unfinished placeholder art. Bespoke Captain artwork per badge
+// (the `art` concept on each entry in gamification.ts) is phase-two work.
+const BADGE_ICONS: Record<string, string> = {
+  'verified-voice': 'u2-shield', 'reward-ready': 'u2-money', 'profile-starter': 'u1-work',
+  'profile-pioneer': 'n-map', 'halfway-heard': 'u2-target', 'full-picture': 'r1-celebrate',
+  'new-chapter': 'n-compass', 'invitation-accepted': 'u1-share', 'survey-scout': 'u1-search',
+  'every-attempt-counts': 'r2-cool', 'quota-navigator': 'u2-calculator', 'back-on-track': 'u1-car',
+  'confirmed-contribution': 'u2-idea', 'first-earnings': 'u2-money', 'reward-step-up': 'u2-gift',
+  'quick-take': 'u1-gaming', 'thoughtful-ten': 'u1-cooking', 'deep-dive': 'n-compass',
+  'feedback-loop': 'n-headphones', 'first-check-in': 'u1-calendar', 'daily-sweep': 'u2-target',
+  'three-day-rhythm': 'u1-calendar', 'seven-day-voice': 'r2-cool', 'shield-activated': 'u2-shield',
+  'cashout-ready': 'u2-calculator', 'first-redemption': 'u2-gift', 'draw-debut': 'r1-celebrate',
+};
 export const badges: Badge[] = BADGES.map((b) => ({
-  icon: 'u2-target',
+  icon: BADGE_ICONS[b.id] ?? 'u2-target',
   label: b.label,
   earned: EARNED_BADGE_IDS.has(b.id),
 }));

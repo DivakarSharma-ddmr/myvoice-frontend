@@ -56,10 +56,38 @@ export function extractLinks(text) {
 
 export function cleanText(text) {
   return text
-    .replace(/\\([-.()[\]*_])/g, '$1')
+    // Google Docs escapes a wide set of punctuation, not just the obvious few.
+    .replace(/\\([-.()[\]*_=+#!<>|~`{}])/g, '$1')
+    // "…website:https://x" — a stripped markdown link left flush against the
+    // colon that introduced it. Give the URL room to breathe.
+    .replace(/([a-zA-Z]):(https?:\/\/)/g, '$1: $2')
     .replace(/\*\*/g, '')
     .replace(/(^|\s)\*(\S)/g, '$1$2')
     .replace(/(\S)\*(\s|$)/g, '$1$2')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+// Google Docs table cells flatten labelled sub-clauses ("Qualifying Surveys:",
+// "No reclassification:", …) into one unbroken paragraph. This restores the
+// structure the author wrote: it only REGROUPS text, never edits it, so the
+// rendered words stay identical to the source. Returns null unless it finds at
+// least `min` labels, so ordinary prose is left alone.
+const LABEL = /(^|[.:]\s)([A-Z][A-Za-z&'’ ]{2,38}):\s/g;
+
+export function splitLabelledClauses(text, min = 3) {
+  const marks = [];
+  for (const m of text.matchAll(LABEL)) {
+    const label = m[2].trim();
+    if (label.split(/\s+/).length > 5) continue;
+    marks.push({ start: m.index + m[1].length, labelEnd: m.index + m[0].length, label });
+  }
+  if (marks.length < min) return null;
+
+  const intro = text.slice(0, marks[0].start).trim();
+  const items = marks.map((mk, i) => {
+    const end = i + 1 < marks.length ? marks[i + 1].start : text.length;
+    return `${mk.label}: ${text.slice(mk.labelEnd, end).trim()}`;
+  });
+  return { intro, items };
 }

@@ -1,7 +1,7 @@
 // Four legal documents, four different shapes, one shared output type.
 // See docs/superpowers/specs/2026-07-22-help-settings-community-design.md § 1.
 
-import { parseTable, extractLinks, cleanText } from './lib/md.mjs';
+import { parseTable, extractLinks, cleanText, splitLabelledClauses } from './lib/md.mjs';
 
 function slug(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'section';
@@ -180,10 +180,20 @@ export function parseClickDraw(md) {
     const cut = splitHeading(rest);
     const heading = `Section ${number}. ${rest.slice(0, cut).trim()}`.replace(/\s+$/, '');
     const text = rest.slice(cut).trim();
-    sections.push({
-      heading: cleanText(heading),
-      blocks: text ? [{ type: 'p', text, links }] : [],
-    });
+    // Sections that pack labelled sub-clauses into one paragraph (Section 3,
+    // the entry rules, is the worst offender and the one members actually
+    // read) get regrouped into intro + list. Grouping only — no words change.
+    const clauses = text ? splitLabelledClauses(text) : null;
+    const blocks = clauses
+      ? [
+          { type: 'p', text: clauses.intro, links },
+          { type: 'list', items: clauses.items },
+        ]
+      : text
+        ? [{ type: 'p', text, links }]
+        : [];
+
+    sections.push({ heading: cleanText(heading), blocks });
   }
 
   return { slug: 'click-draw', title, sections: withUniqueIds(sections) };

@@ -36,9 +36,12 @@ export default function CommunityPage() {
           <Mascot size={104} pose="winner" />
         </div>
         <div className="flex-1">
-          <div className="text-[13px] font-extrabold text-yel">MONTHLY CLICK DRAW</div>
-          <h3 className="mt-1 text-xl font-extrabold">
-            You’re in with {m.tickets} {m.tickets === 1 ? 'entry' : 'entries'}
+          {/* No uppercase tracked eyebrow (DESIGN.md No-Eyebrow Rule) and no
+              decorative yellow — the headline carries it, and yellow is spent
+              on the button below. */}
+          <h3 className="text-xl font-extrabold">
+            You’re in the monthly Click Draw with {m.tickets}{' '}
+            {m.tickets === 1 ? 'entry' : 'entries'}
           </h3>
           <p className="mt-1.5 text-[13px] leading-snug text-[#BFE0E0]">
             Next draw {draw.date} · {draw.prize}. You earn an entry every time a survey ends in a

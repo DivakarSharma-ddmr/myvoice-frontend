@@ -27,6 +27,7 @@ const TITLES: Record<string, [string, string]> = {
   '/member/rewards': ['Rewards wallet', 'u2-gift'],
   '/member/profile': ['Your profile', 'u1-work'],
   '/member/community': ['Community', 'u2-pets'],
+  '/member/community/winners': ['Click Draw winners', 'r1-celebrate'],
   '/member/referrals': ['Referrals', 'u2-handshake'],
   '/member/help': ['Help center', 'u2-idea'],
   '/member/settings': ['Settings', 'u2-gear'],
@@ -36,7 +37,12 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { streak, tickets, available, fmt } = useMember();
   const [moreOpen, setMoreOpen] = useState(false);
-  const isActive = (href: string) => pathname === href || pathname === href + '/';
+  // Prefix match so a sub-route (e.g. /member/community/winners) still lights
+  // up its parent nav item instead of leaving nothing selected.
+  const isActive = (href: string) => {
+    const p = pathname?.replace(/\/$/, '') ?? '';
+    return p === href || p.startsWith(href + '/');
+  };
 
   // Onboarding is a full-screen experience with no chrome.
   if (pathname?.includes('/member/welcome')) {
