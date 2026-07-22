@@ -291,8 +291,10 @@ export const communityStats: { icon: string; value: string; label: string }[] = 
   { icon: 'u1-share', value: '42,000', label: 'surveys completed' },
   { icon: 'u2-gift', value: '18,500', label: 'rewards redeemed' },
 ];
-// PLACEHOLDER (business-critical): real draw date + prize pool.
-export const draw = { date: 'Jun 30', prize: '€250 prize pool' };
+// Prize structure is fixed by the signed Click Draw regulation: 1 x €50 plus
+// 10 x €10, €150 in total, drawn monthly. See DRAW in src/lib/gamification.ts.
+// PLACEHOLDER (business-critical): confirm the live next-draw date each month.
+export const draw = { date: 'Jul 31', prize: '11 prizes, €150 in total' };
 export const pollOptions: [string, number][] = [
   ['Gift cards', 46],
   ['PayPal cash', 34],
