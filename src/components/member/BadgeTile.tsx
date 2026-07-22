@@ -4,28 +4,45 @@ import type { Badge } from '@/lib/mockData';
 // Locked badges keep their label and stay visible: the set reads as something
 // to work towards rather than a secret. Only the internal trigger conditions
 // (gamification.ts) stay hidden — those are operational data, not a promise.
-export function BadgeTile({ badge, size = 52 }: { badge: Badge; size?: number }) {
+//
+// Every badge sits in the same sand tile. Three of the 27 (First Check-In, Deep
+// Dive, Feedback Loop) are drawn as full-bleed scenes rather than cut-out
+// figures, and loose on a white card they read as photographs dropped among
+// drawings. A shared frame makes the difference stop looking like a mistake:
+// each one is then a picture in a tile, not an odd tile.
+export function BadgeTile({ badge, size = 72 }: { badge: Badge; size?: number }) {
+  const art = Math.round(size * 0.82);
   return (
     <div className="text-center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={badgeArt(badge.id)}
-        alt=""
-        aria-hidden
-        draggable={false}
-        width={size}
-        height={size}
-        loading="lazy"
-        decoding="async"
-        className="mx-auto block"
+      <div
+        className="mx-auto grid place-items-center overflow-hidden"
         style={{
           width: size,
           height: size,
-          objectFit: 'contain',
-          filter: badge.earned ? 'none' : 'grayscale(1)',
-          opacity: badge.earned ? 1 : 0.4,
+          borderRadius: Math.round(size * 0.24),
+          background: badge.earned ? '#FBF4E6' : '#F4F3EF',
         }}
-      />
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={badgeArt(badge.id)}
+          alt=""
+          aria-hidden
+          draggable={false}
+          width={art}
+          height={art}
+          loading="lazy"
+          decoding="async"
+          className="block"
+          style={{
+            width: art,
+            height: art,
+            objectFit: 'contain',
+            filter: badge.earned ? 'none' : 'grayscale(1)',
+            opacity: badge.earned ? 1 : 0.45,
+          }}
+        />
+      </div>
       {/* Locked labels stay at Mute (4.5:1 on white) rather than fading further
           — the lock is carried by the grayscale art, not by unreadable text. */}
       <div

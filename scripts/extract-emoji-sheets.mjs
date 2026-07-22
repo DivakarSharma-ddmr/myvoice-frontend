@@ -1,4 +1,4 @@
-// Slices the two Captain MyVoice contact sheets into individual PNGs.
+// Slices the two Captain MyVoice contact sheets into individual WebP files.
 //
 //   node scripts/extract-emoji-sheets.mjs
 //
@@ -41,12 +41,27 @@ const BADGE_READING_ORDER = [
 const INK = 245; // below this a pixel counts as content, not paper
 const MIN_BAND = 40; // ignore runs shorter than this (caption lines, stray marks)
 const MIN_CELL = 40;
-// These are line drawings with flat fills, so a 128-colour palette is visually
-// indistinguishable from truecolour at the sizes they are displayed (checked
-// against the hardest case, the level-12 sunburst and the sunrise badge) and
-// cuts the set from 3.8 MB to well under 1 MB. The audience is explicitly a
-// mid-range phone on a slow connection.
-const PNG = { compressionLevel: 9, palette: true, colours: 128 };
+// Quantise to a 128-colour palette, THEN encode lossless WebP. These are line
+// drawings with hard edges and large flat fills, so lossy compression puts
+// visible ringing along every outline — but lossless WebP straight from the
+// full-colour source is 42 KB a badge. Quantising first collapses the
+// anti-aliasing ramps that make it expensive and lands at 5.2 KB, smaller than
+// every lossy setting and with no artefacts at all:
+//
+//   lossless from source  42.1 KB      near-lossless q60  30.7 KB
+//   lossy q90             16.0 KB      lossy q82          13.3 KB
+//   quantised → lossless   5.2 KB   ← this
+//
+// Lossy IS the right call for the shaded, anti-aliased assets handled by
+// scripts/convert-images.mjs. Different content, different answer.
+const QUANTISE = { compressionLevel: 9, palette: true, colours: 128 };
+const WEBP = { lossless: true, effort: 6 };
+
+/** Flat-art encoder: quantise, then lossless WebP. */
+async function encodeArt(buffer) {
+  const quantised = await sharp(buffer).png(QUANTISE).toBuffer();
+  return sharp(quantised).webp(WEBP).toBuffer();
+}
 
 // The badge sheet has no cell borders, so a small gap inside one drawing (the
 // coin flying out of the wallet in 26) must be merged back. The level sheet
@@ -194,6 +209,30 @@ function floodTransparent(rgba, W, H, tol = 232) {
   }
 }
 
+/**
+ * The panel's own background colour, taken as the median of its outer ring
+ * (minus the labelled corner). Sampling a single patch is not safe — on level 1
+ * the Captain's raised wing reaches the top-left, and that sample turned the
+ * whole medallion green. The full ring is dominated by background on every
+ * panel, and a median ignores whatever artwork does touch an edge.
+ */
+function ringMedian(raw, W, H, channels, skip) {
+  const band = 5;
+  const bands = [[], [], []];
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const edge = x < band || x >= W - band || y < band || y >= H - band;
+      if (!edge || (x < skip && y < skip)) continue;
+      const i = (y * W + x) * channels;
+      for (let c = 0; c < 3; c++) bands[c].push(raw[i + c]);
+    }
+  }
+  return bands.map((b) => {
+    b.sort((a, c) => a - c);
+    return b[Math.floor(b.length / 2)];
+  });
+}
+
 /** Squares a panel by padding the short side, then resizes. */
 async function square(buffer, size, background) {
   const meta = await sharp(buffer).metadata();
@@ -210,7 +249,8 @@ async function square(buffer, size, background) {
     ])
     .png()
     .toBuffer()
-    .then((b) => sharp(b).resize(size, size).png(PNG).toBuffer());
+    .then((b) => sharp(b).resize(size, size).png().toBuffer())
+    .then(encodeArt);
 }
 
 async function extractBadges() {
@@ -239,8 +279,8 @@ async function extractBadges() {
       .png()
       .toBuffer();
     const out = await square(cut, 256, { r: 0, g: 0, b: 0, alpha: 0 });
-    await writeFile(path.join(dir, `${id}.png`), out);
-    console.log(`badge ${String(number).padStart(2)} → ${id}.png (${p.width}x${p.height})`);
+    await writeFile(path.join(dir, `${id}.webp`), out);
+    console.log(`badge ${String(number).padStart(2)} → ${id}.webp (${p.width}x${p.height})`);
   }
 }
 
@@ -252,24 +292,81 @@ async function extractLevels() {
   const dir = path.join(OUT, 'levels');
   await mkdir(dir, { recursive: true });
 
+  const sheetWidth = (await sharp(file).metadata()).width;
+  // The panels are labelled with a boxed number in the top-left corner. It is
+  // sheet annotation, not artwork — and the medallion shows the level number on
+  // its other face, so leaving it in would print the number twice. Sized as a
+  // fraction of the sheet so a re-export at another resolution still lands.
+  const chip = Math.round(sheetWidth * 0.04);
+
   for (let i = 0; i < panels.length; i++) {
     // Level panels are framed illustrations with their own background, so the
     // border is trimmed and the artwork kept whole — no transparency pass.
     const inset = 8;
     const p = panels[i];
-    const cut = await sharp(file)
-      .extract({ left: p.left + inset, top: p.top + inset, width: p.width - inset * 2, height: p.height - inset * 2 })
+    const box = {
+      left: p.left + inset,
+      top: p.top + inset,
+      width: p.width - inset * 2,
+      height: p.height - inset * 2,
+    };
+    const { data, info } = await sharp(file)
+      .extract(box)
+      .flatten({ background: '#fff' })
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const { width: W, height: H, channels } = info;
+
+    // Paint the chip out with the panel's own background, sampled from the
+    // strip directly beneath it — the safest neighbouring patch, since the
+    // artwork itself starts further in on every panel.
+    const bg = ringMedian(data, W, H, channels, chip);
+    for (let y = 0; y < chip - inset + 2; y++) {
+      for (let x = 0; x < chip - inset + 2; x++) {
+        const i2 = (y * W + x) * channels;
+        data[i2] = bg[0];
+        data[i2 + 1] = bg[1];
+        data[i2 + 2] = bg[2];
+      }
+    }
+
+    // Letterboxed, not cropped: the medallion is a rounded square showing the
+    // whole panel, so the illustration must stay intact. Bars take the panel's
+    // own background colour, which makes the padding invisible.
+    //
+    // Trimming the panel's own uniform margin first matters more than it
+    // sounds: letterboxing a 775x493 panel into a square already costs a third
+    // of the height, and the medallion is only 70px across. Trimming is not a
+    // crop — it removes background, never artwork — and it is what keeps the
+    // Captain legible at that size.
+    const cut = await sharp(data, { raw: { width: W, height: H, channels } })
+      .trim({ background: { r: bg[0], g: bg[1], b: bg[2] }, threshold: 12 })
       .png()
       .toBuffer();
-    // Centre-cropped to square rather than letterboxed: these are displayed in
-    // a circular medallion, and a padded landscape image inscribed in a circle
-    // shows nothing but background bars.
-    const out = await sharp(cut)
-      .resize(256, 256, { fit: 'cover', position: 'centre' })
-      .png(PNG)
+    const trimmed = await sharp(cut).metadata();
+    const side = Math.max(trimmed.width, trimmed.height);
+    const padded = await sharp({
+      create: {
+        width: side,
+        height: side,
+        channels: 3,
+        background: { r: bg[0], g: bg[1], b: bg[2] },
+      },
+    })
+      .composite([
+        {
+          input: cut,
+          left: Math.round((side - trimmed.width) / 2),
+          top: Math.round((side - trimmed.height) / 2),
+        },
+      ])
+      .png()
       .toBuffer();
-    await writeFile(path.join(dir, `${i}.png`), out);
-    console.log(`level ${i} → ${i}.png (${p.width}x${p.height})`);
+    const out = await encodeArt(await sharp(padded).resize(256, 256).png().toBuffer());
+    await writeFile(path.join(dir, `${i}.webp`), out);
+    console.log(
+      `level ${i} → ${i}.webp (panel ${p.width}x${p.height} → trimmed ${trimmed.width}x${trimmed.height})`
+    );
   }
 }
 

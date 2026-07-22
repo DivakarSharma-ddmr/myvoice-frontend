@@ -43,7 +43,7 @@ export function Mascot({
       ) : (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={asset(`/assets/${file}.png`)}
+          src={asset(`/assets/${file}.webp`)}
           alt="Captain MyVoice"
           onError={() => setBroken(true)}
           style={{ width: size, height: size, objectFit: 'contain', display: 'block' }}

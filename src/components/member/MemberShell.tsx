@@ -63,7 +63,7 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
       <aside className="sticky top-0 hidden h-screen w-[216px] shrink-0 flex-col bg-dteal p-3 lg:flex">
         <div className="mb-4 self-start rounded-xl bg-white px-2.5 py-1.5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset('/assets/logo.jpg')} alt="MyVoice" className="h-[22px]" />
+          <img src={asset('/assets/logo.webp')} alt="MyVoice" className="h-[22px]" />
         </div>
         <nav className="flex flex-1 flex-col gap-1">
           {NAV.map(([label, ic, href]) => {

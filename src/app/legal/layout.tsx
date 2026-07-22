@@ -11,7 +11,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         <div className="mx-auto flex max-w-[1080px] items-center justify-between gap-4 px-5 py-4 md:px-8">
           <Link href="/" aria-label="MyVoice home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={asset('/assets/logo.jpg')} alt="MyVoice" className="h-[22px]" />
+            <img src={asset('/assets/logo.webp')} alt="MyVoice" className="h-[22px]" />
           </Link>
           <Link
             href="/member/settings"

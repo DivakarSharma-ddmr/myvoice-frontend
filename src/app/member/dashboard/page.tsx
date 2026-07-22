@@ -148,7 +148,7 @@ export default function DashboardPage() {
             <>
               <div className="mt-4 grid grid-cols-3 gap-x-2.5 gap-y-3.5">
                 {earnedBadges.slice(0, 6).map((b) => (
-                  <BadgeTile key={b.id} badge={b} size={60} />
+                  <BadgeTile key={b.id} badge={b} size={68} />
                 ))}
               </div>
               {earnedBadges.length > 6 && (

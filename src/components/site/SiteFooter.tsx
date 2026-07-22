@@ -13,7 +13,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1080px] grid-cols-2 gap-8 md:grid-cols-4 md:gap-8">
         <div className="col-span-2 md:col-span-1">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset('/assets/logo.jpg')} alt="MyVoice" className="h-[30px] w-auto" />
+          <img src={asset('/assets/logo.webp')} alt="MyVoice" className="h-[30px] w-auto" />
           <p className="mt-3.5 max-w-[250px] text-sm leading-relaxed text-mute">
             A trusted global research community. Part of the DataDiggers ecosystem since 2015.
           </p>

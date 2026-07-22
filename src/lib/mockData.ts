@@ -121,10 +121,10 @@ export const memberQuotes: string[] = [
 // `img` is a real product screenshot of each member screen (captured from the
 // running app; see public/assets/screens/). Swap if the UI changes.
 export const insideTiles: { title: string; body: string; tint: 'lteal' | 'syel'; img: string }[] = [
-  { title: 'Dashboard', body: 'Balance, surveys & progress at a glance', tint: 'lteal', img: '/assets/screens/dashboard.png' },
-  { title: 'Surveys', body: 'Matched to your profile & country', tint: 'syel', img: '/assets/screens/surveys.png' },
-  { title: 'Rewards wallet', body: 'Pending, approved & redeemed', tint: 'lteal', img: '/assets/screens/rewards.png' },
-  { title: 'Profile', body: 'Guided, bite-sized completion', tint: 'syel', img: '/assets/screens/profile.png' },
+  { title: 'Dashboard', body: 'Balance, surveys & progress at a glance', tint: 'lteal', img: '/assets/screens/dashboard.webp' },
+  { title: 'Surveys', body: 'Matched to your profile & country', tint: 'syel', img: '/assets/screens/surveys.webp' },
+  { title: 'Rewards wallet', body: 'Pending, approved & redeemed', tint: 'lteal', img: '/assets/screens/rewards.webp' },
+  { title: 'Profile', body: 'Guided, bite-sized completion', tint: 'syel', img: '/assets/screens/profile.webp' },
 ];
 
 export type Faq = { q: string; a: string };

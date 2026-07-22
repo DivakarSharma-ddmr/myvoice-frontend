@@ -249,11 +249,17 @@ label past 4.5:1 to signal state.
 
 Each badge has **its own Captain illustration** — the `art` line in the rules document, drawn
 and delivered as a contact sheet, sliced by `scripts/extract-emoji-sheets.mjs` into
-`public/assets/badges/<badge-id>.png`. The filename is the badge id, so there is no icon map to
-drift out of step. Tiles render at 72px in the gallery and 60px on the dashboard card: the art is
-detailed, and the generic icon set's 52px does not carry it. Backgrounds are cut out by flooding
-inwards from the edges, never by keying on white — that would punch holes through every speech
-bubble and sheet of paper in the set.
+`public/assets/badges/<badge-id>.webp`. The filename is the badge id, so there is no icon map to
+drift out of step. Backgrounds are cut out by flooding inwards from the edges, never by keying on
+white — that would punch holes through every speech bubble and sheet of paper in the set.
+
+Every badge sits in a **sand tile** (`#FBF4E6`, corner radius 24% of the tile, art at 82% inside),
+84px in the gallery and 68px on the dashboard card. The tile is not decoration. Three of the 27 —
+First Check-In, Deep Dive, Feedback Loop — are drawn as full-bleed scenes rather than cut-out
+figures, and loose on a white card they read as photographs dropped among drawings. Those
+backgrounds are painted into the artwork and cannot be separated without redrawing, so the fix is
+a shared frame: each badge becomes a picture in a tile rather than an odd tile. Locked tiles swap
+the sand for a neutral `#F4F3EF`.
 
 ### Level medallion
 The XP ring on the dashboard hero holds a 92px medallion that flips continuously between the
@@ -263,9 +269,32 @@ server-rendered HTML, a paused tab, a screenshot and a reduced-motion member all
 rather than the decoration. Under `prefers-reduced-motion` the interval never starts; killing the
 transition alone would leave the state still snapping between faces.
 
-Level art is centre-cropped to square rather than letterboxed, because a padded landscape image
-inscribed in a circle shows mostly background bars. The crop also drops the source sheet's corner
-number chips, which would otherwise sit inside the medallion competing with the number face.
+The medallion is a **rounded square, not a circle**, at 74px — the largest that clears the ring's
+inner edge (corner reach 45.7px against an inner radius of 47.4px). Level art is letterboxed
+rather than cropped, so each panel is shown whole; the export trims each panel's own background
+margin first, which is what keeps the Captain legible at that size. The sheet's corner number
+chips are painted out at export with the panel's ring-median background colour — the medallion
+already shows the number on its other face, and printing it twice looks like a mistake.
+
+## 6. Assets
+
+Every raster asset the site serves is **WebP**, in one of two encodings, chosen by content:
+
+- **Flat art** (badges, level panels) — quantised to a 128-colour palette, then encoded
+  *lossless*. Hard edges and large flat fills are exactly what lossy compression rings around,
+  and quantising first collapses the anti-aliasing ramps that make lossless expensive: 5.2 KB a
+  badge, against 42 KB lossless-from-source and 16 KB at lossy quality 90.
+- **Shaded art** (the Captain icon set, mascot poses, platform screenshots, logo) — *lossy*
+  quality 90. The icon set drops from 72 KB a file to 8.7 KB, where lossless WebP would be 32 KB.
+
+Run `node scripts/extract-emoji-sheets.mjs` after re-exporting a contact sheet, and
+`node scripts/convert-images.mjs` after adding any new PNG or JPEG. Both are authoring steps, not
+build steps: a failure should be an asset error caught locally, never a broken deploy.
+
+Only `public/assets/icons/*` stays PNG — those are the PWA manifest and apple-touch icons, fetched
+once at install, where PNG is still the safest format across app launchers. All non-video assets
+together come to 861 KB, on a platform whose stated target is a mid-range phone on a slow
+connection.
 
 ### Search suggestion chips
 Under an empty search field, pressable pill chips (white, hairline border, Teal bold 12px) on a
@@ -298,7 +327,7 @@ A **print stylesheet** is part of the design, not an afterthought: members and r
 ### Support chat window
 The Help Center pairs the async **Contact support** form (left, ~1.1fr) with a **"Chat with us"** window (right, ~1fr) in a `lg:grid-cols-[1.1fr_1fr]` layout. The chat window is a *window frame inside* the card (the one sanctioned exception to no-nesting, because it must read as a distinct live surface, not a second card): `rounded-xl` (12px), 1px Border-Sand, `overflow-hidden`. Header bar on `#E8F3F3` (Light Teal) with a small mascot/agent avatar, a green presence dot, agent name in Forest Teal, and a plain-language availability line (support hours, not a fake "typing…"). Message bubbles are `rounded-2xl` with a squared inner corner: **agent** = Light-Teal fill / Deep-Teal text on the left; **member** = Teal fill / white text on the right. Input row is a pill field + a Signal-Yellow **Send** button (the card's only yellow — Send is the CTA). In the static build the window is a non-interactive placeholder for the real chat widget; keep the availability caption honest (e.g. business hours + timezone) rather than promising instant replies.
 
-## 6. Do's and Don'ts
+## 7. Do’s and Don’ts
 
 ### Do:
 - **Do** reserve Signal Yellow `#FFCC33` for the primary action, rewards, and wallet moments — the Signal Yellow Rule (≤10% of a screen).

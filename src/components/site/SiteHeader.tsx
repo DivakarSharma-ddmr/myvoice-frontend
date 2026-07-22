@@ -25,7 +25,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-3 rounded-full border border-[#F0ECD9] bg-white/90 py-2.5 pl-5 pr-2.5 shadow-soft backdrop-blur-md">
         <Link href="/" className="flex items-center" onClick={() => setOpen(false)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset('/assets/logo.jpg')} alt="MyVoice by DataDiggers" className="h-[30px] w-auto" />
+          <img src={asset('/assets/logo.webp')} alt="MyVoice by DataDiggers" className="h-[30px] w-auto" />
         </Link>
 
         {/* Desktop nav */}

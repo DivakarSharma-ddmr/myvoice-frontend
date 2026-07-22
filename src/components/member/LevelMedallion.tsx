@@ -11,9 +11,13 @@ import { levelArt } from '@/lib/asset';
  * flip (reduced motion, a paused tab, a screenshot) still gets the fact rather
  * than the decoration.
  */
+// 74px is the largest rounded square that clears the 120px ring's inner edge
+// (inner radius ~47px, so an inscribed square is ~67px on the diagonal — the
+// rounded corners buy back the difference). Shrinking the art is the trade for
+// showing each level panel whole instead of cropping it to a circle.
 export function LevelMedallion({
   level,
-  size = 92,
+  size = 74,
   intervalMs = 4500,
 }: {
   level: number;
@@ -37,7 +41,7 @@ export function LevelMedallion({
     inset: 0,
     display: 'grid',
     placeItems: 'center',
-    borderRadius: '50%',
+    borderRadius: 16,
     backfaceVisibility: 'hidden',
     WebkitBackfaceVisibility: 'hidden',
   };
@@ -56,8 +60,8 @@ export function LevelMedallion({
       >
         <div style={face}>
           <div className="flex flex-col items-center">
-            <span className="text-[11px] font-bold tracking-wide text-[#BFE0E0]">LEVEL</span>
-            <span className="text-[34px] font-extrabold leading-none text-white">{level}</span>
+            <span className="text-[10px] font-bold tracking-wide text-[#BFE0E0]">LEVEL</span>
+            <span className="text-[30px] font-extrabold leading-none text-white">{level}</span>
           </div>
         </div>
 
@@ -74,10 +78,12 @@ export function LevelMedallion({
             transform: 'rotateY(180deg)',
             width: size,
             height: size,
+            // The panel is letterboxed to square at export with its own
+            // background colour, so `cover` here crops nothing.
             objectFit: 'cover',
-            // A hairline keeps the cream artwork from bleeding into the ring's
-            // own stroke on the dark hero.
-            boxShadow: 'inset 0 0 0 2px rgba(255,255,255,.25)',
+            // A hairline separates the cream artwork from the dark hero behind
+            // the ring.
+            boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,.3)',
           }}
         />
       </div>

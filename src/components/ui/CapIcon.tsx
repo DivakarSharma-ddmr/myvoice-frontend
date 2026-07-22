@@ -1,6 +1,6 @@
 import { capIcon } from '@/lib/asset';
 
-/** Renders one of the Captain MyVoice icon-set PNGs (assets/cap/<name>.png). */
+/** Renders one of the Captain MyVoice icon-set PNGs (assets/cap/<name>.webp). */
 export function CapIcon({
   name,
   size = 24,

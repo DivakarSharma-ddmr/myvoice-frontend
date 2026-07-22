@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   applicationName: 'MyVoice',
   manifest: asset('/manifest.webmanifest'),
   icons: {
-    icon: asset('/assets/logo.jpg'),
+    icon: asset('/assets/logo.webp'),
     apple: asset('/assets/icons/icon-192.png'),
   },
   openGraph: {
