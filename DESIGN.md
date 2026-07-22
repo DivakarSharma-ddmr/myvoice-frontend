@@ -219,6 +219,41 @@ The system is **soft-layered, not flat and not heavy.** Depth is conveyed with d
 ### Accordion (signature)
 White rows, `rounded-2xl` (16px), 1px Border-Sand, a `+` glyph in Teal that rotates 45° to `×` on open. Answer copy in Mute at `text-sm leading-relaxed`. Used for FAQ across site and help center.
 
+### Settings accordion
+Account details collapse into four rows sharing a single open state — opening one closes the
+others. Each row is a full-width `<button>` carrying the group name in Forest Teal above a
+one-line **data summary** in Mute, with the signature `+`-rotates-45°-to-`×` glyph on the right
+in a 28px hairline circle. The summary is what keeps the pattern honest: collapsed does not mean
+hidden, so reading your own account costs nothing and only *editing* costs a click. Summaries
+`truncate` rather than wrap — they hold at 390px without clipping.
+
+Collapsed panels are **unmounted, not height-animated**. A `grid-template-rows: 0fr` panel is
+invisible but still in the tab order, so a keyboard member tabs into controls they cannot see;
+the rotating glyph carries the state change instead. `aria-expanded` and `aria-controls` on the
+button, panel `id` on the content.
+
+### Badge display
+Two tiers, deliberately not one. The **dashboard card is a summary**: count, a teal→green
+progress bar, the first six earned tiles, an "and N more earned" line, and a link out. It sits in
+the same row as "Surveys for you" and matches that column's height. The **full 27-tile gallery
+lives at its own route** (`/member/dashboard/badges`), split into "Earned" and "Still to earn"
+sections on an `auto-fill, minmax(96px, 1fr)` grid.
+
+A gallery is a place, not an interruption — it gets a URL, the back button, and full width on a
+phone, none of which a dialog gives. Modals are reserved for reading flows over a launcher (see
+the FAQ panel), not for content a member navigates to.
+
+Locked tiles keep their label at full Mute contrast and carry the lock in `grayscale(1)` plus
+40% opacity on the art alone, with an `sr-only` "earned" / "not earned yet" suffix. Never fade a
+label past 4.5:1 to signal state.
+
+### Search suggestion chips
+Under an empty search field, pressable pill chips (white, hairline border, Teal bold 12px) on a
+`Try` label in Soft Teal — never static hint text. They are real `<button>`s that run the search,
+they replace themselves with results once there is a query so they cost no height while
+searching, and every one of them is test-asserted to return hits. Keep the labels to one or two
+words: at 390px each extra word pushes the row onto another line.
+
 ### Help Center layout
 The Help Center opens with a **two-column row** at `lg:grid-cols-[1.15fr_1fr]`. On the left, a `rounded-2xl2` teal→cream gradient card holds the announce-pose mascot, the greeting (`How can we help, {name}?`) and a **working search field** beneath it. On the right, an **FAQs launcher card** lists the six categories with a question count each.
 

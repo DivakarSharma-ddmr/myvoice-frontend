@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   LEVELS, BADGES, DAILY_QUESTS, WEEKLY_QUESTS, MONTHLY_QUESTS, DRAW,
   levelFromXp, levelProgress, surveyCompletionXp, streakGraceDays, drawEntriesFromLevel,
+  dailyQuestSlots, weeklyQuestSlot, DAILY_ANCHOR_QUEST_ID, DAILY_SURVEY_QUEST_IDS,
 } from '../src/lib/gamification.ts';
 
 test('the level table matches the rules document', () => {
@@ -109,4 +110,37 @@ test('the draw prize structure matches the signed regulation', () => {
   assert.equal(DRAW.totalValue, 150);
   assert.equal(DRAW.prizes.reduce((n, p) => n + p.count, 0), 11);
   assert.deepEqual(DRAW.entrySources, ['screenout', 'quota-full', 'survey-closed']);
+});
+
+test('daily slots are the anchor, a survey quest and a wider-pool quest', () => {
+  for (let day = 0; day < 40; day++) {
+    const slots = dailyQuestSlots(day);
+    assert.equal(slots.length, 3);
+    assert.equal(slots[0].id, DAILY_ANCHOR_QUEST_ID);
+    assert.ok(DAILY_SURVEY_QUEST_IDS.includes(slots[1].id));
+    assert.ok(!DAILY_SURVEY_QUEST_IDS.includes(slots[2].id));
+    assert.equal(new Set(slots.map((q) => q.id)).size, 3, `day ${day} repeated a quest`);
+  }
+});
+
+test('the same day always yields the same quests', () => {
+  assert.deepEqual(dailyQuestSlots(12), dailyQuestSlots(12));
+  assert.notDeepEqual(dailyQuestSlots(12), dailyQuestSlots(13));
+});
+
+test('rotation handles a negative day index without crashing', () => {
+  assert.equal(dailyQuestSlots(-1).length, 3);
+  assert.ok(weeklyQuestSlot(-3));
+});
+
+test('every daily quest except the anchor is reachable by rotation', () => {
+  const seen = new Set();
+  for (let day = 0; day < 200; day++) dailyQuestSlots(day).forEach((q) => seen.add(q.id));
+  assert.equal(seen.size, DAILY_QUESTS.length);
+});
+
+test('the weekly slot cycles the whole weekly pool', () => {
+  const seen = new Set();
+  for (let w = 0; w < WEEKLY_QUESTS.length; w++) seen.add(weeklyQuestSlot(w).id);
+  assert.equal(seen.size, WEEKLY_QUESTS.length);
 });

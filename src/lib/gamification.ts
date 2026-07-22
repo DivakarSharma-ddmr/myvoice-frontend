@@ -709,3 +709,65 @@ export const DRAW = {
 export const DAILY_QUESTS: QuestDef[] = withReappear(DAILY_RAW);
 export const WEEKLY_QUESTS: QuestDef[] = withReappear(WEEKLY_RAW);
 export const MONTHLY_QUESTS: QuestDef[] = withReappear(MONTHLY_RAW);
+
+//
+// Quest rotation
+//
+// Three daily slots, per the confirmed design: a fixed habit anchor, a survey
+// slot, and one rotating from the wider pool. The split matters — if all three
+// slots needed a survey, a member in a market with thin survey supply could
+// finish a day with nothing completable, which is exactly the frustration the
+// habit loop is meant to avoid.
+//
+// Rotation is a pure function of a day index so the same day always yields the
+// same three quests: the static build precomputes them, and the real backend
+// can hand the member the same slots on every device without storing them.
+export const DAILY_ANCHOR_QUEST_ID = 'daily-check-in';
+
+// The daily quests that need a survey outcome. Everything else in the pool is
+// completable without one.
+export const DAILY_SURVEY_QUEST_IDS = [
+  'share-your-voice',
+  'give-it-a-go',
+  'quick-contribution',
+  'thoughtful-contribution',
+  'double-contribution',
+  'two-genuine-attempts',
+  'reward-step-up',
+  'dashboard-discovery',
+  'mobile-contribution',
+  'mixed-journey',
+] as const;
+
+function mod(n: number, m: number): number {
+  return ((n % m) + m) % m;
+}
+
+function questById(pool: QuestDef[], id: string): QuestDef {
+  const def = pool.find((q) => q.id === id);
+  if (!def) throw new Error(`unknown quest id "${id}"`);
+  return def;
+}
+
+/** The three daily quests for a given day index. Deterministic. */
+export function dailyQuestSlots(dayIndex: number): QuestDef[] {
+  const anchor = questById(DAILY_QUESTS, DAILY_ANCHOR_QUEST_ID);
+  const surveyPool = (DAILY_SURVEY_QUEST_IDS as readonly string[]).map((id) =>
+    questById(DAILY_QUESTS, id)
+  );
+  const widePool = DAILY_QUESTS.filter(
+    (q) =>
+      q.id !== DAILY_ANCHOR_QUEST_ID &&
+      !(DAILY_SURVEY_QUEST_IDS as readonly string[]).includes(q.id)
+  );
+  return [
+    anchor,
+    surveyPool[mod(dayIndex, surveyPool.length)],
+    widePool[mod(dayIndex, widePool.length)],
+  ];
+}
+
+/** The weekly quest for a given week index. Deterministic. */
+export function weeklyQuestSlot(weekIndex: number): QuestDef {
+  return WEEKLY_QUESTS[mod(weekIndex, WEEKLY_QUESTS.length)];
+}

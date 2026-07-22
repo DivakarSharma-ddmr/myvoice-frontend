@@ -23,6 +23,7 @@ const MORE = NAV.slice(4);
 
 const TITLES: Record<string, [string, string]> = {
   '/member/dashboard': ['Hey Ana, ready to play?', 'u2-target'],
+  '/member/dashboard/badges': ['Your badges', 'r1-celebrate'],
   '/member/surveys': ['Available surveys', 'u1-share'],
   '/member/rewards': ['Rewards wallet', 'u2-gift'],
   '/member/profile': ['Your profile', 'u1-work'],

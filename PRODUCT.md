@@ -48,15 +48,22 @@ reuses the existing chat widget from the old platform — its stated availabilit
 business hours (9 AM–6 PM, Bucharest time), never a fake "instant" promise. Help Center topics
 are kept lean (Account, Privacy, Contact) rather than an exhaustive category wall — surfaced as
 three unlabeled topic cards directly under the welcome banner (the "Browse by topic" heading was
-dropped as redundant). The Help Center has **no search field**: the earlier hero search box was a
-non-functional static mock, so it was removed rather than ship a dead control (operational honesty).
-The hero is now a slim welcome banner (mascot + "How can we help, {name}?" greeting only).
+dropped as redundant). An earlier hero search box was removed for a while because it was a
+non-functional static mock — a dead control is worse than no control (operational honesty). It
+returned only once there was real FAQ content behind it to search.
 
 The Help Center carries the **real member FAQ** — 32 questions across 6 categories, generated
 from the source document rather than retyped, so the platform and the published FAQ cannot drift
 apart. A **keyword search** sits under the greeting; it folds diacritics, so a member typing
 "parola" finds "parolă". The Account and Privacy topic cards **deep-link into the matching
 Settings group** rather than being decoration.
+
+The empty search box carries **pressable example queries** rather than hint text describing what
+a member could type. Every suggestion is asserted in tests to return results, so a chip can never
+lead to a dead end. Query-side **synonym expansion** closes the gap where the platform's own
+vocabulary differs from the published FAQ's — the app says "screenout", the FAQ says "redirected
+prematurely", and a member who learned the word from us should not get nothing back. The FAQ text
+itself is never rewritten to suit search.
 
 Not every surface belongs on the web platform. **Notification preferences live in the mobile
 app, not the web** — push/notification settings are a device concern, so the web Settings page
@@ -65,6 +72,11 @@ direction of trimming non-essential engagement surfaces (removed the Community A
 card and gamified extras) in favor of operational clarity.
 
 ## Account Data & Editability
+
+Account details are grouped into four collapsible sections and **only one opens at a time**, so
+fourteen fields never stack into a long scroll. Each collapsed row still shows its own data in
+one line — a member checking which email address we hold should not have to open anything. An
+accordion that hides everything only trades scrolling for clicking.
 
 Members can see every field we hold on them, but not all of them are member-editable.
 **Year of birth, gender and country are read-only**, shown with a lock and a route to support.
@@ -106,6 +118,20 @@ never shown. Members earn levels, bonuses and badges through their activity; the
 handled in code, and members see only what we choose to surface — their current level and label,
 their progress, and the badges they have earned. They do not see the perk ladder, the XP
 formulas, the exact completion rules, or a preview of what the next level grants.
+
+In practice this draws a hard line through the member UI. The **only level perk rendered is the
+streak shield, and only once it is already active** — a member is told the protection they
+currently hold, never how it was earned or what the next level adds. The bonus draw entries that
+levels grant are never shown at all: member-facing draw copy states the signed regulation's rule
+and nothing else. **Badges are the exception that stays visible** — the full 27-badge set is
+shown, earned and unearned, because a badge label is a goal, not a mechanic. The trigger
+conditions behind each badge remain internal.
+
+Daily quests **rotate** — a fixed check-in anchor, a survey slot, and one from the wider pool —
+and the UI says so ("a new set arrives every morning"), so an unfinished quest reads as *there
+will be another* rather than something missed. The three-way split is deliberate: if every slot
+needed a survey, a member in a market with thin survey supply could end the day unable to
+complete anything, which is the exact frustration the habit loop exists to prevent.
 
 ## Brand Personality
 

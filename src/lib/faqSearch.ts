@@ -30,6 +30,28 @@ export function tokenize(text: string): string[] {
     .filter((t) => t.length > 1 && !STOPWORDS.has(t));
 }
 
+// The words members use are not always the words the FAQ uses. The clearest
+// case: the platform itself says "screenout" (draw explainer, survey states)
+// but the FAQ describes it as being "redirected prematurely", so the exact
+// term the app taught the member returned nothing. Expansion happens on the
+// query side only — the published FAQ text is never rewritten to suit search.
+const SYNONYMS: Record<string, string[]> = {
+  screenout: ['redirected', 'prematurely', 'finalize'],
+  screenouts: ['redirected', 'prematurely', 'finalize'],
+  screened: ['redirected', 'prematurely', 'finalize'],
+  quota: ['closed', 'invitation'],
+  payout: ['claim', 'money', 'earned'],
+  payouts: ['claim', 'money', 'earned'],
+  cashout: ['claim', 'money', 'earned'],
+  withdraw: ['claim', 'money', 'earned'],
+  paypal: ['money', 'claim'],
+  earnings: ['money', 'earned', 'balance'],
+  entries: ['draw'],
+  entry: ['draw'],
+  unsubscribe: ['delete', 'account'],
+  gdpr: ['personal', 'data', 'privacy'],
+};
+
 const SCORE = {
   phrase: 100,
   allTerms: 25,
@@ -67,9 +89,18 @@ export function searchFaq<T extends SearchableItem>(
     const matched: string[] = [];
 
     for (const term of terms) {
-      let termScore = scoreOne(qWords, term, SCORE.questionWord, SCORE.questionPrefix);
-      if (!termScore) termScore = scoreOne(cWords, term, SCORE.categoryWord, 0);
-      if (!termScore) termScore = scoreOne(aWords, term, SCORE.answerWord, SCORE.answerPrefix);
+      // A synonym counts for the term that triggered it, but scores lower than
+      // the member's own word so a literal match always sorts first.
+      let termScore = 0;
+      for (const [variant, weight] of [
+        [term, 1] as const,
+        ...(SYNONYMS[term] ?? []).map((v) => [v, 0.5] as const),
+      ]) {
+        let s = scoreOne(qWords, variant, SCORE.questionWord, SCORE.questionPrefix);
+        if (!s) s = scoreOne(cWords, variant, SCORE.categoryWord, 0);
+        if (!s) s = scoreOne(aWords, variant, SCORE.answerWord, SCORE.answerPrefix);
+        termScore = Math.max(termScore, s * weight);
+      }
       if (termScore) {
         score += termScore;
         matched.push(term);

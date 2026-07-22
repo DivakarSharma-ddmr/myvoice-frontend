@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { normalize, tokenize, searchFaq } from '../src/lib/faqSearch.ts';
+import { FAQ_SUGGESTIONS } from '../src/lib/faqSuggestions.ts';
+import { faqItems } from '../src/content/faq.generated.ts';
 
 const ITEMS = [
   { id: 'a', category: 'Rewards', question: 'Where can I see my balance?', answer: 'Log in and the dashboard shows your current balance.' },
@@ -58,4 +60,27 @@ test('respects the result limit', () => {
 test('reports which terms matched so the UI can highlight them', () => {
   const [hit] = searchFaq(ITEMS, 'balance dashboard');
   assert.deepEqual([...hit.terms].sort(), ['balance', 'dashboard']);
+});
+
+test('a literal match still outranks a synonym match', () => {
+  // "money" is literal in b and reachable from "payout" — the literal wins.
+  const hits = searchFaq(ITEMS, 'payout');
+  const literal = searchFaq(ITEMS, 'money');
+  assert.ok(hits[0].score < literal[0].score);
+});
+
+// Every pressable suggestion must return something. A chip that leads to "no
+// answers matched" is worse than no chip at all.
+for (const suggestion of FAQ_SUGGESTIONS) {
+  test(`suggestion "${suggestion}" returns FAQ results`, () => {
+    assert.ok(searchFaq(faqItems, suggestion).length > 0);
+  });
+}
+
+// The app says "screenout" (draw explainer, survey states) but the FAQ says
+// "redirected prematurely". Members type the word the app taught them.
+test('vocabulary the app uses reaches the FAQ that explains it', () => {
+  for (const term of ['screenout', 'payout', 'earnings', 'unsubscribe', 'gdpr']) {
+    assert.ok(searchFaq(faqItems, term).length > 0, `"${term}" found nothing`);
+  }
 });

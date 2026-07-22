@@ -23,7 +23,13 @@
 
 /* ----------------------------- PUBLIC SITE ------------------------------ */
 
-import { BADGES, DAILY_QUESTS, surveyCompletionXp } from './gamification';
+import {
+  BADGES,
+  DAILY_SURVEY_QUEST_IDS,
+  dailyQuestSlots,
+  surveyCompletionXp,
+  weeklyQuestSlot,
+} from './gamification';
 
 export type TrustStat = { value: string; label: string };
 // PLACEHOLDER (business-critical): verify each figure before publishing.
@@ -215,19 +221,55 @@ export type Quest = {
   done: boolean;
   kind: 'survey' | 'profile' | 'checkin';
 };
-// Today's three daily slots, drawn from the 17-quest pool in gamification.ts.
+// PLACEHOLDER (dev team): the day and week indexes are fixed so the static
+// export stays deterministic — a Date-based index would render one set of
+// quests at build time and another in the browser, which React reports as a
+// hydration mismatch. The real backend supplies the member's current slots.
+const ROTATION_DAY = 4;
+const ROTATION_WEEK = 2;
+
+// One icon per daily quest, so any slot the rotation lands on has thematic art
+// rather than the same glyph three times.
+const QUEST_ICONS: Record<string, string> = {
+  'daily-check-in': 'u1-calendar', 'share-your-voice': 'u1-share', 'give-it-a-go': 'u2-target',
+  'quick-contribution': 'u1-gaming', 'thoughtful-contribution': 'u1-cooking',
+  'profile-check': 'u1-work', 'double-contribution': 'u2-idea',
+  'two-genuine-attempts': 'r2-cool', 'reward-step-up': 'u2-money',
+  'dashboard-discovery': 'u1-search', 'mobile-contribution': 'n-headphones',
+  'mixed-journey': 'n-compass', 'profile-pair': 'n-map', 'profile-milestone': 'u2-calculator',
+  'first-cashout-request': 'u2-gift', 'badge-breakthrough': 'r1-celebrate',
+  'century-day': 'u2-target',
+};
+
 // Objectives and XP come from the rules document; the completion RULES stay
 // internal and are never shown to members.
-const DAILY_SLOTS: [string, string, Quest['kind']][] = [
-  ['daily-check-in', 'u1-calendar', 'checkin'],
-  ['share-your-voice', 'u1-share', 'survey'],
-  ['give-it-a-go', 'u2-target', 'survey'],
-];
-export const quests: Quest[] = DAILY_SLOTS.map(([id, icon, kind], i) => {
-  const def = DAILY_QUESTS.find((q) => q.id === id);
-  if (!def) throw new Error(`mockData: unknown daily quest id "${id}"`);
-  return { id: i + 1, title: def.objective, icon, xp: def.xp, done: false, kind };
-});
+export const quests: Quest[] = dailyQuestSlots(ROTATION_DAY).map((def, i) => ({
+  id: i + 1,
+  title: def.objective,
+  icon: QUEST_ICONS[def.id] ?? 'u2-target',
+  xp: def.xp,
+  done: false,
+  kind: (DAILY_SURVEY_QUEST_IDS as readonly string[]).includes(def.id)
+    ? 'survey'
+    : def.id.startsWith('profile')
+      ? 'profile'
+      : 'checkin',
+}));
+
+// The one weekly goal that sits alongside the dailies. Progress is a
+// PLACEHOLDER (business-critical): the real values come from the member's
+// activity this week.
+export const weeklyQuest = {
+  title: weeklyQuestSlot(ROTATION_WEEK).title,
+  // The card already says "This week", so a trailing "this week" in the
+  // objective reads as a stutter. Some objectives don't carry one at all.
+  objective: weeklyQuestSlot(ROTATION_WEEK).objective.replace(/\s+this week$/i, ''),
+  xp: weeklyQuestSlot(ROTATION_WEEK).xp,
+  icon: 'n-compass',
+  progress: 2,
+  target: 5,
+  resetsIn: '3 days',
+};
 
 export type SurveyState = 'rec' | 'closing' | 'avail' | 'quota' | 'screen' | 'pending' | 'done';
 // projectId / surveyId are the real research-platform identifiers shown to members

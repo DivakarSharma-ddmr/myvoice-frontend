@@ -1,7 +1,11 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { faqItems } from '@/content/faq.generated';
 import { searchFaq } from '@/lib/faqSearch';
+// Examples the member can actually press, rather than hint text telling them
+// what they could have typed. Each one is asserted to return hits in
+// tests/faqSearch.test.mjs, so a suggestion can never lead to an empty result.
+import { FAQ_SUGGESTIONS } from '@/lib/faqSuggestions';
 
 export function HelpSearch({
   onOpenItem,
@@ -9,6 +13,7 @@ export function HelpSearch({
   onOpenItem: (id: string, category: string) => void;
 }) {
   const [q, setQ] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const query = q.trim();
   const hits = useMemo(() => (query ? searchFaq(faqItems, query, 6) : []), [query]);
 
@@ -18,6 +23,7 @@ export function HelpSearch({
         Search the FAQs
       </label>
       <input
+        ref={inputRef}
         id="faq-search"
         type="search"
         value={q}
@@ -26,6 +32,27 @@ export function HelpSearch({
         autoComplete="off"
         className="w-full rounded-[11px] border border-bd bg-white px-3.5 py-3 text-sm outline-none focus:border-teal"
       />
+
+      {/* The empty state does the teaching. Once there is a query these are
+          replaced by results, so they cost no height while searching. */}
+      {!query && (
+        <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+          <span className="text-[12px] font-semibold text-soft">Try</span>
+          {FAQ_SUGGESTIONS.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => {
+                setQ(s);
+                inputRef.current?.focus();
+              }}
+              className="rounded-full border border-bd bg-white px-3 py-1.5 text-[12px] font-bold text-teal transition hover:border-teal"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
 
       {query && (
         <div

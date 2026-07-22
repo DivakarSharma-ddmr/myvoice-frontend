@@ -7,45 +7,92 @@ import { SettingsField } from '@/components/member/SettingsField';
 // PLACEHOLDER (dev team): every group here is display-only. In the real build
 // Edit swaps the group into a form bound to the account API. Nothing persists
 // in this static mock — Save simply closes the group.
+//
+// Fourteen account fields stacked open made this page a long scroll, so the
+// groups collapse and only one opens at a time. The collapsed row still shows
+// its own data in one line: a member checking which email we hold should not
+// have to open anything, and an accordion that hides everything just trades
+// scrolling for clicking.
 function Group({
+  id,
   title,
+  summary,
   note,
+  open,
+  onToggle,
   children,
 }: {
+  id: string;
   title: string;
+  summary: string;
   note?: string;
+  open: boolean;
+  onToggle: () => void;
   children: React.ReactNode;
 }) {
   const [editing, setEditing] = useState(false);
+
   return (
-    <section className="border-t border-bd pt-4 first:border-t-0 first:pt-0">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h4 className="text-sm font-extrabold text-dteal">{title}</h4>
-          {note && <p className="mt-0.5 max-w-[46ch] text-[11px] leading-snug text-mute">{note}</p>}
-        </div>
+    <section className="border-t border-bd first:border-t-0">
+      <h4>
         <button
-          onClick={() => setEditing((v) => !v)}
-          className="shrink-0 rounded-[9px] border border-bd bg-white px-3.5 py-2 text-[13px] font-bold text-teal"
+          type="button"
+          onClick={() => {
+            if (open) setEditing(false);
+            onToggle();
+          }}
+          aria-expanded={open}
+          aria-controls={`${id}-panel`}
+          className="flex w-full items-center gap-3 py-3.5 text-left"
         >
-          {editing ? 'Cancel' : 'Edit'}
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-extrabold text-dteal">{title}</span>
+            <span className="mt-0.5 block truncate text-[13px] text-mute">{summary}</span>
+          </span>
+          {/* The system's signature accordion glyph: + rotates 45° into ×. */}
+          <span
+            aria-hidden="true"
+            className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-bd text-base font-bold text-teal transition-transform duration-200"
+            style={{ transform: open ? 'rotate(45deg)' : 'none' }}
+          >
+            +
+          </span>
         </button>
-      </div>
-      <div className="mt-1">{children}</div>
-      {editing && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            onClick={() => setEditing(false)}
-            className="rounded-[10px] bg-yel px-4 py-2.5 text-[13px] font-bold text-ink"
-          >
-            Save changes
-          </button>
-          <button
-            onClick={() => setEditing(false)}
-            className="rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-mute"
-          >
-            Cancel
-          </button>
+      </h4>
+
+      {/* Collapsed groups are unmounted rather than visually hidden: a
+          height-animated panel leaves its fields and links in the tab order,
+          so a keyboard member tabs into controls they cannot see. The rotating
+          glyph carries the state change instead. */}
+      {open && (
+        <div id={`${id}-panel`} className="pb-4">
+          {note && <p className="max-w-[46ch] text-[11px] leading-snug text-mute">{note}</p>}
+          {children}
+          <div className="flex flex-wrap gap-2 pt-3">
+            {editing ? (
+              <>
+                <button
+                  onClick={() => setEditing(false)}
+                  className="rounded-[10px] bg-yel px-4 py-2.5 text-[13px] font-bold text-ink"
+                >
+                  Save changes
+                </button>
+                <button
+                  onClick={() => setEditing(false)}
+                  className="rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-mute"
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => setEditing(true)}
+                className="rounded-[9px] border border-bd bg-white px-3.5 py-2 text-[13px] font-bold text-teal"
+              >
+                Edit {title.toLowerCase()}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </section>
@@ -59,14 +106,30 @@ const LEGAL_LINKS: [string, string][] = [
 ];
 
 export default function SettingsPage() {
+  // One open group at a time: opening a second closes the first, so the page
+  // never grows back into the long scroll this replaced.
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const groupProps = (id: string) => ({
+    id,
+    open: openGroup === id,
+    onToggle: () => setOpenGroup((cur) => (cur === id ? null : id)),
+  });
+
   return (
     <div className="max-w-[780px] space-y-4">
       {/* Account details — anchor target for the Help Center "Account" card */}
       <div id="account" className="scroll-mt-24 rounded-2xl2 border border-bd bg-white p-5">
         <h3 className="text-base font-extrabold">Account details</h3>
+        <p className="mt-1 text-[13px] leading-snug text-mute">
+          Everything we hold on your account. Open a section to change it.
+        </p>
 
-        <div className="mt-4 space-y-5">
-          <Group title="Personal details">
+        <div className="mt-3">
+          <Group
+            {...groupProps('personal')}
+            title="Personal details"
+            summary={`${member.firstName} ${member.lastName} · ${member.gender} · born ${member.yearOfBirth}`}
+          >
             <div className="flex items-center gap-3 border-t border-bd py-3">
               <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-teal text-base font-extrabold text-white">
                 {member.initials}
@@ -96,7 +159,11 @@ export default function SettingsPage() {
             />
           </Group>
 
-          <Group title="Contact">
+          <Group
+            {...groupProps('contact')}
+            title="Contact"
+            summary={`${member.email} · ${member.countryFlag} ${member.country}`}
+          >
             <SettingsField label="Email" value={member.email} />
             <SettingsField label="Secondary email" value={member.secondaryEmail} />
             <SettingsField label="Phone number" value={member.phone} />
@@ -112,13 +179,15 @@ export default function SettingsPage() {
           </Group>
 
           <Group
+            {...groupProps('payments')}
             title="Payments"
+            summary={member.paypalEmail || 'No PayPal address yet'}
             note="Change your PayPal address and we send a confirmation link to it. Payouts keep going to your current address until you confirm."
           >
             <SettingsField label="PayPal email" value={member.paypalEmail} />
           </Group>
 
-          <Group title="Security">
+          <Group {...groupProps('security')} title="Security" summary="Password">
             <SettingsField label="Password" value="••••••••" />
           </Group>
         </div>

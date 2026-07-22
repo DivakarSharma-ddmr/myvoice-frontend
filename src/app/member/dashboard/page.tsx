@@ -4,12 +4,18 @@ import { useMember } from '@/components/member/MemberProvider';
 import { Mascot } from '@/components/ui/Mascot';
 import { CapIcon, IconLabel } from '@/components/ui/CapIcon';
 import { Ring, ProgressBar } from '@/components/ui/Progress';
-import { badges, draw, profileCompletion } from '@/lib/mockData';
+import { BadgeTile } from '@/components/member/BadgeTile';
+import { badges, draw, profileCompletion, weeklyQuest } from '@/lib/mockData';
+import { streakGraceDays } from '@/lib/gamification';
 
 export default function DashboardPage() {
   const m = useMember();
   const xpPct = m.xpPct;
   const doneCount = m.quests.filter((q) => q.done).length;
+  const earnedBadges = badges.filter((b) => b.earned);
+  const badgePct = Math.round((earnedBadges.length / badges.length) * 100);
+  const shieldActive = streakGraceDays(m.level) > 1;
+  const weeklyPct = Math.round((weeklyQuest.progress / weeklyQuest.target) * 100);
 
   return (
     <div className="space-y-5">
@@ -37,14 +43,28 @@ export default function DashboardPage() {
           <div className="mx-auto mt-2.5 max-w-[420px] sm:mx-0">
             <ProgressBar pct={xpPct} color="linear-gradient(90deg,#FFCC33,#FFE9A6)" />
           </div>
+          {/* The only level perk shown to members, and only once it is already
+              active. The ladder itself, the XP formulas and the bonus draw
+              entries stay internal — see PRODUCT.md, "Gamification Data". */}
+          {shieldActive && (
+            <div className="mt-2.5 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-[12px] font-bold text-[#DCEFEF]">
+              <span aria-hidden="true">🛡</span>
+              Streak shield active — a missed day won’t reset you
+            </div>
+          )}
         </div>
         <div className="relative hidden md:block"><Mascot size={104} pose="cheer" bubble="Captain MyVoice says: one more quest to level up!" /></div>
       </div>
 
       {/* Daily quests */}
       <div>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="text-[17px] font-extrabold"><IconLabel name="u2-target" text="Daily quests" /></h2>
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <div>
+            <h2 className="text-[17px] font-extrabold"><IconLabel name="u2-target" text="Daily quests" /></h2>
+            {/* The rotation is the point: say so, so an unfinished quest reads
+                as "there'll be another" rather than something missed. */}
+            <p className="mt-0.5 text-[13px] text-mute">A new set arrives every morning.</p>
+          </div>
           <span className="text-[13px] font-bold text-gold">{doneCount}/{m.quests.length} complete</span>
         </div>
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
@@ -66,6 +86,27 @@ export default function DashboardPage() {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* One weekly goal under the dailies. It runs on its own clock, so it
+            shows progress rather than a claim button — nothing to press, just
+            somewhere the week's work adds up. */}
+        <div className="mt-3.5 flex flex-col gap-3.5 rounded-2xl2 border border-bd bg-white p-[18px] sm:flex-row sm:items-center">
+          <CapIcon name={weeklyQuest.icon} size={40} />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+              <span className="text-[15px] font-bold">This week: {weeklyQuest.objective}</span>
+              <span className="text-[13px] font-bold text-gold">
+                {weeklyQuest.progress} of {weeklyQuest.target}
+              </span>
+            </div>
+            <div className="mt-2 max-w-[420px]">
+              <ProgressBar pct={weeklyPct} color="linear-gradient(90deg,#336666,#22A06B)" height={8} />
+            </div>
+            <div className="mt-1.5 text-[13px] text-mute">
+              Resets in {weeklyQuest.resetsIn} · +{weeklyQuest.xp} XP when it is done
+            </div>
+          </div>
         </div>
       </div>
 
@@ -94,18 +135,36 @@ export default function DashboardPage() {
           <Link href="/member/surveys" className="mt-1 inline-block rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-teal">See all surveys →</Link>
         </div>
 
+        {/* A summary, not a catalogue: the dashboard answers "how am I doing?"
+            in one glance and sends the full 27-tile set to its own page. */}
         <div className="rounded-2xl2 border border-bd bg-white p-[18px]">
-          <h2 className="mb-3 text-base font-extrabold"><IconLabel name="r1-celebrate" text="Badges" size={22} /></h2>
-          <div className="grid grid-cols-3 gap-2.5">
-            {badges.map((b, i) => (
-              <div key={i} className="text-center" style={{ opacity: b.earned ? 1 : 0.45 }}>
-                <div className="mx-auto h-[52px] w-[52px] overflow-hidden rounded-[14px]" style={{ filter: b.earned ? 'none' : 'grayscale(1)' }}>
-                  <CapIcon name={b.icon} size={52} radius={14} />
-                </div>
-                <div className="mt-1 text-[10px] font-semibold text-mute">{b.label}</div>
-              </div>
-            ))}
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="text-base font-extrabold"><IconLabel name="r1-celebrate" text="Badges" size={22} /></h2>
+            <span className="shrink-0 text-[13px] font-extrabold text-teal">{earnedBadges.length} of {badges.length}</span>
           </div>
+          <div className="mt-2.5"><ProgressBar pct={badgePct} color="linear-gradient(90deg,#336666,#22A06B)" height={8} /></div>
+
+          {earnedBadges.length ? (
+            <>
+              <div className="mt-4 grid grid-cols-3 gap-x-2.5 gap-y-3.5">
+                {earnedBadges.slice(0, 6).map((b) => (
+                  <BadgeTile key={b.label} badge={b} />
+                ))}
+              </div>
+              {earnedBadges.length > 6 && (
+                <div className="mt-3 text-[13px] text-mute">
+                  and {earnedBadges.length - 6} more earned
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="mt-4 text-[13px] leading-snug text-mute">
+              No badges yet. Finish a profile section or take your first survey and the first one
+              is yours.
+            </div>
+          )}
+
+          <Link href="/member/dashboard/badges" className="mt-3.5 inline-block rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-teal">See all badges →</Link>
         </div>
       </div>
 
