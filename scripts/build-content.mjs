@@ -5,6 +5,12 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseFaq } from './parse-faq.mjs';
+import {
+  parseCookiePolicy,
+  parsePrivacyPolicy,
+  parseTerms,
+  parseClickDraw,
+} from './parse-legal.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = (name) => readFileSync(join(root, 'content', 'source', name), 'utf8');
@@ -27,5 +33,30 @@ out(
 export const faqCategories: FaqCategory[] = ${JSON.stringify(categories, null, 2)};
 
 export const faqItems: FaqItem[] = faqCategories.flatMap((c) => c.items);
+`
+);
+
+const docs = [
+  parsePrivacyPolicy(src('Privacy Policy.md')),
+  parseCookiePolicy(src('Cookie Policy.md')),
+  parseTerms(src('Terms and Conditions.md')),
+  parseClickDraw(src('Click Draw T&C.md')),
+];
+
+for (const d of docs) {
+  if (!d.sections.length) throw new Error(`build-content: ${d.slug} produced no sections`);
+}
+
+out(
+  'legal.generated.ts',
+  `${BANNER}import type { LegalDoc } from './types';
+
+export const legalDocs: Record<string, LegalDoc> = ${JSON.stringify(
+    Object.fromEntries(docs.map((d) => [d.slug, d])),
+    null,
+    2
+  )};
+
+export const legalSlugs = ${JSON.stringify(docs.map((d) => d.slug))};
 `
 );
