@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useMember } from '@/components/member/MemberProvider';
 import { Mascot } from '@/components/ui/Mascot';
 import { CapIcon, IconLabel } from '@/components/ui/CapIcon';
-import { Ring, ProgressBar } from '@/components/ui/Progress';
+import { SquareRing, ProgressBar } from '@/components/ui/Progress';
 import { BadgeTile } from '@/components/member/BadgeTile';
 import { LevelMedallion } from '@/components/member/LevelMedallion';
 import { badges, draw, profileCompletion, weeklyQuest } from '@/lib/mockData';
@@ -24,8 +24,10 @@ export default function DashboardPage() {
       <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-3xl2 p-6 sm:flex-row sm:gap-6"
         style={{ background: 'linear-gradient(135deg,#1F4F4F,#2c6a64)' }}>
         <div aria-hidden className="absolute -right-8 -top-10 h-44 w-44 rounded-full bg-yel/[.12]" />
+        {/* Frame and faces are the same shape, so the artwork fills the square
+            instead of shrinking to fit inside a circle. */}
         <div className="relative grid h-[120px] w-[120px] shrink-0 place-items-center">
-          <Ring pct={xpPct} size={120} />
+          <SquareRing pct={xpPct} size={120} />
           <div className="absolute">
             <LevelMedallion level={m.level} />
           </div>

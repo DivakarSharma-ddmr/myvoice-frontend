@@ -269,10 +269,16 @@ server-rendered HTML, a paused tab, a screenshot and a reduced-motion member all
 rather than the decoration. Under `prefers-reduced-motion` the interval never starts; killing the
 transition alone would leave the state still snapping between faces.
 
-The medallion is a **rounded square, not a circle**, at 74px — the largest that clears the ring's
-inner edge (corner reach 45.7px against an inner radius of 47.4px). Level art is letterboxed
-rather than cropped, so each panel is shown whole; the export trims each panel's own background
-margin first, which is what keeps the Captain legible at that size. The sheet's corner number
+**The frame is a rounded square too**, not a circle — `SquareRing`, an SVG rounded rect with
+`pathLength="100"` so the XP dash maths stays a plain percentage across the corner arcs. A
+circular track around square faces leaves dead corners and forces the artwork down to the
+inscribed square; matching the frame to the faces lets them fill it. 120px frame, 9px stroke,
+96px medallion inside — a 12px inset on every side, with the corner radius stepping down by the
+same amount so the two shapes stay parallel. Both faces are that same square, so the number and
+the artwork occupy exactly the same area and the flip has nothing to resize.
+
+Level art is letterboxed rather than cropped, so each panel is shown whole; the export trims each
+panel's own background margin first, which is what keeps the Captain legible at that size. The sheet's corner number
 chips are painted out at export with the panel's ring-median background colour — the medallion
 already shows the number on its other face, and printing it twice looks like a mistake.
 

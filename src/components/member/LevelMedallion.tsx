@@ -11,17 +11,20 @@ import { levelArt } from '@/lib/asset';
  * flip (reduced motion, a paused tab, a screenshot) still gets the fact rather
  * than the decoration.
  */
-// 74px is the largest rounded square that clears the 120px ring's inner edge
-// (inner radius ~47px, so an inscribed square is ~67px on the diagonal — the
-// rounded corners buy back the difference). Shrinking the art is the trade for
-// showing each level panel whole instead of cropping it to a circle.
+// Sized to sit concentrically inside the 120px SquareRing: a 9px stroke plus a
+// 3px breathing gap leaves 96px, and the corner radius steps down by the same
+// 12px inset (30 → 18) so the two shapes stay parallel. Both faces are that
+// square, so the number and the artwork occupy exactly the same area and the
+// flip has nothing to resize.
 export function LevelMedallion({
   level,
-  size = 74,
+  size = 96,
+  radius = 22,
   intervalMs = 4500,
 }: {
   level: number;
   size?: number;
+  radius?: number;
   intervalMs?: number;
 }) {
   const [showArt, setShowArt] = useState(false);
@@ -41,7 +44,7 @@ export function LevelMedallion({
     inset: 0,
     display: 'grid',
     placeItems: 'center',
-    borderRadius: 16,
+    borderRadius: radius,
     backfaceVisibility: 'hidden',
     WebkitBackfaceVisibility: 'hidden',
   };
@@ -60,8 +63,8 @@ export function LevelMedallion({
       >
         <div style={face}>
           <div className="flex flex-col items-center">
-            <span className="text-[10px] font-bold tracking-wide text-[#BFE0E0]">LEVEL</span>
-            <span className="text-[30px] font-extrabold leading-none text-white">{level}</span>
+            <span className="text-[11px] font-bold tracking-wide text-[#BFE0E0]">LEVEL</span>
+            <span className="text-[38px] font-extrabold leading-none text-white">{level}</span>
           </div>
         </div>
 

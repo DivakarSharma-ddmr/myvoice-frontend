@@ -40,6 +40,62 @@ export function ProgressBar({
   );
 }
 
+/**
+ * Animated rounded-square progress frame (SVG).
+ *
+ * The square sibling of `Ring`, for the dashboard level medallion: both of its
+ * faces — the number and the level artwork — are rounded squares, and a
+ * circular track around a square face leaves dead corners and forces the art
+ * to shrink to the inscribed square. Matching the frame to the faces lets them
+ * fill it.
+ *
+ * `pathLength="100"` normalises the perimeter so the dash maths is a plain
+ * percentage and does not have to account for the corner arcs.
+ */
+export function SquareRing({
+  pct,
+  size = 120,
+  stroke = 9,
+  radius = 25,
+}: {
+  pct: number;
+  size?: number;
+  stroke?: number;
+  radius?: number;
+}) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    const t = setTimeout(() => setVal(pct), 140);
+    return () => clearTimeout(t);
+  }, [pct]);
+  const inset = stroke / 2;
+  const side = 100 - stroke;
+  const common = {
+    x: inset,
+    y: inset,
+    width: side,
+    height: side,
+    rx: radius,
+    ry: radius,
+    fill: 'none',
+    strokeWidth: stroke,
+    pathLength: 100,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden>
+      <rect {...common} stroke="rgba(255,255,255,.2)" />
+      <rect
+        {...common}
+        stroke="#FFCC33"
+        strokeLinecap="round"
+        strokeDasharray="100"
+        strokeDashoffset={100 - val}
+        style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)' }}
+      />
+    </svg>
+  );
+}
+
 /** Animated circular progress ring (SVG). */
 export function Ring({ pct, size = 120, stroke = 9 }: { pct: number; size?: number; stroke?: number }) {
   const [val, setVal] = useState(0);
