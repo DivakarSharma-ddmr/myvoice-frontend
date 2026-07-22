@@ -271,15 +271,24 @@ New `src/lib/gamification.ts` is the single source of truth, transcribed from
   `drawEntriesPerActiveMonth` (levels 2, 5, 8, 11, 12 → +1, +2, +3, +5, +7) and
   `streakGraceDays` (levels 3, 6, 9, 12 → 2, 3, 5, 7 consecutive misses).
 
-  Open question. The design review confirmed the regulation stands unamended,
-  but the regulation names qualifying surveys as the only entry source, so the
-  level-perk bonus entries have nothing backing them. The data is transcribed
-  either way and `drawEntriesPerActiveMonth` stays in the module. What changes is
-  only whether member-facing copy mentions it. Until the user answers, the draw
-  explainer and Community card describe qualifying surveys alone, and the level
-  perks render as their non-draw benefits. This is the safe default: it never
-  promises a member an entry the signed regulation does not support, and turning
-  it on later is a copy change, not a rebuild.
+  Resolved 2026-07-22. **The rules document is internal operational data, not a
+  member-facing promise.** It is not a legal commitment, it may change at any
+  time, and the master table is never shown to members. Members earn levels,
+  bonuses and badges through their activity; the mechanics are handled in code,
+  and members see only what the business chooses to surface.
+
+  This resolves the apparent conflict with the signed regulation. The regulation
+  governs what MyVoice *promises* about draw entries — qualifying surveys only,
+  and that is what member-facing copy says. The level perks are an internal
+  weighting the platform applies, not an advertised entitlement, so no amendment
+  is needed and none is made.
+
+  The binding constraint that follows: `LEVEL_PERKS`, `XP_SOURCES`, and the
+  `rule` field on every quest are **engineering data and must never be rendered
+  in member-facing UI**. Members may see their current level label, their
+  progress, and the badges they have earned. They must not see the perk ladder,
+  the XP formulas, the exact completion rules, or a preview of what the next
+  level grants.
 - `levelFromXp(xp)` and `levelProgress(xp)` returning level, label, XP into the
   current band, band span, percentage and next threshold.
 - `surveyCompletionXp(minutes) = 25 + 5 * minutes`. This replaces the July 7
