@@ -35,7 +35,7 @@ export function Overlay() {
             <div className="flex justify-center"><Mascot size={104} pose="cheer" /></div>
             <div className="mt-1.5 text-[13px] font-extrabold tracking-widest text-gold">LEVEL UP!</div>
             <h3 className="mt-1 text-3xl font-extrabold">You’re Level {m.level} 🎉</h3>
-            <p className="mt-2 text-sm text-mute">New badge unlocked and a bonus draw ticket added.</p>
+            <p className="mt-2 text-sm text-mute">You’ve reached {m.rank}.</p>
             <button onClick={m.dismissLevelUp} className="mt-4 rounded-xl bg-teal px-7 py-3 text-[15px] font-bold text-white">Keep playing</button>
           </div>
         </div>
@@ -47,7 +47,7 @@ export function Overlay() {
           <div className={cardStyle + ' text-center'}>
             <div className="flex justify-center"><Mascot size={104} pose="winner" /></div>
             <h3 className="mt-2 text-[22px] font-extrabold">Reward request received</h3>
-            <p className="mt-2 text-sm leading-relaxed text-mute">We’ll notify you when it’s processed — usually within 1–3 business days. Bonus ticket added!</p>
+            <p className="mt-2 text-sm leading-relaxed text-mute">We’ll notify you when it’s processed — usually within 1–3 business days.</p>
             <button onClick={m.dismissRedeemDone} className="mt-4 rounded-xl bg-teal px-7 py-3 text-[15px] font-bold text-white">Back to wallet</button>
           </div>
         </div>
@@ -149,7 +149,7 @@ function RedeemModal() {
         <div className="mt-4 text-center">
           <div className="text-[13px] text-mute">You are redeeming</div>
           <div className="text-[46px] font-extrabold text-dteal">€10.00</div>
-          <div className="text-[13px] text-mute">via {methodName} · +1 bonus ticket 🎟</div>
+          <div className="text-[13px] text-mute">via {methodName}</div>
         </div>
       )}
       {step === 3 && (

@@ -118,7 +118,7 @@ export default function HomePage() {
             <div className="mt-5"><LinkButton href="/rewards" pill>Explore rewards →</LinkButton></div>
           </div>
           <div className="relative grid grid-cols-2 gap-3">
-            {[['€8.80', 'Available', 'light'], ['€2.40', 'Pending', 'glass'], ['€146', 'Lifetime', 'glass'], ['×6', 'Draw tickets', 'yellow']].map((c, i) => (
+            {[['€8.80', 'Available', 'light'], ['€2.40', 'Pending', 'glass'], ['€146', 'Lifetime', 'glass'], ['×6', 'Draw entries', 'yellow']].map((c, i) => (
               <div key={i} className="rounded-2xl2 p-5"
                 style={{ background: c[2] === 'light' ? '#fff' : c[2] === 'yellow' ? '#FFCC33' : 'rgba(255,255,255,.08)', border: c[2] === 'glass' ? '1px solid rgba(255,255,255,.14)' : 'none' }}>
                 <div className="text-3xl font-extrabold tracking-tight" style={{ color: c[2] === 'glass' ? '#fff' : '#1F4F4F' }}>{c[0]}</div>

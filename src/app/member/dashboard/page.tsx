@@ -4,11 +4,11 @@ import { useMember } from '@/components/member/MemberProvider';
 import { Mascot } from '@/components/ui/Mascot';
 import { CapIcon, IconLabel } from '@/components/ui/CapIcon';
 import { Ring, ProgressBar } from '@/components/ui/Progress';
-import { badges, profileCompletion } from '@/lib/mockData';
+import { badges, draw, profileCompletion } from '@/lib/mockData';
 
 export default function DashboardPage() {
   const m = useMember();
-  const xpPct = (m.xp / m.xpMax) * 100;
+  const xpPct = m.xpPct;
   const doneCount = m.quests.filter((q) => q.done).length;
 
   return (
@@ -26,8 +26,14 @@ export default function DashboardPage() {
         </div>
         <div className="relative flex-1 text-center sm:text-left">
           <div className="text-[13px] font-bold text-yel">{m.rank.toUpperCase()}</div>
-          <div className="mt-0.5 text-2xl font-extrabold text-white">{m.xp} / {m.xpMax} XP</div>
-          <div className="mt-1 text-[13px] text-[#BFE0E0]">{m.xpMax - m.xp} XP to Level {m.level + 1} — {m.tickets} draw tickets earned</div>
+          <div className="mt-0.5 text-2xl font-extrabold text-white">{m.xpInto} / {m.xpMax} XP</div>
+          <div className="mt-1 text-[13px] text-[#BFE0E0]">
+            {m.xpToNext === null
+              ? 'Top level reached'
+              : `${m.xpToNext} XP to Level ${m.level + 1}`}
+            {' — '}
+            {m.tickets} draw {m.tickets === 1 ? 'entry' : 'entries'} earned
+          </div>
           <div className="mx-auto mt-2.5 max-w-[420px] sm:mx-0">
             <ProgressBar pct={xpPct} color="linear-gradient(90deg,#FFCC33,#FFE9A6)" />
           </div>
@@ -117,7 +123,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between gap-4 rounded-2xl2 px-6 py-5 text-white" style={{ background: 'linear-gradient(120deg,#336666,#2c6a64)' }}>
           <div>
             <div className="text-[17px] font-extrabold">🎟 Monthly community draw</div>
-            <div className="mt-0.5 text-[13px] text-[#BFE0E0]">You have {m.tickets} tickets · drawn Jun 30</div>
+            <div className="mt-0.5 text-[13px] text-[#BFE0E0]">You have {m.tickets} {m.tickets === 1 ? 'entry' : 'entries'} · next draw {draw.date}</div>
           </div>
           <Link href="/member/community" className="shrink-0 rounded-[11px] bg-yel px-5 py-2.5 text-sm font-bold text-ink">View prizes</Link>
         </div>

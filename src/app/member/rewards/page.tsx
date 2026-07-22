@@ -18,7 +18,7 @@ export default function RewardsPage() {
             <div className="text-[50px] font-extrabold tracking-tighter">{m.fmt(m.available)}</div>
             <div className="mt-2.5"><ProgressBar pct={Math.min(100, (m.available / 10) * 100)} color="#FFCC33" height={12} /></div>
             <div className="mt-2 text-[13px] text-[#BFE0E0]">
-              {redeemable ? 'Eligible — redeem for a bonus ticket! 🎟' : `${m.fmt(10 - m.available)} to the €10 minimum`}
+              {redeemable ? 'Eligible to redeem' : `${m.fmt(10 - m.available)} to the €10 minimum`}
             </div>
             <button onClick={redeemable ? m.openRedeem : undefined} disabled={!redeemable}
               className="mt-3.5 rounded-xl px-6 py-3 text-[15px] font-bold disabled:cursor-not-allowed"

@@ -14,12 +14,16 @@
  *    - rewardBrands:    "20+ brands", PayPal/SEPA/charity availability varies
  *                       by country — wire to real reward catalogue per market.
  *    - referral reward: "€5 each" is illustrative — confirm the real program.
- *    - draw / prize:    "€250 prize pool, drawn Jun 30" is illustrative.
+ *    - draw / prize:    prize structure is FIXED by the signed Click Draw
+ *                       regulation (1 x €50 + 10 x €10 = €150). Only the
+ *                       next-draw date is illustrative.
  *  Search this file for `PLACEHOLDER` to find each spot.
  * ============================================================================
  */
 
 /* ----------------------------- PUBLIC SITE ------------------------------ */
+
+import { BADGES, DAILY_QUESTS, surveyCompletionXp } from './gamification';
 
 export type TrustStat = { value: string; label: string };
 // PLACEHOLDER (business-critical): verify each figure before publishing.
@@ -183,11 +187,14 @@ export const member = {
   postCode: '010101',
   secondaryEmail: '',
   paypalEmail: 'ana.m@email.com',
-  level: 4,
-  rank: 'Voicer',
-  xp: 320,
-  xpMax: 500,
+  // Lifetime XP. Level and its label DERIVE from this via levelProgress() in
+  // src/lib/gamification.ts — never store the level separately, it drifts.
+  // 2340 XP sits inside band 4 ("Trusted Voice", 2000) heading for 5000.
+  xp: 2340,
   streak: 7,
+  // Click Draw entries earned this month. Entries come only from surveys that
+  // end in screenout, quota full or survey closed — see DRAW in gamification.ts.
+  // PLACEHOLDER (business-critical): real entry count for the current month.
   tickets: 6,
   referralLink: 'myvoice.com/r/ana-m-4821',
 };
@@ -208,29 +215,37 @@ export type Quest = {
   done: boolean;
   kind: 'survey' | 'profile' | 'checkin';
 };
-export const quests: Quest[] = [
-  { id: 1, title: 'Complete a survey today', icon: 'u1-share', xp: 60, reward: 1.2, done: false, kind: 'survey' },
-  { id: 2, title: 'Update one profile section', icon: 'u1-work', xp: 40, done: false, kind: 'profile' },
-  { id: 3, title: 'Daily check-in', icon: 'u1-calendar', xp: 20, done: false, kind: 'checkin' },
+// Today's three daily slots, drawn from the 17-quest pool in gamification.ts.
+// Objectives and XP come from the rules document; the completion RULES stay
+// internal and are never shown to members.
+const DAILY_SLOTS: [string, string, Quest['kind']][] = [
+  ['daily-check-in', 'u1-calendar', 'checkin'],
+  ['share-your-voice', 'u1-share', 'survey'],
+  ['give-it-a-go', 'u2-target', 'survey'],
 ];
+export const quests: Quest[] = DAILY_SLOTS.map(([id, icon, kind], i) => {
+  const def = DAILY_QUESTS.find((q) => q.id === id);
+  if (!def) throw new Error(`mockData: unknown daily quest id "${id}"`);
+  return { id: i + 1, title: def.objective, icon, xp: def.xp, done: false, kind };
+});
 
 export type SurveyState = 'rec' | 'closing' | 'avail' | 'quota' | 'screen' | 'pending' | 'done';
 // projectId / surveyId are the real research-platform identifiers shown to members
 // in place of the category name. Wire these to the live project & survey IDs.
 export type Survey = { id: number; topic: string; projectId: string; surveyId: string; icon: string; time: number; reward: number; xp: number; state: SurveyState };
 export const dashboardSurveys: Survey[] = [
-  { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: 60, state: 'rec' },
-  { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: 70, state: 'rec' },
+  { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: surveyCompletionXp(8), state: 'rec' },
+  { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: surveyCompletionXp(10), state: 'rec' },
 ];
 export const allSurveys: Survey[] = [
-  { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: 60, state: 'rec' },
-  { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: 70, state: 'rec' },
-  { id: 3, topic: 'Travel & Holidays', projectId: 'P-10431', surveyId: 'S-58240', icon: 'n-map', time: 12, reward: 1.8, xp: 80, state: 'avail' },
-  { id: 4, topic: 'Streaming & Media', projectId: 'P-10433', surveyId: 'S-58251', icon: 'u1-music', time: 6, reward: 0.9, xp: 45, state: 'avail' },
-  { id: 5, topic: 'Banking Services', projectId: 'P-10435', surveyId: 'S-58262', icon: 'u2-money', time: 9, reward: 1.4, xp: 65, state: 'quota' },
-  { id: 6, topic: 'Health & Wellbeing', projectId: 'P-10437', surveyId: 'S-58270', icon: 'u1-health', time: 11, reward: 1.6, xp: 75, state: 'screen' },
-  { id: 7, topic: 'Grocery Shopping', projectId: 'P-10439', surveyId: 'S-58288', icon: 'u1-cooking', time: 7, reward: 1.1, xp: 55, state: 'pending' },
-  { id: 8, topic: 'Automotive', projectId: 'P-10440', surveyId: 'S-58291', icon: 'u1-car', time: 10, reward: 1.5, xp: 70, state: 'done' },
+  { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: surveyCompletionXp(8), state: 'rec' },
+  { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: surveyCompletionXp(10), state: 'rec' },
+  { id: 3, topic: 'Travel & Holidays', projectId: 'P-10431', surveyId: 'S-58240', icon: 'n-map', time: 12, reward: 1.8, xp: surveyCompletionXp(12), state: 'avail' },
+  { id: 4, topic: 'Streaming & Media', projectId: 'P-10433', surveyId: 'S-58251', icon: 'u1-music', time: 6, reward: 0.9, xp: surveyCompletionXp(6), state: 'avail' },
+  { id: 5, topic: 'Banking Services', projectId: 'P-10435', surveyId: 'S-58262', icon: 'u2-money', time: 9, reward: 1.4, xp: surveyCompletionXp(9), state: 'quota' },
+  { id: 6, topic: 'Health & Wellbeing', projectId: 'P-10437', surveyId: 'S-58270', icon: 'u1-health', time: 11, reward: 1.6, xp: surveyCompletionXp(11), state: 'screen' },
+  { id: 7, topic: 'Grocery Shopping', projectId: 'P-10439', surveyId: 'S-58288', icon: 'u1-cooking', time: 7, reward: 1.1, xp: surveyCompletionXp(7), state: 'pending' },
+  { id: 8, topic: 'Automotive', projectId: 'P-10440', surveyId: 'S-58291', icon: 'u1-car', time: 10, reward: 1.5, xp: surveyCompletionXp(10), state: 'done' },
 ];
 export const surveyFilters = ['All', 'Short surveys', 'Highest reward', 'Recommended'];
 export const surveyStateMeta: Record<SurveyState, { label: string; fg: string; bg: string }> = {
@@ -244,14 +259,23 @@ export const surveyStateMeta: Record<SurveyState, { label: string; fg: string; b
 };
 
 export type Badge = { icon: string; label: string; earned: boolean };
-export const badges: Badge[] = [
-  { icon: 'u2-money', label: 'First reward', earned: true },
-  { icon: 'r2-cool', label: '7-day streak', earned: true },
-  { icon: 'u1-search', label: 'Explorer', earned: true },
-  { icon: 'r1-celebrate', label: 'Level 5', earned: false },
-  { icon: 'u2-gift', label: '€100 club', earned: false },
-  { icon: 'u1-share', label: 'Survey pro', earned: false },
-];
+
+// The real 27-badge set from the rules document. Only the LABEL and earned
+// state are member-facing — the trigger conditions stay internal.
+// NOTE: the profile grid now renders 27 tiles and runs long. Redesigning that
+// gallery belongs to the phase-two gamification UI spec, not here.
+// PLACEHOLDER (business-critical): which badges this member has actually earned.
+const EARNED_BADGE_IDS = new Set([
+  'verified-voice', 'profile-starter', 'profile-pioneer', 'halfway-heard',
+  'invitation-accepted', 'first-check-in', 'three-day-rhythm', 'seven-day-voice',
+  'every-attempt-counts', 'draw-debut',
+]);
+export const badges: Badge[] = BADGES.map((b) => ({
+  icon: 'u2-target',
+  label: b.label,
+  earned: EARNED_BADGE_IDS.has(b.id),
+}));
+
 
 export type ProfileCategory = { name: string; pct: number; time: string };
 export const profileCategories: ProfileCategory[] = [
@@ -305,7 +329,7 @@ export const pollQuestion = 'What’s your favourite way to get rewarded?';
 export const memberTips: [string, string][] = [
   ['Complete your profile', 'Better data means better-matched surveys.'],
   ['Answer honestly', 'Consistent answers keep your account in good standing.'],
-  ['Check in daily', 'A streak earns bonus tickets and XP.'],
+  ['Check in daily', 'A streak keeps your XP building.'],
 ];
 
 // Referrals

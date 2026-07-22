@@ -14,7 +14,7 @@ export default function LoginPage() {
       benefit={
         <BenefitPanel
           title="Your voice, your rewards."
-          sub="Pick up right where you left off — your balance, surveys and draw tickets are waiting."
+          sub="Pick up right where you left off — your balance, surveys and draw entries are waiting."
           bullets={['€8.80 balance ready to grow', '3 surveys matched to you', '7-day streak going strong']}
         />
       }

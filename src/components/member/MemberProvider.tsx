@@ -8,6 +8,7 @@ import {
   type Quest,
   type Survey,
 } from '@/lib/mockData';
+import { levelFromXp, levelProgress } from '@/lib/gamification';
 
 /**
  * All member-platform state + actions live here, deliberately framework-light
@@ -18,16 +19,13 @@ import {
 type ConfettiPiece = { id: number; left: number; bg: string; d: number; delay: number; size: number; rad: string };
 type Toast = { id: number; msg: string; kind: 'xp' | 'approve' };
 type Modal =
-  | { type: 'survey'; sv: { id: number; topic: string; reward: number; xp: number }; questId: number | null; choice: number | null }
+  | { type: 'survey'; sv: { id: number; topic: string; reward: number; xp: number; time?: number }; questId: number | null; choice: number | null }
   | { type: 'redeem'; step: number; method: number | null }
   | null;
 
 type MemberState = {
   animated: boolean;
-  level: number;
-  rank: string;
   xp: number;
-  xpMax: number;
   streak: number;
   tickets: number;
   available: number;
@@ -46,10 +44,17 @@ type MemberState = {
 };
 
 type MemberCtx = MemberState & {
+  // Derived from lifetime xp — see levelProgress() in src/lib/gamification.ts.
+  level: number;
+  rank: string;
+  xpInto: number;
+  xpMax: number;
+  xpPct: number;
+  xpToNext: number | null;
   pieces: ConfettiPiece[];
   fmt: (n: number) => string;
   completeQuest: (q: Quest) => void;
-  openSurvey: (sv: { id: number; topic: string; reward: number; xp: number }, questId: number | null) => void;
+  openSurvey: (sv: { id: number; topic: string; reward: number; xp: number; time?: number }, questId: number | null) => void;
   setModal: (m: Modal) => void;
   submitSurvey: () => void;
   openRedeem: () => void;
@@ -71,10 +76,7 @@ export const useMember = () => {
 export function MemberProvider({ children }: { children: React.ReactNode }) {
   const [s, setS] = useState<MemberState>({
     animated: false,
-    level: seedMember.level,
-    rank: seedMember.rank,
     xp: seedMember.xp,
-    xpMax: seedMember.xpMax,
     streak: seedMember.streak,
     tickets: seedMember.tickets,
     available: seedWallet.available,
@@ -122,22 +124,20 @@ export function MemberProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => setS((p) => ({ ...p, confetti: null })), 2000);
   }, []);
 
+  // XP accumulates for life and the level derives from it, so there is no
+  // separate level counter to drift out of step with the XP total.
   const addXp = useCallback((amount: number) => {
     setS((p) => {
-      let { xp, xpMax, level } = p;
-      xp += amount;
-      if (xp >= xpMax) {
-        xp -= xpMax;
-        level += 1;
-        xpMax += 100;
+      const xp = p.xp + amount;
+      if (levelFromXp(xp) > levelFromXp(p.xp)) {
         setTimeout(fireConfetti, 0);
-        return { ...p, xp, xpMax, level, levelUp: true };
+        return { ...p, xp, levelUp: true };
       }
       return { ...p, xp };
     });
   }, [fireConfetti]);
 
-  const openSurvey = useCallback((sv: { id: number; topic: string; reward: number; xp: number }, questId: number | null) => {
+  const openSurvey = useCallback((sv: { id: number; topic: string; reward: number; xp: number; time?: number }, questId: number | null) => {
     setS((p) => ({ ...p, modal: { type: 'survey', sv, questId, choice: null } }));
   }, []);
 
@@ -150,8 +150,11 @@ export function MemberProvider({ children }: { children: React.ReactNode }) {
         if (sv) return { ...p, modal: { type: 'survey', sv: { id: sv.id, topic: sv.topic, reward: sv.reward, xp: sv.xp }, questId: q.id, choice: null } };
         return p;
       }
-      setTimeout(() => { fireConfetti(); addXp(q.xp); toast('+' + q.xp + ' XP · ' + q.title + (q.kind === 'checkin' ? ' · +1 ticket 🎟' : ''), 'xp'); }, 0);
-      return { ...p, quests: p.quests.map((x) => (x.id === q.id ? { ...x, done: true } : x)), tickets: q.kind === 'checkin' ? p.tickets + 1 : p.tickets };
+      // Quests pay XP only. Click Draw entries come exclusively from surveys
+      // that end in screenout / quota full / survey closed, per the signed
+      // regulation — never from quests, check-ins or redemptions.
+      setTimeout(() => { fireConfetti(); addXp(q.xp); toast('+' + q.xp + ' XP · ' + q.title, 'xp'); }, 0);
+      return { ...p, quests: p.quests.map((x) => (x.id === q.id ? { ...x, done: true } : x)) };
     });
   }, [addXp, fireConfetti, toast]);
 
@@ -200,8 +203,15 @@ export function MemberProvider({ children }: { children: React.ReactNode }) {
   const dismissLevelUp = useCallback(() => setS((p) => ({ ...p, levelUp: false })), []);
   const dismissRedeemDone = useCallback(() => setS((p) => ({ ...p, redeemDone: false })), []);
 
+  const prog = levelProgress(s.xp);
   const value: MemberCtx = {
     ...s,
+    level: prog.level,
+    rank: prog.label,
+    xpInto: prog.into,
+    xpMax: prog.span,
+    xpPct: prog.pct,
+    xpToNext: prog.nextAt === null ? null : prog.nextAt - s.xp,
     pieces: pieces.current,
     fmt,
     completeQuest,
