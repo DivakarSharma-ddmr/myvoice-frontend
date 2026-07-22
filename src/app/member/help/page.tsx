@@ -1,33 +1,78 @@
 'use client';
+import { useState } from 'react';
+import Link from 'next/link';
 import { Mascot } from '@/components/ui/Mascot';
 import { CapIcon } from '@/components/ui/CapIcon';
+import { HelpSearch } from '@/components/member/HelpSearch';
+import { FaqCard } from '@/components/member/FaqCard';
+import { FaqPanel } from '@/components/member/FaqPanel';
 import { member, helpCategories, helpTopics } from '@/lib/mockData';
 
+const CARD =
+  'block rounded-2xl border border-bd bg-white p-[18px] text-left transition hover:border-teal';
+
 export default function HelpPage() {
+  const [panel, setPanel] = useState<{ open: boolean; category?: string; item?: string }>({
+    open: false,
+  });
+
   return (
     <div className="space-y-4">
-      {/* Welcome banner */}
-      <div className="flex items-center gap-4 rounded-2xl2 p-6" style={{ background: 'linear-gradient(120deg,#E8F3F3,#FFF6DA)' }}>
-        <div className="hidden sm:block"><Mascot size={88} pose="announce" /></div>
-        <div className="flex-1">
-          <h2 className="text-[22px] font-extrabold text-dteal">How can we help, {member.name}?</h2>
+      {/* Greeting + search, beside the FAQ launcher */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.15fr_1fr]">
+        <div
+          className="rounded-2xl2 p-6"
+          style={{ background: 'linear-gradient(120deg,#E8F3F3,#FFF6DA)' }}
+        >
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:block">
+              <Mascot size={72} pose="announce" />
+            </div>
+            <h2 className="text-[22px] font-extrabold text-dteal">
+              How can we help, {member.name}?
+            </h2>
+          </div>
+          <HelpSearch
+            onOpenItem={(item, category) => setPanel({ open: true, item, category })}
+          />
         </div>
+
+        <FaqCard onOpenCategory={(category) => setPanel({ open: true, category })} />
       </div>
 
       {/* Topics */}
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-        {helpCategories.map((c, i) => (
-          <div key={i} className="cursor-pointer rounded-2xl border border-bd bg-white p-[18px]">
-            <CapIcon name={c[0]} size={44} radius={11} />
-            <div className="mt-2 text-[15px] font-bold">{c[1]}</div>
-            <div className="mt-0.5 text-xs text-mute">{c[2]}</div>
-          </div>
-        ))}
+        {helpCategories.map((c) => {
+          const body = (
+            <>
+              <CapIcon name={c.icon} size={44} radius={11} />
+              <div className="mt-2 text-[15px] font-bold">{c.title}</div>
+              <div className="mt-0.5 text-xs text-mute">{c.desc}</div>
+            </>
+          );
+          return c.href ? (
+            <Link key={c.title} href={c.href} className={CARD}>
+              {body}
+            </Link>
+          ) : (
+            <button
+              key={c.title}
+              className={CARD + ' w-full'}
+              onClick={() =>
+                document
+                  .getElementById(c.scrollTo!)
+                  ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }
+            >
+              {body}
+            </button>
+          );
+        })}
       </div>
 
       {/* Contact + live chat */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.1fr_1fr]">
-        <div className="rounded-2xl2 border border-bd bg-white p-5">
+        <div id="contact-support" className="scroll-mt-24 rounded-2xl2 border border-bd bg-white p-5">
           <h3 className="text-base font-extrabold">Contact support</h3>
           <div className="mt-0.5 text-xs font-bold text-green">Typical reply within 1 business day</div>
           <div className="mt-3.5 flex flex-col gap-2.5">
@@ -69,6 +114,13 @@ export default function HelpPage() {
           <p className="mt-3 text-[11px] leading-snug text-mute">We will reply within standard business hours, 9 AM to 6 PM, Bucharest time.</p>
         </div>
       </div>
+
+      <FaqPanel
+        open={panel.open}
+        categoryName={panel.category}
+        itemId={panel.item}
+        onClose={() => setPanel({ open: false })}
+      />
     </div>
   );
 }

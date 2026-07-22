@@ -354,10 +354,18 @@ export const referralStats: [string, string][] = [
 ];
 
 // Help center
-export const helpCategories: [string, string, string][] = [
-  ['u1-work', 'Account', 'Login, profile, deletion'],
-  ['u2-shield', 'Privacy', 'Data, GDPR, consent'],
-  ['n-headphones', 'Contact', 'Reach our support team'],
+// Each card is a real destination: Account and Privacy deep-link into the
+// matching Settings group, Contact scrolls to the form further down the page.
+export const helpCategories: {
+  icon: string;
+  title: string;
+  desc: string;
+  href?: string;
+  scrollTo?: string;
+}[] = [
+  { icon: 'u1-work', title: 'Account', desc: 'Login, profile, deletion', href: '/member/settings#account' },
+  { icon: 'u2-shield', title: 'Privacy', desc: 'Data, GDPR, consent', href: '/member/settings#privacy' },
+  { icon: 'n-headphones', title: 'Contact', desc: 'Reach our support team', scrollTo: 'contact-support' },
 ];
 export const helpTopics = ['Topic: Rewards', 'Topic: Surveys', 'Topic: Account', 'Topic: Privacy', 'Topic: Technical'];
 
