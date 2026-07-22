@@ -24,7 +24,33 @@ export type LevelPerk = {
   streakGraceDays?: number;
 };
 export type Badge = { id: string; label: string; trigger: string; art: string };
-export type QuestDef = { id: string; title: string; objective: string; rule: string; xp: number };
+// `reappear` is the source table's "Reappear" column: 'always' for quests that
+// can be offered again freely, 'limited' for those the source marks
+// "Yes, limited" — one-off or milestone-bound goals that must not re-enter the
+// rotation once satisfied. Scheduling-relevant, so it is carried, not dropped.
+export type QuestReappear = 'always' | 'limited';
+export type QuestDef = {
+  id: string;
+  title: string;
+  objective: string;
+  rule: string;
+  xp: number;
+  reappear: QuestReappear;
+};
+
+// The five quests the source marks "Yes, limited"; everything else is "Yes".
+export const LIMITED_REAPPEAR_QUEST_IDS = [
+  'profile-check',
+  'profile-pair',
+  'profile-milestone',
+  'first-cashout-request',
+  'profile-progress',
+] as const;
+
+const LIMITED = new Set<string>(LIMITED_REAPPEAR_QUEST_IDS);
+function withReappear(defs: Omit<QuestDef, 'reappear'>[]): QuestDef[] {
+  return defs.map((q) => ({ ...q, reappear: LIMITED.has(q.id) ? 'limited' : 'always' }));
+}
 
 export const LEVELS: Level[] = [
   { level: 0, cumulativeXp: 0, label: 'Getting Started' },
@@ -389,7 +415,7 @@ export const BADGES: Badge[] = [
 
 // Section 4.1, all 17 rows. Three slots are drawn from this pool daily,
 // refreshing at local midnight.
-export const DAILY_QUESTS: QuestDef[] = [
+const DAILY_RAW: Omit<QuestDef, 'reappear'>[] = [
   {
     id: 'daily-check-in',
     title: 'Daily Check-In',
@@ -513,7 +539,7 @@ export const DAILY_QUESTS: QuestDef[] = [
 
 // Section 4.2, all 12 rows. One is active per week, refreshing at local
 // midnight on Monday.
-export const WEEKLY_QUESTS: QuestDef[] = [
+const WEEKLY_RAW: Omit<QuestDef, 'reappear'>[] = [
   {
     id: 'three-voices-shared',
     title: 'Three Voices Shared',
@@ -602,7 +628,7 @@ export const WEEKLY_QUESTS: QuestDef[] = [
 
 // Section 4.3, all 6 rows. One is active per month, refreshing at local
 // midnight on the 1st of the new month.
-export const MONTHLY_QUESTS: QuestDef[] = [
+const MONTHLY_RAW: Omit<QuestDef, 'reappear'>[] = [
   {
     id: 'ten-voices-shared',
     title: 'Ten Voices Shared',
@@ -661,3 +687,7 @@ export const DRAW = {
   drawnWith: 'random.org',
   onePrizePerPersonPerMonth: true,
 };
+
+export const DAILY_QUESTS: QuestDef[] = withReappear(DAILY_RAW);
+export const WEEKLY_QUESTS: QuestDef[] = withReappear(WEEKLY_RAW);
+export const MONTHLY_QUESTS: QuestDef[] = withReappear(MONTHLY_RAW);
