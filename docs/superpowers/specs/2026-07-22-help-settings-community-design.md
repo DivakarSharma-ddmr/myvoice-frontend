@@ -271,8 +271,16 @@ New `src/lib/gamification.ts` is the single source of truth, transcribed from
   `drawEntriesPerActiveMonth` (levels 2, 5, 8, 11, 12 → +1, +2, +3, +5, +7) and
   `streakGraceDays` (levels 3, 6, 9, 12 → 2, 3, 5, 7 consecutive misses).
 
-  Resolved 2026-07-22. **The rules document is internal operational data, not a
-  member-facing promise.** It is not a legal commitment, it may change at any
+  Resolved 2026-07-22, twice over. **The bands are a ladder, not an
+  accumulation**: levels 2–4 grant 1 entry per active month, 5–7 grant 2, 8–10
+  grant 3, level 11 grants 5 and level 12 grants 7. The source's "+N additional"
+  phrasing invites the accumulating reading, under which a level-11 member would
+  hold 11 entries rather than 5 — a 2x difference in draw odds at the top of the
+  ladder. Every level is asserted in `tests/gamification.test.mjs` so the
+  ambiguity cannot creep back in.
+
+  And **the rules document is internal operational data, not a member-facing
+  promise.** It is not a legal commitment, it may change at any
   time, and the master table is never shown to members. Members earn levels,
   bonuses and badges through their activity; the mechanics are handled in code,
   and members see only what the business chooses to surface.
@@ -361,4 +369,7 @@ any public `(site)` route.
    operates in 30+ markets. Which members even see the draw is a legal call.
 2. **Real winners data.** The seeded month is placeholder content and must be
    replaced before launch.
-3. **Whether level perks grant draw entries.** See the note in section 6.
+3. **An FAQ entry for "screenout".** The app now uses the word prominently, but
+   the FAQ never does, so searching it returns nothing. Acknowledged and
+   deliberately deferred 2026-07-22 — noted here so it is not rediscovered as a
+   bug.

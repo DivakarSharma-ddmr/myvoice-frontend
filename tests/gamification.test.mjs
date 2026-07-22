@@ -62,14 +62,33 @@ test('streak grace days step up at levels 3, 6, 9 and 12', () => {
   assert.equal(streakGraceDays(12), 7);
 });
 
-test('level draw-entry bonuses step up at levels 2, 5, 8, 11 and 12', () => {
-  assert.equal(drawEntriesFromLevel(1), 0);
-  assert.equal(drawEntriesFromLevel(2), 1);
-  assert.equal(drawEntriesFromLevel(4), 1);
-  assert.equal(drawEntriesFromLevel(5), 2);
-  assert.equal(drawEntriesFromLevel(8), 3);
+// Confirmed by the business owner 2026-07-22. The source document says
+// "+1 additional", "+2 additional" and so on, which reads as though the values
+// accumulate — they do NOT. The bands below are the whole truth: a level-11
+// member gets 5 entries per month, not 1+2+3+5. Every level is asserted so a
+// future reading of "additional" cannot quietly reintroduce accumulation.
+test('level draw-entry bonuses follow the confirmed bands at every level', () => {
+  const expected = {
+    0: 0, 1: 0,
+    2: 1, 3: 1, 4: 1,
+    5: 2, 6: 2, 7: 2,
+    8: 3, 9: 3, 10: 3,
+    11: 5,
+    12: 7,
+  };
+  for (const [level, entries] of Object.entries(expected)) {
+    assert.equal(
+      drawEntriesFromLevel(Number(level)),
+      entries,
+      `level ${level} should grant ${entries} draw entries per active month`
+    );
+  }
+});
+
+test('draw entry bonuses never accumulate across bands', () => {
+  // 1 + 2 + 3 + 5 = 11 would be the accumulating reading. It is wrong.
+  assert.notEqual(drawEntriesFromLevel(11), 11);
   assert.equal(drawEntriesFromLevel(11), 5);
-  assert.equal(drawEntriesFromLevel(12), 7);
 });
 
 test('the badge set is complete and uniquely keyed', () => {

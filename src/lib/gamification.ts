@@ -69,6 +69,24 @@ export const LEVELS: Level[] = [
 ];
 
 // An "active month" requires at least one confirmed survey start.
+//
+// DRAW ENTRY BANDS — confirmed by the business owner 2026-07-22:
+//   levels 0–1   0 entries
+//   levels 2–4   +1 entry  per active month
+//   levels 5–7   +2 entries
+//   levels 8–10  +3 entries
+//   level  11    +5 entries
+//   level  12    +7 entries
+//
+// The source document phrases these as "+1 additional", "+2 additional" and so
+// on, which reads as though they accumulate. THEY DO NOT. A level-11 member
+// gets 5 entries per month, not 1+2+3+5. `drawEntriesFromLevel` implements the
+// bands by taking the highest threshold at or below the member's level, and
+// tests/gamification.test.mjs asserts every level so this cannot regress.
+//
+// These bonus entries are INTERNAL WEIGHTING, never advertised. Member-facing
+// copy states only the signed regulation's rule: one entry per survey ending in
+// screenout, quota full or survey closed.
 export const LEVEL_PERKS: LevelPerk[] = [
   { level: 0, perk: 'Captain MyVoice Welcome Badge', rule: 'Displayed automatically during onboarding.' },
   { level: 1, perk: 'New Voice Profile Pack', rule: 'First permanent Captain MyVoice badge and bronze profile frame.' },
