@@ -269,13 +269,25 @@ server-rendered HTML, a paused tab, a screenshot and a reduced-motion member all
 rather than the decoration. Under `prefers-reduced-motion` the interval never starts; killing the
 transition alone would leave the state still snapping between faces.
 
-**The frame is a rounded square too**, not a circle — `SquareRing`, an SVG rounded rect with
-`pathLength="100"` so the XP dash maths stays a plain percentage across the corner arcs. A
-circular track around square faces leaves dead corners and forces the artwork down to the
-inscribed square; matching the frame to the faces lets them fill it. 120px frame, 9px stroke,
-96px medallion inside — a 12px inset on every side, with the corner radius stepping down by the
-same amount so the two shapes stay parallel. Both faces are that same square, so the number and
-the artwork occupy exactly the same area and the flip has nothing to resize.
+**The frame is a rounded square too**, not a circle — `SquareRing`. A circular track around
+square faces leaves dead corners and forces the artwork down to the inscribed square; matching
+the frame to the faces lets them fill it. 120px frame, 9px stroke, 96px medallion inside — a 12px
+inset on every side, with the corner radius stepping down by the same amount so the two shapes
+stay parallel. Both faces are that same square, so the number and the artwork occupy exactly the
+same area and the flip has nothing to resize.
+
+**The frame is a clock face.** It marks the member's level, not their XP: level 1 fills to one
+o'clock, level 4 to four o'clock, level 12 all the way round. The horizontal bar beside it still
+shows XP within the current level — standing in the ladder and progress toward the next step are
+two different questions, so they get two different marks rather than one repeated twice.
+
+Two details make it read as a real clock rather than an approximation. It is drawn as a **path,
+not a `<rect>`**, because a rect's outline starts at the top-LEFT corner — the fill would begin at
+half past ten. And each hour's stop is solved from its **true angle**, not by dividing the
+perimeter into twelve: an hour is an angle, a stroke-dash is an arc length, and on a square those
+do not scale together. One o'clock sits at 8.09% of the way round rather than 8.33%. The maths
+lives in `src/lib/clockDial.ts`, where hours 3, 6 and 9 landing on exact quarter-turns is the
+invariant the tests hold it to.
 
 Level art is letterboxed rather than cropped, so each panel is shown whole; the export trims each
 panel's own background margin first, which is what keeps the Captain legible at that size. The sheet's corner number

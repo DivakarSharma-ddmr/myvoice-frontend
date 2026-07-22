@@ -119,6 +119,12 @@ handled in code, and members see only what we choose to surface — their curren
 their progress, and the badges they have earned. They do not see the perk ladder, the XP
 formulas, the exact completion rules, or a preview of what the next level grants.
 
+The level itself is surfaced twice on the dashboard, deliberately answering two different
+questions: the frame around the medallion reads as a **clock face** showing standing in the
+twelve-level ladder (level 4 fills to four o'clock), while the bar beside it shows XP progress
+within the current level. Neither exposes the ladder's contents — a member sees where they are,
+never what the next step pays.
+
 In practice this draws a hard line through the member UI. The **only level perk rendered is the
 streak shield, and only once it is already active** — a member is told the protection they
 currently hold, never how it was earned or what the next level adds. The bonus draw entries that

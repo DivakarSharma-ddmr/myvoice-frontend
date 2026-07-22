@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { DIAL, dialPath } from '@/lib/clockDial';
 
 /** Animated horizontal progress bar. Fills from 0 to `pct` on mount. */
 export function ProgressBar({
@@ -49,14 +50,18 @@ export function ProgressBar({
  * to shrink to the inscribed square. Matching the frame to the faces lets them
  * fill it.
  *
- * `pathLength="100"` normalises the perimeter so the dash maths is a plain
- * percentage and does not have to account for the corner arcs.
+ * Drawn as a path rather than a `<rect>` because it is read as a clock face:
+ * a rect's outline starts at the top-LEFT corner, so the fill would begin at
+ * half past ten. `dialPath()` starts at top centre and runs clockwise, and
+ * `pathLength="100"` normalises the perimeter so `pct` is a plain percentage
+ * regardless of the corner arcs. See src/lib/clockDial.ts for how an hour is
+ * converted into that percentage.
  */
 export function SquareRing({
   pct,
   size = 120,
-  stroke = 9,
-  radius = 25,
+  stroke = DIAL.stroke,
+  radius = DIAL.radius,
 }: {
   pct: number;
   size?: number;
@@ -68,23 +73,12 @@ export function SquareRing({
     const t = setTimeout(() => setVal(pct), 140);
     return () => clearTimeout(t);
   }, [pct]);
-  const inset = stroke / 2;
-  const side = 100 - stroke;
-  const common = {
-    x: inset,
-    y: inset,
-    width: side,
-    height: side,
-    rx: radius,
-    ry: radius,
-    fill: 'none',
-    strokeWidth: stroke,
-    pathLength: 100,
-  };
+  const d = dialPath({ stroke, radius });
+  const common = { d, fill: 'none', strokeWidth: stroke, pathLength: 100 };
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden>
-      <rect {...common} stroke="rgba(255,255,255,.2)" />
-      <rect
+      <path {...common} stroke="rgba(255,255,255,.2)" />
+      <path
         {...common}
         stroke="#FFCC33"
         strokeLinecap="round"

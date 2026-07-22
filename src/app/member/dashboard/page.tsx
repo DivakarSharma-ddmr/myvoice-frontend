@@ -8,6 +8,7 @@ import { BadgeTile } from '@/components/member/BadgeTile';
 import { LevelMedallion } from '@/components/member/LevelMedallion';
 import { badges, draw, profileCompletion, weeklyQuest } from '@/lib/mockData';
 import { streakGraceDays } from '@/lib/gamification';
+import { dialPercent } from '@/lib/clockDial';
 
 export default function DashboardPage() {
   const m = useMember();
@@ -25,9 +26,12 @@ export default function DashboardPage() {
         style={{ background: 'linear-gradient(135deg,#1F4F4F,#2c6a64)' }}>
         <div aria-hidden className="absolute -right-8 -top-10 h-44 w-44 rounded-full bg-yel/[.12]" />
         {/* Frame and faces are the same shape, so the artwork fills the square
-            instead of shrinking to fit inside a circle. */}
+            instead of shrinking to fit inside a circle. The frame reads as a
+            clock face — level 4 fills to four o'clock — so it shows standing
+            in the twelve-level ladder, while the bar below it shows XP within
+            the current level. Two different questions, two different marks. */}
         <div className="relative grid h-[120px] w-[120px] shrink-0 place-items-center">
-          <SquareRing pct={xpPct} size={120} />
+          <SquareRing pct={dialPercent(m.level)} size={120} />
           <div className="absolute">
             <LevelMedallion level={m.level} />
           </div>
