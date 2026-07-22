@@ -171,6 +171,18 @@ export const member = {
   country: 'Romania',
   countryFlag: '🇷🇴',
   language: 'English',
+  // Account details shown on the Settings page. Gender, yearOfBirth and country
+  // drive survey targeting, so they are member-visible but not member-editable —
+  // changing them is a support action. See PRODUCT.md.
+  firstName: 'Ana',
+  lastName: 'Marin',
+  phone: '+40 721 000 000',
+  gender: 'Female',
+  yearOfBirth: '1992',
+  address: 'Str. Exemplu 12, Ap. 4',
+  postCode: '010101',
+  secondaryEmail: '',
+  paypalEmail: 'ana.m@email.com',
   level: 4,
   rank: 'Voicer',
   xp: 320,
