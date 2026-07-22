@@ -270,6 +270,16 @@ New `src/lib/gamification.ts` is the single source of truth, transcribed from
 - `LEVEL_PERKS` — perk text per level, plus structured
   `drawEntriesPerActiveMonth` (levels 2, 5, 8, 11, 12 → +1, +2, +3, +5, +7) and
   `streakGraceDays` (levels 3, 6, 9, 12 → 2, 3, 5, 7 consecutive misses).
+
+  Open question. The design review confirmed the regulation stands unamended,
+  but the regulation names qualifying surveys as the only entry source, so the
+  level-perk bonus entries have nothing backing them. The data is transcribed
+  either way and `drawEntriesPerActiveMonth` stays in the module. What changes is
+  only whether member-facing copy mentions it. Until the user answers, the draw
+  explainer and Community card describe qualifying surveys alone, and the level
+  perks render as their non-draw benefits. This is the safe default: it never
+  promises a member an entry the signed regulation does not support, and turning
+  it on later is a copy change, not a rebuild.
 - `levelFromXp(xp)` and `levelProgress(xp)` returning level, label, XP into the
   current band, band span, percentage and next threshold.
 - `surveyCompletionXp(minutes) = 25 + 5 * minutes`. This replaces the July 7
@@ -317,18 +327,29 @@ returns sensible results for a handful of real queries, the FAQ panel traps focu
 and closes on Escape, all four legal routes render and print cleanly, and the
 Community winners page renders the placeholder month.
 
+## Resolved during design review
+
+**The Click Draw entry rule stands as written, and the regulation is not
+amended.** Confirmed 2026-07-22: rewarding screenouts, quota-full and
+survey-closed outcomes is deliberate policy. It pays members who genuinely
+attempt surveys without creating an incentive to farm completions, which is
+exactly the click-farm behaviour the panel needs to avoid. The rule is a fraud
+control, not just a consolation mechanic, and the member-facing copy should carry
+that intent rather than framing entries as a booby prize.
+
+**Full winner names are correct, because the audiences differ.** Confirmed
+2026-07-22: the testimonial videos sit on the public marketing site, visible to
+anyone, so they are anonymised to "Verified MyVoice member". The winners list is
+behind member authentication and visible only to panel members, and Section 8 of
+the regulation secures consent for it. Both decisions are right for their
+surface. The winners page must therefore never be linked from, or rendered on,
+any public `(site)` route.
+
 ## Open items for the user
 
-1. **The signed Click Draw regulation needs amending.** Section 3 lists
-   qualifying surveys as the only entry source and makes no mention of the
-   level-perk bonus entries that the new rules document grants at levels 2, 5, 8,
-   11 and 12. Legal should reconcile the two before this goes live.
-2. **Prize-draw legality per market.** Carried forward from the July 7 spec and
+1. **Prize-draw legality per market.** Carried forward from the July 7 spec and
    still unresolved: prize draws are regulated country by country, and MyVoice
    operates in 30+ markets. Which members even see the draw is a legal call.
-3. **Winner names.** Full names are contractually permitted by Section 8, but
-   they sit oddly beside the decision to anonymise the video testimonials as
-   "Verified MyVoice member". Worth a conscious second look before the first real
-   list is published.
-4. **Real winners data.** The seeded month is placeholder content and must be
+2. **Real winners data.** The seeded month is placeholder content and must be
    replaced before launch.
+3. **Whether level perks grant draw entries.** See the note in section 6.
