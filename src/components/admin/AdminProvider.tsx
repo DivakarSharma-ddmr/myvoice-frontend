@@ -38,6 +38,8 @@ type AdminContextValue = {
   saveProfile: (p: AdminProfile) => void;
   addRecruitment: (name: string) => void;
   setRecruitmentStatus: (id: string, status: 'active' | 'inactive') => void;
+  deleteCampaign: (id: number) => void;
+  addReport: (name: string) => void;
   sendMessage: (threadId: string, text: string) => void;
 };
 
@@ -129,6 +131,17 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     setRecruitmentStatus: (id, status) => {
       setData((d) => ({ ...d, recruitment: d.recruitment.map((s) => (s.id === id ? { ...s, status } : s)) }));
       toast(`Source marked ${status}.`);
+    },
+
+    deleteCampaign: (id) => {
+      setData((d) => ({ ...d, campaigns: d.campaigns.filter((c) => c.id !== id) }));
+      toast(`Campaign #${id} deleted.`);
+    },
+
+    addReport: (name) => {
+      const row = { id: `rep-${Date.now()}`, name, status: 'complete' as const, createdAt: 'just now' };
+      setData((d) => ({ ...d, reports: [row, ...d.reports] }));
+      toast('Report generated.');
     },
 
     sendMessage: (threadId, text) => {
