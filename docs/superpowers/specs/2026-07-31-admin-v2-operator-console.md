@@ -101,10 +101,28 @@ The V2 list stays a table (reuse `DataTable`) with an "Open in wizard" action �
 - Message Center: **canned-reply picker** (a few multilingual templates) inserted into the composer + a **member-context strip** beside the chat (status, recent redemptions). Built as an additive wrapper over `TwoPaneChat` or a V2 variant — no edit to the V1 component.
 - Signal Yellow strictly on money/approve+save.
 
-## 5. Scope boundaries (V2)
-- **In:** the 6 changes above for **Home, Member's Rewards, Members, Email Tool**, the shared `AdminLabShell` + command palette across **all** `/admin-lab` sections, and the unified action/status pass.
-- **Reused as-is (restyled by the shell only):** Access Control, Manage Rewards, Payment Email, Panel Settings, Account, Report, Recruitment, Message Center — V2 renders them with the same V1 page bodies under `AdminLabShell` (no reimagining this round unless time allows), so `/admin-lab` is complete and navigable.
-- **Out:** real backend, real auth, persistence, dark mode.
+## 5. Scope boundaries (V2) — reimagine ALL 12 sections
+
+Every `/admin-lab` section is redesigned in the operator-console style (not a V1 re-skin).
+The 4 flagship sections get the full new designs in §4; the other 8 get the V2 treatment —
+`AdminLabShell` + `CommandPalette` everywhere, a **filter bar** (search + quick-filter chips)
+instead of per-column header inputs, the unified `RowActions` convention, and drawers/cards
+where they read better than a table. Concrete V2 treatment per section:
+
+1. **Home** — action hub (`NeedsYouNow`) + demoted metrics. *(flagship §4.1)*
+2. **Access Control** — filter bar + table; row → `DetailDrawer` (user + status); Add User in a drawer form; `RowActions` (Edit / Mark Inactive).
+3. **Members** — filter bar + `DetailDrawer`. *(flagship §4.3)*
+4. **Member's Rewards** — approval queue. *(flagship §4.2)*
+5. **Manage Rewards** — **card grid** (reward cards: name · €value · status · description) with a status filter bar; Add/Edit in a drawer.
+6. **Payment Email Settings** — a clean single settings card (labelled form, Save/Reset).
+7. **Panel Settings** — left settings-nav (vertical) instead of top tabs: **Settings (+Rewards Info)** and **Email Templates** (two-pane list + editor with live preview).
+8. **Account** — left settings-nav: Personal Info / Change Picture / Change Password.
+9. **Email Tool** — 3-step `CampaignWizard` + list. *(flagship §4.5)*
+10. **Report** — generate panel (as a compact form) + reports list with filter bar + `RowActions` (Download).
+11. **Recruitment** — segmented tabs (Source / Report); source table with filter bar + inline Add + `RowActions`.
+12. **Message Center** — `TwoPaneChat` variant with a **canned-reply picker** + **member-context strip** (status, recent redemptions). *(polish §4.7)*
+
+- **Out:** real backend, real auth, persistence, dark mode, any modification of V1 files.
 
 ## 6. Out-of-scope / non-goals
 No modification of any `/admin/*` (V1) file, no changes to `adminMockData.ts` or existing
