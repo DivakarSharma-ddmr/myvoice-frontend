@@ -190,3 +190,40 @@ Given a global, mobile-heavy, mixed-literacy / ESL audience, hold an extra bar i
 practice: plain-language copy, color-blind-safe status colors (don't rely on red/green
 alone for survey/reward state), and generous touch targets. Design for the member on a
 mid-range phone on a slow connection, not the reviewer on a desktop.
+
+## Panel Admin Console (internal surface)
+
+Beyond the two member-facing surfaces, the frontend now includes a **third surface: the
+panel-admin console** — the internal tool panel administrators (DataDiggers staff) use to run a
+country panel. Its users are **operators, not members or prospects**: they approve reward
+payouts, manage member accounts, edit the reward catalogue and panel settings, run email
+campaigns, generate reports, manage recruitment sources, and answer support chat. The job is
+*operational throughput and correctness*, not persuasion — so this surface is **product/utility
+register**, deliberately outside the "Trusted Neighbor" brand voice (see DESIGN.md §8).
+
+It ships in **two versions**, both static mock-data builds that are backend-ready:
+
+- **V1 — `/admin`** (on `main`, deployed): a faithful re-skin of the legacy Metronic admin,
+  12 sections, columns/actions/flows preserved so the dev team wires the real backend
+  (Node.js + Laravel + MongoDB) with a **1:1 mapping** — swap `src/lib/adminMockData.ts` and the
+  bodies of `AdminProvider`'s actions; the UI, states, and handlers stay. Requested consolidations
+  applied: Rewards Info → Panel Settings tab 1; Transaction Email Templates → tab 2; the
+  standalone Panel Communication item and struck-off tabs dropped.
+- **V2 — `/admin-lab`** (on branch `admin-v2`, **not deployed**): the reimagined *operator
+  console* — all 12 sections redesigned around what the operator needs to do (action-hub Home,
+  true approval queue, filter-bar + detail-drawer records, 3-step campaign wizard, ⌘K command
+  palette). V2 is **purely additive** (adds files, never edits a V1 file), so it merges cleanly
+  even after V1's backend is wired, and V2 inherits real data on merge. Switching V2 to primary
+  later is a one-line redirect `/admin → /admin-lab`.
+
+**Operational rules that hold across both versions:**
+- **State the stakes on money moves.** Bulk approve/reject shows count + € total before it acts
+  ("Approve 12 payouts · €140?"); destructive and impersonation ("Login as member") actions
+  confirm first.
+- **Money-field discipline mirrors the member side** — e.g. survey-targeting fields stay
+  protected; the console never invents payout amounts (the €150 Click Draw structure and the
+  fixed reward catalogue are authoritative, not decorative).
+- **The console is unlinked** from the public site and member area, reachable only by URL and
+  gated by a cosmetic mock login (`/admin/login`). Real auth, roles, server-side pagination
+  (tables paginate client-side over seed rows with faked totals like "87,696"), and real
+  side-effects (emails, file storage, live chat transport) are the backend team's to build.

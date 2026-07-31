@@ -363,3 +363,62 @@ The Help Center pairs the async **Contact support** form (left, ~1.1fr) with a *
 - **Don't** put mute-gray text on cream/sand — it washes out and fails contrast (No-Gray-On-Warm Rule).
 - **Don't** use gray or black shadows; **don't** nest cards; **don't** exceed a ~52px display headline.
 - **Don't** use color as the only signal for survey/reward state — always pair with an icon or label.
+
+## 8. Admin Console (internal surface)
+
+A **third surface** beyond the public site and member platform: the **panel-admin console**,
+the internal operational tool panel administrators use (approve payouts, manage members,
+run campaigns, answer support). It ships in two versions that share one design language:
+
+- **V1 — `/admin`** (on `main`, deployed): a faithful, prettier re-skin of the legacy Metronic
+  admin, backend-ready for a 1:1 wiring.
+- **V2 — `/admin-lab`** (on branch `admin-v2`, not deployed): the reimagined *operator console*.
+
+### Register & tone
+Admin is a **product / utility** register — **denser than the member platform**, function over
+warmth. It is deliberately **not** the "Trusted Neighbor" brand voice: no marketing warmth, no
+mascot, no gamification. Same tokens (`tailwind.config.ts`), tighter spacing, more information
+per screen. Light mode only for now.
+
+### Rules carried over (unchanged)
+- **Signal Yellow stays money-only** — reserved for the primary/positive value action
+  (Approve payouts, Save), never for nav-active or decoration. (This is why admin nav-active
+  uses `lteal/dteal`, not the legacy yellow highlight.)
+- **Teal-tinted shadows**, generous radii, WCAG 2.2 AA.
+- **Status by icon + colour, never colour alone** — one canonical token set in
+  `src/lib/adminStatus.ts` → `<StatusPill>`: Active (green/check), Inactive (mute/dash),
+  Sleeping (amber/moon), Unsubscribed (soft-teal/bell-off — *distinct* from Active, fixing the
+  legacy "both blue" bug), Pending (amber/clock), On Hold (gold/pause), Approved (green/check),
+  Rejected (danger/x), Complete (teal/check).
+
+### Shared component library (`src/components/admin/*`)
+`AdminShell`, `DataTable` (sort/filter/paginate/select + faked legacy totals), `StatusPill`,
+`ActionMenu`, `ConfirmDialog` (stakes-stating for money/bulk/destructive), `Toast`, `Tabs`,
+`Field` (Text/TextArea/Select/Toggle/DatePicker/FileUpload), `RichTextEditor` (contentEditable
++ `%%merge-tag%%` chips + preview), `PanelSwitcher` (searchable 30+ panels), `TwoPaneChat`,
+`StatTile`. Data flows through `src/lib/adminMockData.ts` (the swap-for-API file); mutations
+live in `AdminProvider` and reset on reload.
+
+### V2 visual differentiators (`/admin-lab`, `src/components/admin-lab/*`)
+V2 reads as a distinct "console" while staying in the same design language:
+- **Dark Deep-Teal sidebar** (vs V1's white sidebar) with a small **"LAB"** badge — instantly
+  tells you which version you're in.
+- **Action hub Home** ("Needs you now" cards) instead of a stats wall.
+- **Approval queue**: segmented status filter with counts, bulk €-total confirms, inline member
+  risk context (redemption count + account status per row).
+- **Filter bar + right `DetailDrawer`** for record detail (Members), replacing crammed row
+  buttons; **card grid** for the reward catalogue; **vertical settings-nav** for settings pages.
+- **`RowActions`** convention everywhere: one visible primary + overflow menu + destructive
+  confirmed.
+- **Command palette (⌘K/Ctrl+K)**: jump to any section or a member by id/email.
+- **3-step campaign wizard** (Audience → Content → Review), Start gated on a test send.
+- Message Center adds **canned multilingual replies** + a **member-context strip**.
+
+### Admin Do / Don't
+- **Do** state the stakes on money/bulk/destructive actions ("Approve 12 payouts · €140?").
+- **Do** keep the console unlinked from the public site and member area; entry is the cosmetic
+  mock login at `/admin/login`.
+- **Don't** apply the warm marketing tone, mascot, or gamification here — this surface serves the
+  task, not persuasion.
+- **Don't** let V2 modify any V1 file — V2 is purely additive so it merges cleanly after backend
+  wiring.

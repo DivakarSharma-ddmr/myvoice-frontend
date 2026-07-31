@@ -7,7 +7,10 @@ and [DESIGN.md](DESIGN.md) (visual system) before designing or changing any UI.
 
 **Register (hybrid):** `product` by default. Routes under `src/app/(site)/*` (public
 marketing website) are **brand** surfaces; routes under `src/app/member/*` (logged-in
-platform) are **product** surfaces. Set register per task by the surface in focus.
+platform) are **product** surfaces. Routes under `src/app/admin/*` (V1) and
+`src/app/admin-lab/*` (V2) are the **internal panel-admin console** — **product/utility**
+register, denser than the member area, no brand/marketing tone (see PRODUCT.md "Panel Admin
+Console" + DESIGN.md §8). Set register per task by the surface in focus.
 
 **Mission:** reposition MyVoice from a "paid survey site" into a *trusted global
 research community* — Trust → Participation → Rewards. Personality: warm, credible,
