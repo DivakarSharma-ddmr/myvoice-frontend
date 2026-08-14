@@ -102,7 +102,7 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2">
             <Chip icon="🔥" val={String(streak)} bg="#FFF4CC" col="#8a6d12"
               tip={`${streak}-day streak — answer a survey today to keep it going`} />
-            <Chip icon="🎟" val={String(tickets)} bg="#E8F3F3" col="#1F4F4F" className="hidden sm:flex"
+            <Chip icon="🎫" val={String(tickets)} bg="#E8F3F3" col="#1F4F4F" className="hidden sm:flex"
               tip={`Click Draw entries — you have ${tickets} for this month's prize draw`} />
             <Chip icon="💰" val={fmt(available)} bg="#FFF4CC" col="#1C2526"
               tip={`Available balance — ${fmt(available)} ready to withdraw`} />
@@ -180,8 +180,11 @@ function Chip({ icon, val, bg, col, className, tip }: { icon: string; val: strin
       {tip && (
         <span
           role="tooltip"
-          className="pointer-events-none absolute right-0 top-full z-30 mt-1.5 hidden w-max max-w-[220px] whitespace-normal rounded-lg bg-ink px-2.5 py-1.5 text-left text-[11px] font-semibold leading-snug text-white shadow-soft group-hover:block"
+          className="pointer-events-none absolute right-0 top-[calc(100%+9px)] z-30 w-max max-w-[230px] origin-top-right scale-90 whitespace-normal rounded-2xl border border-bd bg-cream px-3.5 py-2.5 text-left text-[11.5px] font-semibold leading-snug text-ink opacity-0 shadow-card transition duration-150 ease-out group-hover:scale-100 group-hover:opacity-100"
         >
+          {/* Speech-bubble tail — a rotated square that borrows the bubble's own
+              fill + border so only its two upper edges read as the pointer. */}
+          <span aria-hidden="true" className="absolute -top-1.5 right-5 h-3 w-3 rotate-45 rounded-[3px] border-l border-t border-bd bg-cream" />
           {tip}
         </span>
       )}
