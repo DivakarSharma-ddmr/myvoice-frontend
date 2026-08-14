@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import { useMember } from '@/components/member/MemberProvider';
-import { Mascot } from '@/components/ui/Mascot';
 import { CapIcon, IconLabel } from '@/components/ui/CapIcon';
 import { SquareRing, ProgressBar } from '@/components/ui/Progress';
 import { BadgeTile } from '@/components/member/BadgeTile';
@@ -17,13 +16,11 @@ export default function DashboardPage() {
   const earnedBadges = badges.filter((b) => b.earned);
   const badgePct = Math.round((earnedBadges.length / badges.length) * 100);
   const shieldActive = streakGraceDays(m.level) > 1;
-  const weeklyPct = Math.round((weeklyQuest.progress / weeklyQuest.target) * 100);
 
   return (
     <div className="space-y-5">
       {/* Hero */}
-      <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-3xl2 p-6 sm:flex-row sm:gap-6"
-        style={{ background: 'linear-gradient(135deg,#1F4F4F,#2c6a64)' }}>
+      <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-3xl2 bg-dgreen p-6 sm:flex-row sm:gap-6">
         <div aria-hidden className="absolute -right-8 -top-10 h-44 w-44 rounded-full bg-yel/[.12]" />
         {/* Frame and faces are the same shape, so the artwork fills the square
             instead of shrinking to fit inside a circle. The frame reads as a
@@ -59,118 +56,133 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-        <div className="relative hidden md:block"><Mascot size={104} pose="cheer" bubble="Captain MyVoice says: one more quest to level up!" /></div>
       </div>
 
-      {/* Daily quests */}
+      {/* Surveys for you — lifted directly under the hero: the member's
+          reason to be here comes first, laid out two-up so several fit above
+          the fold. */}
       <div>
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <div>
-            <h2 className="text-[17px] font-extrabold"><IconLabel name="u2-target" text="Daily quests" /></h2>
-            {/* The rotation is the point: say so, so an unfinished quest reads
-                as "there'll be another" rather than something missed. */}
-            <p className="mt-0.5 text-[13px] text-mute">A new set arrives every morning.</p>
-          </div>
-          <span className="text-[13px] font-bold text-gold">{doneCount}/{m.quests.length} complete</span>
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <h2 className="text-[17px] font-extrabold"><IconLabel name="u1-share" text="Surveys for you" size={24} /></h2>
+          <Link href="/member/surveys" className="shrink-0 rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-teal">See all surveys →</Link>
         </div>
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
-          {m.quests.map((q) => (
-            <div key={q.id} className="rounded-2xl2 border-[1.5px] bg-white p-[18px]" style={{ borderColor: q.done ? '#CFE7CF' : '#F1ECDB' }}>
-              <div className="flex items-start justify-between">
-                {q.done ? (
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#E7F6EF] text-xl font-extrabold text-green">✓</span>
-                ) : (
-                  <CapIcon name={q.icon} size={40} />
-                )}
-                <span className="rounded-full bg-syel px-2.5 py-1 text-xs font-extrabold text-gold">+{q.xp} XP</span>
-              </div>
-              <div className="mt-3 text-[15px] font-bold">{q.title}</div>
-              <button onClick={q.done ? undefined : () => m.completeQuest(q)} disabled={q.done}
-                className="mt-3 w-full rounded-[10px] py-2.5 text-[13px] font-bold disabled:cursor-default"
-                style={{ background: q.done ? '#E7F6EF' : '#FFCC33', color: q.done ? '#22A06B' : '#1C2526' }}>
-                {q.done ? 'Completed' : q.kind === 'survey' ? 'Start →' : 'Claim'}
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* One weekly goal under the dailies. It runs on its own clock, so it
-            shows progress rather than a claim button — nothing to press, just
-            somewhere the week's work adds up. */}
-        <div className="mt-3.5 flex flex-col gap-3.5 rounded-2xl2 border border-bd bg-white p-[18px] sm:flex-row sm:items-center">
-          <CapIcon name={weeklyQuest.icon} size={40} />
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-              <span className="text-[15px] font-bold">This week: {weeklyQuest.objective}</span>
-              <span className="text-[13px] font-bold text-gold">
-                {weeklyQuest.progress} of {weeklyQuest.target}
-              </span>
-            </div>
-            <div className="mt-2 max-w-[420px]">
-              <ProgressBar pct={weeklyPct} color="linear-gradient(90deg,#336666,#22A06B)" height={8} />
-            </div>
-            <div className="mt-1.5 text-[13px] text-mute">
-              Resets in {weeklyQuest.resetsIn} · +{weeklyQuest.xp} XP when it is done
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Surveys + badges */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.3fr_1fr]">
-        <div>
-          <h2 className="mb-2.5 text-base font-extrabold"><IconLabel name="u1-share" text="Surveys for you" size={22} /></h2>
-          {m.surveys.length ? (
-            m.surveys.map((sv) => (
-              <div key={sv.id} className="mb-2.5 flex items-center gap-3 rounded-2xl border border-bd bg-white p-3.5">
+        {m.surveys.length ? (
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+            {m.surveys.map((sv) => (
+              <div key={sv.id} className="flex items-center gap-3 rounded-2xl border border-bd bg-white p-3.5">
                 <CapIcon name={sv.icon} size={42} />
                 <div className="min-w-0 flex-1">
                   <div className="text-[15px] font-bold">Project {sv.projectId} · Survey {sv.surveyId}</div>
                   <div className="text-xs text-mute">⏱ {sv.time} min · {m.fmt(sv.reward)} · +{sv.xp} XP</div>
                 </div>
                 <button onClick={() => m.openSurvey({ id: sv.id, topic: sv.topic, reward: sv.reward, xp: sv.xp }, null)}
-                  className="shrink-0 rounded-[10px] bg-teal px-4 py-2.5 text-[13px] font-bold text-white">Play</button>
+                  className="shrink-0 rounded-[10px] bg-teal px-5 py-2.5 text-[13px] font-bold text-white">Start</button>
               </div>
-            ))
-          ) : (
-            <div className="rounded-2xl border border-dashed border-bd bg-white p-6 text-center">
-              <div className="flex justify-center"><CapIcon name="r1-celebrate" size={58} radius={14} /></div>
-              <div className="mt-1.5 text-sm font-bold">All surveys done — legend!</div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-bd bg-white p-6 text-center">
+            <div className="flex justify-center"><CapIcon name="r1-celebrate" size={58} radius={14} /></div>
+            <div className="mt-1.5 text-sm font-bold">All surveys done — legend!</div>
+          </div>
+        )}
+      </div>
+
+      {/* Daily quests · This week · Badges — three parallel columns, kept
+          deliberately compact so the whole row sits under the surveys without
+          dominating them. Each answers a different question: what's on today,
+          how the week is going, what's been earned. */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.15fr_.9fr_1fr]">
+        {/* Daily quests — compact rows: icon, title, XP, and a small action
+            button beside the heading rather than a full-width bar. */}
+        <div>
+          <div className="mb-2.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+            <div>
+              <h2 className="text-[15px] font-extrabold"><IconLabel name="u2-target" text="Daily quests" size={22} /></h2>
+              {/* The rotation is the point: say so, so an unfinished quest reads
+                  as "there'll be another" rather than something missed. */}
+              <p className="mt-0.5 text-[12px] text-mute">A new set arrives every morning.</p>
             </div>
-          )}
-          <Link href="/member/surveys" className="mt-1 inline-block rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-teal">See all surveys →</Link>
+            <span className="text-[12px] font-bold text-gold">{doneCount}/{m.quests.length} complete</span>
+          </div>
+          <div className="flex flex-col gap-2.5">
+            {m.quests.map((q) => (
+              <div key={q.id} className="flex items-center gap-2.5 rounded-xl2 border-[1.5px] bg-white p-2.5" style={{ borderColor: q.done ? '#CFE7CF' : '#F1ECDB' }}>
+                {q.done ? (
+                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#E7F6EF] text-base font-extrabold text-green">✓</span>
+                ) : (
+                  <CapIcon name={q.icon} size={32} />
+                )}
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-[13px] font-bold leading-tight">{q.title}</div>
+                  <div className="mt-0.5 text-[11px] font-extrabold text-gold">+{q.xp} XP</div>
+                </div>
+                <button onClick={q.done ? undefined : () => m.completeQuest(q)} disabled={q.done}
+                  className="shrink-0 rounded-lg px-3 py-1.5 text-[12px] font-bold disabled:cursor-default"
+                  style={{ background: q.done ? '#E7F6EF' : '#FFCC33', color: q.done ? '#22A06B' : '#1C2526' }}>
+                  {q.done ? 'Done' : q.kind === 'survey' ? 'Start →' : 'Claim'}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* A summary, not a catalogue: the dashboard answers "how am I doing?"
-            in one glance and sends the full 27-tile set to its own page. */}
-        <div className="rounded-2xl2 border border-bd bg-white p-[18px]">
-          <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-base font-extrabold"><IconLabel name="r1-celebrate" text="Badges" size={22} /></h2>
-            <span className="shrink-0 text-[13px] font-extrabold text-teal">{earnedBadges.length} of {badges.length}</span>
+        {/* This week — one weekly goal on its own clock. Shown as a step ladder
+            rather than a claim button: nothing to press, just somewhere the
+            week's attempts add up toward the reset. */}
+        <div className="rounded-2xl2 border border-bd bg-white p-4">
+          <div className="flex flex-col items-center text-center">
+            <CapIcon name={weeklyQuest.icon} size={40} />
+            <div className="mt-2 text-[13.5px] font-bold leading-snug">This week: {weeklyQuest.objective}</div>
           </div>
-          <div className="mt-2.5"><ProgressBar pct={badgePct} color="linear-gradient(90deg,#336666,#22A06B)" height={8} /></div>
+          <div className="relative mx-auto mt-3.5 max-w-[190px]">
+            <span className="absolute left-[6px] top-1.5 bottom-1.5 w-px -translate-x-1/2 bg-bd" aria-hidden="true" />
+            <ul className="relative space-y-2.5">
+              {Array.from({ length: weeklyQuest.target }).map((_, i) => {
+                const done = i < weeklyQuest.progress;
+                return (
+                  <li key={i} className="flex items-center gap-3">
+                    <span className={`z-10 grid h-3 w-3 place-items-center rounded-full border-2 ${done ? 'border-green bg-green' : 'border-bd bg-white'}`} />
+                    <span className={`text-[12px] font-semibold ${done ? 'text-ink' : 'text-mute'}`}>Level {i + 1}</span>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="mt-3.5 text-center text-[12px] font-bold text-gold">{weeklyQuest.progress} of {weeklyQuest.target}</div>
+          <div className="mt-1 text-center text-[11px] text-mute">Resets in {weeklyQuest.resetsIn} · +{weeklyQuest.xp} XP when it is done</div>
+        </div>
+
+        {/* Badges — a summary, not a catalogue: the dashboard answers "how am I
+            doing?" in one glance and sends the full 27-tile set to its own page. */}
+        <div className="rounded-2xl2 border border-bd bg-white p-4">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="text-[15px] font-extrabold"><IconLabel name="r1-celebrate" text="Badges" size={20} /></h2>
+            <span className="shrink-0 text-[12px] font-extrabold text-teal">{earnedBadges.length} of {badges.length}</span>
+          </div>
+          <div className="mt-2"><ProgressBar pct={badgePct} color="linear-gradient(90deg,#336666,#22A06B)" height={7} /></div>
 
           {earnedBadges.length ? (
             <>
-              <div className="mt-4 grid grid-cols-3 gap-x-2.5 gap-y-3.5">
+              <div className="mt-3 grid grid-cols-3 gap-x-2 gap-y-2.5">
                 {earnedBadges.slice(0, 6).map((b) => (
-                  <BadgeTile key={b.id} badge={b} size={68} />
+                  <BadgeTile key={b.id} badge={b} size={56} />
                 ))}
               </div>
               {earnedBadges.length > 6 && (
-                <div className="mt-3 text-[13px] text-mute">
+                <div className="mt-2.5 text-[12px] text-mute">
                   and {earnedBadges.length - 6} more earned
                 </div>
               )}
             </>
           ) : (
-            <div className="mt-4 text-[13px] leading-snug text-mute">
+            <div className="mt-3 text-[12px] leading-snug text-mute">
               No badges yet. Finish a profile section or take your first survey and the first one
               is yours.
             </div>
           )}
 
-          <Link href="/member/dashboard/badges" className="mt-3.5 inline-block rounded-[10px] border border-bd bg-white px-4 py-2.5 text-[13px] font-bold text-teal">See all badges →</Link>
+          <Link href="/member/dashboard/badges" className="mt-3 inline-block rounded-[10px] border border-bd bg-white px-3.5 py-2 text-[12px] font-bold text-teal">See all badges →</Link>
         </div>
       </div>
 
@@ -185,7 +197,7 @@ export default function DashboardPage() {
           <div className="mt-2 text-[13px] text-mute">Complete 3 more sections to get better survey matches.</div>
           <Link href="/member/profile" className="mt-3 inline-block rounded-[10px] bg-teal px-4 py-2.5 text-[13px] font-bold text-white">Improve my profile →</Link>
         </div>
-        <div className="flex items-center justify-between gap-4 rounded-2xl2 px-6 py-5 text-white" style={{ background: 'linear-gradient(120deg,#336666,#2c6a64)' }}>
+        <div className="flex items-center justify-between gap-4 rounded-2xl2 bg-dgreen px-6 py-5 text-white">
           <div>
             <div className="text-[17px] font-extrabold">🎟 Monthly community draw</div>
             <div className="mt-0.5 text-[13px] text-[#BFE0E0]">You have {m.tickets} {m.tickets === 1 ? 'entry' : 'entries'} · next draw {draw.date}</div>

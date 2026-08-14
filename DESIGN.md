@@ -131,8 +131,9 @@ This system explicitly rejects the **survey-farm aesthetic** it is escaping: no 
 A warm, grounded palette: a deep teal does the heavy lifting, warm off-whites carry the surfaces, and one saturated yellow is the single loud voice.
 
 ### Primary
-- **Deep Muted Teal** (`#336666`): The brand's anchor. Primary buttons in "dark" mode, links, active nav, headings on light surfaces, member sidebar (`#1F4F4F` deepened variant). Carries credibility and calm.
-- **Forest Teal (deep)** (`#1F4F4F`): The darkest teal. Hero headline color, member platform sidebar background, primary-button hover. Adds weight and seriousness where teal alone would feel light.
+- **Deep Muted Teal** (`#336666`): The brand's anchor. Primary buttons in "dark" mode, links, active nav, headings on light surfaces. Carries credibility and calm.
+- **Forest Teal (deep)** (`#1F4F4F`): The darkest teal. Hero headline color, primary-button hover. Adds weight and seriousness where teal alone would feel light.
+- **Deep Green (dark)** (`#023842`, token `dgreen`): The member platform's structural dark surface — the desktop **sidebar**, the dashboard **level hero**, and every standing feature bar (dashboard **monthly community draw**, rewards **"available to redeem"**, profile **completion** hero, community **Click Draw** bar). Deeper and greener than Forest Teal; used flat (no gradient) so the member area's dark anchors all read as one surface.
 - **Soft Teal (muted)** (`#52706E`): Desaturated teal for secondary body copy on warm surfaces where pure `#667085` gray would look washed out. Use instead of gray-on-tint.
 
 ### Secondary
@@ -214,7 +215,15 @@ The system is **soft-layered, not flat and not heavy.** Depth is conveyed with d
 
 ### Navigation
 - **Site header:** A floating white pill — `bg-white/90`, `rounded-full`, `backdrop-blur-md`, `shadow-soft`, warm 1px border — stuck near the top with margin on all sides (not edge-to-edge). Nav links are 14px semibold `#33635F`, bold Teal when active. Mobile collapses to a hamburger revealing a rounded card menu with Light-Teal active rows.
-- **Member platform:** A `#1F4F4F` (Forest Teal) fixed sidebar on desktop with white logo chip and icon+label nav; a bottom tab bar with a "More" overflow on mobile.
+- **Member platform:** A `#023842` (Deep Green) fixed **200px** sidebar on desktop, split into two groups by a hairline `bg-white/10` divider — primary destinations (Dashboard / Surveys / Rewards / Profile / Community) above, support/config (Help Center / Settings) below. A white logo panel sits at the top. Nav uses **clean single-stroke line icons** (`src/components/ui/NavIcon.tsx`, `currentColor` so one icon serves both states) — *not* the Captain CapIcon tiles, which stay reserved for content (page titles, cards, badges). Active row = Signal-Yellow fill with ink text; idle = `#BFE0E0` with a `hover:bg-white/5`. Mobile keeps the bottom tab bar (same line icons) with a "More" overflow.
+- **Topbar chips:** The three status chips (🔥 streak, 🎟 Click Draw entries, 💰 balance) each carry a `group-hover` tooltip (ink bubble, `role="tooltip"`, plus `aria-label`) that spells out what the number means — the glyphs alone were ambiguous.
+
+### Member dashboard layout
+Information order answers the member's questions in priority sequence, top to bottom:
+1. **Level hero** (`#023842`) — rank, XP into the level, draw entries, streak-shield chip. No mascot on the hero (removed: it competed with the numbers). The clock-face `SquareRing` + flipping `LevelMedallion` stay.
+2. **Surveys for you** — lifted directly under the hero (the member's reason to be here comes first), a **2×2 grid** of recommended surveys with a compact `See all surveys →` in the heading row.
+3. **Daily quests · This week · Badges** — three parallel columns, deliberately compact so they support the surveys rather than dominate. **Daily-quest cards are a single tight row**: icon, title, `+XP`, and a *small* action button (Claim / Start) beside the heading — not a full-width bar. **This week** is a vertical step ladder (the `n-compass` stopwatch icon, one dot per weekly attempt) rather than a claim button — nothing to press, just where the week accrues. **Badges** stays the summary card (56px tiles).
+4. **Profile completion · Monthly community draw** — the two closing cards.
 
 ### Accordion (signature)
 White rows, `rounded-2xl` (16px), 1px Border-Sand, a `+` glyph in Teal that rotates 45° to `×` on open. Answer copy in Mute at `text-sm leading-relaxed`. Used for FAQ across site and help center.

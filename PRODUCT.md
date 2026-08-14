@@ -141,6 +141,12 @@ will be another* rather than something missed. The three-way split is deliberate
 needed a survey, a member in a market with thin survey supply could end the day unable to
 complete anything, which is the exact frustration the habit loop exists to prevent.
 
+The dashboard is ordered to respect the member's time: after the level hero, **"Surveys for you"
+comes first** — the reason a member logs in — and the gamification (daily quests, weekly ladder,
+badges) sits below it in a deliberately compact row, present but never crowding the actual work.
+The three status figures in the topbar (streak, Click Draw entries, balance) each carry a
+hover tooltip explaining what the number means, so a glyph and a count are never left to guess.
+
 ## Brand Personality
 
 **Warm, credible, respectful.** Three words: *trustworthy, approachable, fair.*
