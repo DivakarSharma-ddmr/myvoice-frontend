@@ -29,8 +29,7 @@ export default function CommunityPage() {
 
       {/* Draw */}
       <div
-        className="flex items-center gap-4 rounded-2xl2 p-6 text-white"
-        style={{ background: 'linear-gradient(135deg,#1F4F4F,#2c6a64)' }}
+        className="flex items-center gap-4 rounded-2xl2 bg-dgreen p-6 text-white"
       >
         <div className="hidden sm:block">
           <Mascot size={104} pose="winner" />

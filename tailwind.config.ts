@@ -12,6 +12,7 @@ const config: Config = {
         ink: '#1C2526',
         teal: '#336666',
         dteal: '#1F4F4F',
+        dgreen: '#023842',
         teal2: '#2c6a64',
         yel: '#FFCC33',
         syel: '#FFF4CC',

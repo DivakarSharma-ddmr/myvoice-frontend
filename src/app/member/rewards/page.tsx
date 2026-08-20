@@ -11,7 +11,7 @@ export default function RewardsPage() {
     <div className="space-y-5">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.4fr_1fr]">
         {/* Balance card */}
-        <div className="relative overflow-hidden rounded-2xl2 p-6 text-white" style={{ background: 'linear-gradient(135deg,#1F4F4F,#2c6a64)' }}>
+        <div className="relative overflow-hidden rounded-2xl2 bg-dgreen p-6 text-white">
           <div aria-hidden className="absolute -bottom-8 -right-8 h-[150px] w-[150px] rounded-full bg-yel/[.14]" />
           <div className="relative">
             <div className="text-[13px] font-semibold text-[#BFE0E0]">Available to redeem</div>

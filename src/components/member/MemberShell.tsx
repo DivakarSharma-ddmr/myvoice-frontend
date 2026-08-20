@@ -5,19 +5,27 @@ import { usePathname } from 'next/navigation';
 import { asset } from '@/lib/asset';
 import { clsx } from '@/lib/clsx';
 import { CapIcon } from '@/components/ui/CapIcon';
+import { NavIcon, type NavIconName } from '@/components/ui/NavIcon';
 import { useMember } from './MemberProvider';
 import { Overlay } from './Overlay';
 import { member } from '@/lib/mockData';
 
-const NAV: [string, string, string][] = [
-  ['Dashboard', 'u2-home', '/member/dashboard'],
-  ['Surveys', 'u1-share', '/member/surveys'],
-  ['Rewards', 'u2-gift', '/member/rewards'],
-  ['Profile', 'u1-work', '/member/profile'],
-  ['Community', 'u2-pets', '/member/community'],
-  ['Help Center', 'u2-idea', '/member/help'],
-  ['Settings', 'u2-gear', '/member/settings'],
+// The sidebar splits into two groups: the primary destinations up top, then a
+// hairline divider, then the support/config items. Clean line icons (NavIcon)
+// replace the Captain tiles in the menu — see NavIcon.tsx.
+const NAV_TOP: [string, NavIconName, string][] = [
+  ['Dashboard', 'home', '/member/dashboard'],
+  ['Surveys', 'surveys', '/member/surveys'],
+  ['Rewards', 'rewards', '/member/rewards'],
+  ['Profile', 'profile', '/member/profile'],
+  ['Community', 'community', '/member/community'],
 ];
+const NAV_BOTTOM: [string, NavIconName, string][] = [
+  ['Help Center', 'help', '/member/help'],
+  ['Settings', 'settings', '/member/settings'],
+];
+const NAV = [...NAV_TOP, ...NAV_BOTTOM];
+// Mobile bottom nav: the four core destinations, everything else under "More".
 const PRIMARY = NAV.slice(0, 4);
 const MORE = NAV.slice(4);
 
@@ -60,35 +68,26 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-cream">
       {/* Desktop sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-[216px] shrink-0 flex-col bg-dteal p-3 lg:flex">
-        <div className="mb-4 self-start rounded-xl bg-white px-2.5 py-1.5">
+      <aside className="sticky top-0 hidden h-screen w-[200px] shrink-0 flex-col bg-dgreen px-3.5 py-4 lg:flex">
+        <div className="mb-6 self-start rounded-2xl bg-white px-3 py-2.5 shadow-soft">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={asset('/assets/logo.webp')} alt="MyVoice" className="h-[22px]" />
+          <img src={asset('/assets/logo.webp')} alt="MyVoice by DataDiggers" className="block h-14 w-auto" />
         </div>
-        <nav className="flex flex-1 flex-col gap-1">
-          {NAV.map(([label, ic, href]) => {
-            const a = isActive(href);
-            return (
-              <Link key={href} href={href}
-                className={clsx('flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm', a ? 'bg-yel font-bold text-ink' : 'font-semibold text-[#BFE0E0] hover:bg-white/5')}>
-                <span className={clsx('grid h-[34px] w-[34px] shrink-0 place-items-center rounded-[10px]', a ? 'bg-white' : 'bg-[#FBF7EC]')}>
-                  <CapIcon name={ic} size={24} radius={7} />
-                </span>
-                {label}
-              </Link>
-            );
-          })}
+        <nav className="flex flex-col gap-1">
+          {NAV_TOP.map((item) => (
+            <NavLink key={item[2]} item={item} active={isActive(item[2])} />
+          ))}
         </nav>
-        <div className="my-2 rounded-2xl bg-white/[.08] p-3">
-          <div className="flex items-center gap-2">
-            <span className="inline-block animate-qflame text-[15px]">🔥</span>
-            <span className="text-[13px] font-bold text-white">{streak}-day streak</span>
-          </div>
-          <div className="mt-1 text-[11px] text-[#9FBDBD]">Keep it alive — answer today!</div>
-        </div>
+        <div className="my-4 h-px bg-white/10" />
+        <nav className="flex flex-col gap-1">
+          {NAV_BOTTOM.map((item) => (
+            <NavLink key={item[2]} item={item} active={isActive(item[2])} />
+          ))}
+        </nav>
+        <div className="flex-1" />
         <div className="flex items-center justify-between px-2 py-1">
           <span className="text-xs font-semibold text-[#9FBDBD]">🌍 {member.language}</span>
-          <Link href="/login" className="text-xs font-bold text-[#9FBDBD]">Logout</Link>
+          <Link href="/login" className="text-xs font-bold text-[#9FBDBD] hover:text-white">Logout</Link>
         </div>
       </aside>
 
@@ -101,9 +100,12 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
             <span className="truncate">{title}</span>
           </h1>
           <div className="flex items-center gap-2">
-            <Chip icon="🔥" val={String(streak)} bg="#FFF4CC" col="#8a6d12" />
-            <Chip icon="🎟" val={String(tickets)} bg="#E8F3F3" col="#1F4F4F" className="hidden sm:flex" />
-            <Chip icon="💰" val={fmt(available)} bg="#FFF4CC" col="#1C2526" />
+            <Chip icon="🔥" val={String(streak)} bg="#FFF4CC" col="#8a6d12"
+              tip={`${streak}-day streak — answer a survey today to keep it going`} />
+            <Chip icon="🎫" val={String(tickets)} bg="#E8F3F3" col="#1F4F4F" className="hidden sm:flex"
+              tip={`Click Draw entries — you have ${tickets} for this month's prize draw`} />
+            <Chip icon="💰" val={fmt(available)} bg="#FFF4CC" col="#1C2526"
+              tip={`Available balance — ${fmt(available)} ready to withdraw`} />
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal font-extrabold text-white">{member.initials}</span>
           </div>
         </div>
@@ -118,8 +120,8 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
           const a = isActive(href);
           return (
             <Link key={href} href={href} className="flex flex-col items-center gap-0.5 px-2 py-1">
-              <span className={clsx('grid h-8 w-8 place-items-center rounded-lg', a ? 'bg-lteal' : '')}>
-                <CapIcon name={ic} size={22} radius={6} />
+              <span className={clsx('grid h-8 w-8 place-items-center rounded-lg', a ? 'bg-lteal text-teal' : 'text-mute')}>
+                <NavIcon name={ic} size={21} />
               </span>
               <span className={clsx('text-[10px] font-bold', a ? 'text-teal' : 'text-mute')}>{label}</span>
             </Link>
@@ -139,8 +141,8 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
             <div className="grid grid-cols-2 gap-2">
               {MORE.map(([label, ic, href]) => (
                 <Link key={href} href={href} onClick={() => setMoreOpen(false)}
-                  className="flex items-center gap-3 rounded-2xl border border-bd p-3 text-sm font-bold">
-                  <CapIcon name={ic} size={28} radius={8} /> {label}
+                  className="flex items-center gap-3 rounded-2xl border border-bd p-3 text-sm font-bold text-ink">
+                  <span className="grid h-9 w-9 place-items-center rounded-lg bg-lteal text-teal"><NavIcon name={ic} size={20} /></span> {label}
                 </Link>
               ))}
             </div>
@@ -154,11 +156,38 @@ export function MemberShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Chip({ icon, val, bg, col, className }: { icon: string; val: string; bg: string; col: string; className?: string }) {
+function NavLink({ item, active }: { item: [string, NavIconName, string]; active: boolean }) {
+  const [label, ic, href] = item;
   return (
-    <div className={clsx('flex items-center gap-1.5 rounded-full px-3 py-1.5', className)} style={{ background: bg }}>
-      <span className="text-sm">{icon}</span>
+    <Link
+      href={href}
+      className={clsx(
+        'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm',
+        active ? 'bg-yel font-bold text-ink' : 'font-semibold text-[#BFE0E0] hover:bg-white/5 hover:text-white',
+      )}
+    >
+      <NavIcon name={ic} className="shrink-0" size={22} />
+      {label}
+    </Link>
+  );
+}
+
+function Chip({ icon, val, bg, col, className, tip }: { icon: string; val: string; bg: string; col: string; className?: string; tip?: string }) {
+  return (
+    <div className={clsx('group relative flex items-center gap-1.5 rounded-full px-3 py-1.5', className)} style={{ background: bg }} aria-label={tip}>
+      <span className="text-sm" aria-hidden="true">{icon}</span>
       <span className="text-sm font-extrabold" style={{ color: col }}>{val}</span>
+      {tip && (
+        <span
+          role="tooltip"
+          className="pointer-events-none absolute right-0 top-[calc(100%+9px)] z-30 w-max max-w-[230px] origin-top-right scale-90 whitespace-normal rounded-2xl border border-bd bg-cream px-3.5 py-2.5 text-left text-[11.5px] font-semibold leading-snug text-ink opacity-0 shadow-card transition duration-150 ease-out group-hover:scale-100 group-hover:opacity-100"
+        >
+          {/* Speech-bubble tail — a rotated square that borrows the bubble's own
+              fill + border so only its two upper edges read as the pointer. */}
+          <span aria-hidden="true" className="absolute -top-1.5 right-5 h-3 w-3 rotate-45 rounded-[3px] border-l border-t border-bd bg-cream" />
+          {tip}
+        </span>
+      )}
     </div>
   );
 }

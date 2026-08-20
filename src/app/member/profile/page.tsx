@@ -7,8 +7,7 @@ export default function ProfilePage() {
   return (
     <div className="space-y-5">
       {/* Hero */}
-      <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-2xl2 p-6 text-white sm:flex-row sm:gap-6"
-        style={{ background: 'linear-gradient(135deg,#1F4F4F,#2c6a64)' }}>
+      <div className="relative flex flex-col items-center gap-5 overflow-hidden rounded-2xl2 bg-dgreen p-6 text-white sm:flex-row sm:gap-6">
         <div className="relative grid h-[108px] w-[108px] shrink-0 place-items-center">
           <Ring pct={72} size={108} />
           <div className="absolute text-center">

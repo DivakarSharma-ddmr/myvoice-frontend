@@ -131,8 +131,9 @@ This system explicitly rejects the **survey-farm aesthetic** it is escaping: no 
 A warm, grounded palette: a deep teal does the heavy lifting, warm off-whites carry the surfaces, and one saturated yellow is the single loud voice.
 
 ### Primary
-- **Deep Muted Teal** (`#336666`): The brand's anchor. Primary buttons in "dark" mode, links, active nav, headings on light surfaces, member sidebar (`#1F4F4F` deepened variant). Carries credibility and calm.
-- **Forest Teal (deep)** (`#1F4F4F`): The darkest teal. Hero headline color, member platform sidebar background, primary-button hover. Adds weight and seriousness where teal alone would feel light.
+- **Deep Muted Teal** (`#336666`): The brand's anchor. Primary buttons in "dark" mode, links, active nav, headings on light surfaces. Carries credibility and calm.
+- **Forest Teal (deep)** (`#1F4F4F`): The darkest teal. Hero headline color, primary-button hover. Adds weight and seriousness where teal alone would feel light.
+- **Deep Green (dark)** (`#023842`, token `dgreen`): The member platform's structural dark surface — the desktop **sidebar**, the dashboard **level hero**, and every standing feature bar (dashboard **monthly community draw**, rewards **"available to redeem"**, profile **completion** hero, community **Click Draw** bar). Deeper and greener than Forest Teal; used flat (no gradient) so the member area's dark anchors all read as one surface.
 - **Soft Teal (muted)** (`#52706E`): Desaturated teal for secondary body copy on warm surfaces where pure `#667085` gray would look washed out. Use instead of gray-on-tint.
 
 ### Secondary
@@ -214,7 +215,15 @@ The system is **soft-layered, not flat and not heavy.** Depth is conveyed with d
 
 ### Navigation
 - **Site header:** A floating white pill — `bg-white/90`, `rounded-full`, `backdrop-blur-md`, `shadow-soft`, warm 1px border — stuck near the top with margin on all sides (not edge-to-edge). Nav links are 14px semibold `#33635F`, bold Teal when active. Mobile collapses to a hamburger revealing a rounded card menu with Light-Teal active rows.
-- **Member platform:** A `#1F4F4F` (Forest Teal) fixed sidebar on desktop with white logo chip and icon+label nav; a bottom tab bar with a "More" overflow on mobile.
+- **Member platform:** A `#023842` (Deep Green) fixed **200px** sidebar on desktop, split into two groups by a hairline `bg-white/10` divider — primary destinations (Dashboard / Surveys / Rewards / Profile / Community) above, support/config (Help Center / Settings) below. A white logo panel sits at the top. Nav uses **clean single-stroke line icons** (`src/components/ui/NavIcon.tsx`, `currentColor` so one icon serves both states) — *not* the Captain CapIcon tiles, which stay reserved for content (page titles, cards, badges). Active row = Signal-Yellow fill with ink text; idle = `#BFE0E0` with a `hover:bg-white/5`. Mobile keeps the bottom tab bar (same line icons) with a "More" overflow.
+- **Topbar chips:** The three status chips (🔥 streak, 🎫 Click Draw entries, 💰 balance) each carry a `group-hover` tooltip that spells out what the number means — the glyphs alone were ambiguous. The tooltip is a **light speech bubble**: `bg-cream` fill, `text-ink` (black) copy, 1px Border-Sand, `rounded-2xl`, `shadow-card`, and a rotated-square **tail** (same fill + border) pointing up to the chip. It pops in with a `scale-90 → scale-100` + `opacity` transition on hover (`role="tooltip"` + `aria-label` for a11y). The middle chip uses a **ticket** glyph (🎫), not the ambiguous admission-tickets one.
+
+### Member dashboard layout
+Information order answers the member's questions in priority sequence, top to bottom:
+1. **Level hero** (`#023842`) — rank, XP into the level, draw entries, streak-shield chip. No mascot on the hero (removed: it competed with the numbers). The clock-face `SquareRing` + flipping `LevelMedallion` stay.
+2. **Surveys for you** — lifted directly under the hero (the member's reason to be here comes first), a **2×2 grid** of recommended surveys with a compact `See all surveys →` in the heading row.
+3. **Daily quests · This week · Badges** — three parallel columns, deliberately compact so they support the surveys rather than dominate. **Daily-quest cards are a single tight row**: icon, title, `+XP`, and a *small* action button (Claim / Start) beside the heading — not a full-width bar. **This week** is a vertical step ladder (the `n-compass` stopwatch icon, one dot per weekly attempt) rather than a claim button — nothing to press, just where the week accrues. **Badges** stays the summary card (56px tiles).
+4. **Profile completion · Monthly community draw** — the two closing cards.
 
 ### Accordion (signature)
 White rows, `rounded-2xl` (16px), 1px Border-Sand, a `+` glyph in Teal that rotates 45° to `×` on open. Answer copy in Mute at `text-sm leading-relaxed`. Used for FAQ across site and help center.
@@ -363,3 +372,78 @@ The Help Center pairs the async **Contact support** form (left, ~1.1fr) with a *
 - **Don't** put mute-gray text on cream/sand — it washes out and fails contrast (No-Gray-On-Warm Rule).
 - **Don't** use gray or black shadows; **don't** nest cards; **don't** exceed a ~52px display headline.
 - **Don't** use color as the only signal for survey/reward state — always pair with an icon or label.
+
+## 8. Admin Console (internal surface)
+
+A **third surface** beyond the public site and member platform: the **panel-admin console**,
+the internal operational tool panel administrators use (approve payouts, manage members,
+run campaigns, answer support). It ships in two versions that share one design language:
+
+- **V1 — `/admin`** (on `main`, deployed): a faithful, prettier re-skin of the legacy Metronic
+  admin, backend-ready for a 1:1 wiring.
+- **V2 — `/admin-lab`** (on branch `admin-v2`, not deployed): the reimagined *operator console*.
+
+### Register & tone
+Admin is a **product / utility** register — **denser than the member platform**, function over
+warmth. It is deliberately **not** the "Trusted Neighbor" brand voice: no marketing warmth, no
+mascot, no gamification. Same tokens (`tailwind.config.ts`), tighter spacing, more information
+per screen. Light mode only for now.
+
+### Rules carried over (unchanged)
+- **Signal Yellow stays money-only** — reserved for the primary/positive value action
+  (Approve payouts, Save), never for nav-active or decoration. (This is why admin nav-active
+  uses `lteal/dteal`, not the legacy yellow highlight.)
+- **Teal-tinted shadows**, generous radii, WCAG 2.2 AA.
+- **Status by icon + colour, never colour alone** — one canonical token set in
+  `src/lib/adminStatus.ts` → `<StatusPill>`: Active (green/check), Inactive (mute/dash),
+  Sleeping (amber/moon), Unsubscribed (soft-teal/bell-off — *distinct* from Active, fixing the
+  legacy "both blue" bug), Pending (amber/clock), On Hold (gold/pause), Approved (green/check),
+  Rejected (danger/x), Complete (teal/check).
+
+### Shared component library (`src/components/admin/*`)
+`AdminShell`, `DataTable` (sort/filter/paginate/select + faked legacy totals), `StatusPill`,
+`ActionMenu`, `ConfirmDialog` (stakes-stating for money/bulk/destructive), `Toast`, `Tabs`,
+`Field` (Text/TextArea/Select/Toggle/DatePicker/FileUpload), `RichTextEditor` (contentEditable
++ `%%merge-tag%%` chips + preview), `PanelSwitcher` (searchable 30+ panels), `TwoPaneChat`,
+`StatTile`. Data flows through `src/lib/adminMockData.ts` (the swap-for-API file); mutations
+live in `AdminProvider` and reset on reload.
+
+### Edit Member layout (the member record)
+The Members list's **View** opens a full member record. Two layouts, one data source
+(`memberDetail(id)`):
+- **V1 (`/admin/members/[id]`)** — **faithful legacy 6-tab** layout via the shared `Tabs` strip:
+  User Details · Extra/Meta Data · Panel Questions · Transactions · Consent · Messages. A top
+  bar carries the **Wallet Amount** and the **Award Point / Reason / Approve** control. Read-only
+  account facts sit left in a `<dl>`; editable identity fields (`Field` inputs) sit right; the
+  Transactions/Messages tabs reuse `DataTable`; Panel Questions are grouped read-only cards.
+  **Signal Yellow is reserved for the Approve (points) button** — every other submit is teal.
+- **V2 (`/admin-lab/members/[id]`)** — the same record as **one single scannable page**: a sticky
+  dark-teal identity header (avatar, name/email, status, key facts inline), a **pinned action row**
+  (status · award · save · login-as) that stays reachable while scrolling, then **collapsible
+  section cards** (Account & meta · Panel questions · Transactions · Consent · Messages) with an
+  in-page anchor rail — no tab-hopping. Reached from the members `DetailDrawer` via "Open full
+  profile →".
+
+### V2 visual differentiators (`/admin-lab`, `src/components/admin-lab/*`)
+V2 reads as a distinct "console" while staying in the same design language:
+- **Dark Deep-Teal sidebar** (vs V1's white sidebar) with a small **"LAB"** badge — instantly
+  tells you which version you're in.
+- **Action hub Home** ("Needs you now" cards) instead of a stats wall.
+- **Approval queue**: segmented status filter with counts, bulk €-total confirms, inline member
+  risk context (redemption count + account status per row).
+- **Filter bar + right `DetailDrawer`** for record detail (Members), replacing crammed row
+  buttons; **card grid** for the reward catalogue; **vertical settings-nav** for settings pages.
+- **`RowActions`** convention everywhere: one visible primary + overflow menu + destructive
+  confirmed.
+- **Command palette (⌘K/Ctrl+K)**: jump to any section or a member by id/email.
+- **3-step campaign wizard** (Audience → Content → Review), Start gated on a test send.
+- Message Center adds **canned multilingual replies** + a **member-context strip**.
+
+### Admin Do / Don't
+- **Do** state the stakes on money/bulk/destructive actions ("Approve 12 payouts · €140?").
+- **Do** keep the console unlinked from the public site and member area; entry is the cosmetic
+  mock login at `/admin/login`.
+- **Don't** apply the warm marketing tone, mascot, or gamification here — this surface serves the
+  task, not persuasion.
+- **Don't** let V2 modify any V1 file — V2 is purely additive so it merges cleanly after backend
+  wiring.

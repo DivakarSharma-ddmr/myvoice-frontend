@@ -275,9 +275,13 @@ export type SurveyState = 'rec' | 'closing' | 'avail' | 'quota' | 'screen' | 'pe
 // projectId / surveyId are the real research-platform identifiers shown to members
 // in place of the category name. Wire these to the live project & survey IDs.
 export type Survey = { id: number; topic: string; projectId: string; surveyId: string; icon: string; time: number; reward: number; xp: number; state: SurveyState };
+// Four recommended surveys so the dashboard "Surveys for you" reads as a 2×2
+// grid. Wire these to the member's real top matches from the routing engine.
 export const dashboardSurveys: Survey[] = [
   { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: surveyCompletionXp(8), state: 'rec' },
   { id: 2, topic: 'Consumer Technology', projectId: 'P-10429', surveyId: 'S-58219', icon: 'u1-gaming', time: 10, reward: 1.5, xp: surveyCompletionXp(10), state: 'rec' },
+  { id: 3, topic: 'Travel & Holidays', projectId: 'P-10431', surveyId: 'S-58240', icon: 'n-map', time: 12, reward: 1.8, xp: surveyCompletionXp(12), state: 'rec' },
+  { id: 4, topic: 'Streaming & Media', projectId: 'P-10433', surveyId: 'S-58251', icon: 'u1-music', time: 6, reward: 0.9, xp: surveyCompletionXp(6), state: 'rec' },
 ];
 export const allSurveys: Survey[] = [
   { id: 1, topic: 'Shopping Habits', projectId: 'P-10428', surveyId: 'S-58213', icon: 'u2-cart', time: 8, reward: 1.2, xp: surveyCompletionXp(8), state: 'rec' },
