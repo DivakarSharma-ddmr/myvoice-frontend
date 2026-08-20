@@ -29,6 +29,10 @@ type AdminContextValue = {
   bulkReward: (ids: string[], status: 'approved' | 'rejected') => void;
   setMemberStatus: (id: number, status: Member['status']) => void;
   deleteMember: (id: number) => void;
+  saveMemberDetails: (id: number, patch: { status?: Member['status']; email?: string; gender?: Member['gender']; birthYear?: number; postalCode?: string }) => void;
+  saveMemberMeta: (id: number) => void;
+  awardPoints: (id: number, points: number, reason: string) => void;
+  sendMemberMessage: (id: number, text: string) => void;
   addAdminUser: (u: AdminUser) => void;
   setAdminUserStatus: (panelistId: string, status: AdminUser['status']) => void;
   upsertCatalogue: (r: CatalogueReward) => void;
@@ -93,6 +97,18 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     deleteMember: (id) => {
       setData((d) => ({ ...d, members: d.members.filter((m) => m.id !== id) }));
       toast(`Member #${id} deleted.`);
+    },
+
+    saveMemberDetails: (id, patch) => {
+      setData((d) => ({ ...d, members: d.members.map((m) => (m.id === id ? { ...m, ...patch } : m)) }));
+      toast(`Member #${id} details saved.`);
+    },
+    saveMemberMeta: (id) => { toast(`Member #${id} meta data saved.`); },
+    awardPoints: (id, points, reason) => {
+      toast(`Awarded ${points} point${points === 1 ? '' : 's'} to #${id}${reason ? ` (${reason})` : ''}.`);
+    },
+    sendMemberMessage: (id, text) => {
+      if (text.trim()) toast(`Message sent to #${id}.`);
     },
 
     addAdminUser: (u) => {
