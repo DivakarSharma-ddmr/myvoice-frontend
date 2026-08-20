@@ -408,6 +408,22 @@ per screen. Light mode only for now.
 `StatTile`. Data flows through `src/lib/adminMockData.ts` (the swap-for-API file); mutations
 live in `AdminProvider` and reset on reload.
 
+### Edit Member layout (the member record)
+The Members list's **View** opens a full member record. Two layouts, one data source
+(`memberDetail(id)`):
+- **V1 (`/admin/members/[id]`)** — **faithful legacy 6-tab** layout via the shared `Tabs` strip:
+  User Details · Extra/Meta Data · Panel Questions · Transactions · Consent · Messages. A top
+  bar carries the **Wallet Amount** and the **Award Point / Reason / Approve** control. Read-only
+  account facts sit left in a `<dl>`; editable identity fields (`Field` inputs) sit right; the
+  Transactions/Messages tabs reuse `DataTable`; Panel Questions are grouped read-only cards.
+  **Signal Yellow is reserved for the Approve (points) button** — every other submit is teal.
+- **V2 (`/admin-lab/members/[id]`)** — the same record as **one single scannable page**: a sticky
+  dark-teal identity header (avatar, name/email, status, key facts inline), a **pinned action row**
+  (status · award · save · login-as) that stays reachable while scrolling, then **collapsible
+  section cards** (Account & meta · Panel questions · Transactions · Consent · Messages) with an
+  in-page anchor rail — no tab-hopping. Reached from the members `DetailDrawer` via "Open full
+  profile →".
+
 ### V2 visual differentiators (`/admin-lab`, `src/components/admin-lab/*`)
 V2 reads as a distinct "console" while staying in the same design language:
 - **Dark Deep-Teal sidebar** (vs V1's white sidebar) with a small **"LAB"** badge — instantly

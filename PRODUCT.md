@@ -222,6 +222,17 @@ It ships in **two versions**, both static mock-data builds that are backend-read
   even after V1's backend is wired, and V2 inherits real data on merge. Switching V2 to primary
   later is a one-line redirect `/admin → /admin-lab`.
 
+**Edit Member (the six-tab member record).** On the Members list, **View** opens a full
+Edit Member page reproducing the legacy "Edit User" screen: **User Details** (read-only account
+facts + editable identity/status), **Extra/Meta Data** (name, bank, PayPal, etc.), **Panel
+Questions** (the member's profiling answers, grouped), **Transactions** (survey/reward history),
+**Consent** (GDPR consents + timestamps), and **Messages** (support thread). A top bar shows the
+wallet balance and an **Award Point / Reason / Approve** control. In V1 the layout is faithful to
+legacy; in V2 (`/admin-lab/members/[id]`) the same record is one **single scannable page** — a
+sticky identity header, a pinned action row, and collapsible sections instead of tabs. All member
+data flows through `memberDetail(id)` in `adminMockData.ts`, and every submit/approve/message is a
+mock `AdminProvider` action — the backend team wires those bodies.
+
 **Operational rules that hold across both versions:**
 - **State the stakes on money moves.** Bulk approve/reject shows count + € total before it acts
   ("Approve 12 payouts · €140?"); destructive and impersonation ("Login as member") actions
