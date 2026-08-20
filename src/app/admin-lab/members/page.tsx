@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { useAdmin } from '@/components/admin/AdminProvider';
 import { StatusPill } from '@/components/admin/StatusPill';
 import { ConfirmDialog } from '@/components/admin/ConfirmDialog';
@@ -108,6 +109,7 @@ export default function LabMembers() {
       >
         {view && (
           <div className="space-y-5">
+            <Link href={`/admin-lab/members/${view.id}`} className="inline-flex items-center gap-1 text-sm font-semibold text-teal hover:underline">Open full profile →</Link>
             <dl className="grid grid-cols-2 gap-y-2.5 text-sm">
               <dt className="text-soft">Status</dt><dd><StatusPill status={view.status} /></dd>
               <dt className="text-soft">Gender</dt><dd className="text-ink">{view.gender}</dd>
