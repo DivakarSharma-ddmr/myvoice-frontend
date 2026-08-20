@@ -512,3 +512,130 @@ export const TOTALS = { members: 87696, memberRewards: 6144, campaigns: 3242, re
 /** Sum of the values of the given rewards (used by the bulk-approve confirm). */
 export const approvalTotal = (rewards: { value: number }[]): number =>
   rewards.reduce((sum, r) => sum + r.value, 0);
+
+/* ============================================================================
+ *  MEMBER DETAIL — the Edit Member page (legacy "Edit User" six-tab screen)
+ * ============================================================================
+ *  A superset of `Member` returned only on the detail page. Member 34 is the
+ *  exact reproduction of the legacy screenshots; every other id gets
+ *  deterministic (no `Date()`, no randomness) detail derived from the id.
+ * ========================================================================== */
+
+export type PanelQuestionGroup = { group: string; items: { question: string; answer: string }[] };
+export type MemberTransaction = {
+  id: string; created: string; type: string; amount: number;
+  status: string; projectNo: string; surveyNo: string; token: string; clickDraw: string;
+};
+export type MemberConsent = { name: string; option: 'Yes' | 'No'; collected: string };
+export type MemberMessage = { created: string; message: string; status: string };
+
+export type MemberDetail = Member & {
+  panel: string; cintId: string;
+  created: string; lastSent: string; lastAnswered: string; lastUpdated: string; lastAction: string;
+  walletAmount: number; recruitmentSource: string; emailVerified: boolean; resetPasswordLink: string;
+  memberIdField: string; mobile: string; daysBetweenMailouts: string;
+  firstName: string; lastName: string; username: string; ssn: string;
+  bankClearing: string; bankAccount: string; streetAddress: string;
+  secondaryEmail: string; paypalEmail: string; metaUpdatedOn: string;
+  panelQuestions: PanelQuestionGroup[];
+  transactions: MemberTransaction[];
+  consents: MemberConsent[];
+  messages: MemberMessage[];
+};
+
+export const TXN_TYPES = ['Correct Points', 'Redemption', 'Points From Survey', 'Bonus Rewards', 'Cint Survey', 'Profile Completion Reward', 'MyVoice Survey'];
+export const TXN_STATUSES = ['Survey Started', 'Completed', 'Screenout from Survey', 'Quota Full', 'Quality Terminate', 'Survey Closed', 'Client Dropout'];
+export const CONSENT_NAMES = ['Take surveys', 'Terms and Conditions', 'Connect Cookie Tracking', 'Mobile Advertising', 'Third party Cookie', 'Share Profile'];
+
+// Member 34's Occupation answers, verbatim from the legacy Panel Questions tab.
+const OCCUPATION_QA: { question: string; answer: string }[] = [
+  { question: 'Occupation', answer: 'Full-time work' },
+  { question: 'India - What is your occupation', answer: 'Skilled Worked' },
+  { question: "Which of the following categories best describes your organization's primary industry?", answer: 'Computer Software' },
+  { question: 'Approximately how many employees work at your organization (all locations)?', answer: '101-250' },
+  { question: 'Which department do you primarily work within at your organization? (Field of expertise)', answer: 'Technology Development Software (not only IT)' },
+  { question: "If you work in your organization's IT department, please provide more detail about your role.", answer: 'Quality Assurance' },
+  { question: 'What is your professional position in the company you work for?', answer: "I don't work" },
+  { question: 'If you work in the finance sector, which best describes your position?', answer: "I don't work/I don't work in finance" },
+  { question: 'Please choose which departments/products you have influence or decision making authority on spending/purchasing', answer: "I don't work" },
+  { question: 'How many cars does your organization purchase/lease per year for their employees?', answer: '1 to 4' },
+  { question: 'How would you define the price range of the car your organization purchases/leases for their employees?', answer: 'Mid Price Range' },
+  { question: 'Which mobile operator/carrier do you use for business purposes?', answer: "I don't have a company mobile phone" },
+  { question: 'Do you use a smart phone for business purposes?', answer: "I don't work" },
+  { question: 'What brand of smartphone do you use for business purposes?', answer: "I don't use a smart phone for business purposes" },
+  { question: 'If you use a smart phone for business, what operating system do you use?', answer: "I don't use a smart phone for business purposes" },
+  { question: 'What is your primary role in your organization?', answer: 'Systems analyst' },
+];
+
+const MEMBER_34: MemberDetail = {
+  id: 34, email: 'bhartianshul916@gmail.com', gender: 'Male', birthYear: 1997, postalCode: '201001', status: 'active', country: 'Romania Panel',
+  panel: '1', cintId: '1123080033',
+  created: '2019-01-23 00:00:00', lastSent: 'N/A', lastAnswered: '2026-06-15 14:29:13', lastUpdated: '2026-06-15 14:29:13', lastAction: '2026-06-15 14:29:13',
+  walletAmount: 0, recruitmentSource: '', emailVerified: true,
+  resetPasswordLink: 'https://www.myvoice-surveys.com/password_reset/ahlUlWgJqZbuWj24QPxWuQP1bye5IlVlWZLF8yOF',
+  memberIdField: '0', mobile: '', daysBetweenMailouts: '',
+  firstName: 'anshul_athlete', lastName: '', username: '', ssn: '', bankClearing: '', bankAccount: '', streetAddress: '', secondaryEmail: '', paypalEmail: '', metaUpdatedOn: '',
+  panelQuestions: [
+    { group: 'Household', items: [{ question: 'How many people live in the household?', answer: 'Prefer not to say' }] },
+    { group: 'Occupation', items: OCCUPATION_QA },
+    { group: 'Auto', items: [
+      { question: 'Do you own or lease a car?', answer: 'Own' },
+      { question: 'What is the make of your primary car?', answer: 'Dacia' },
+      { question: 'When do you plan to buy your next car?', answer: 'In more than 2 years' },
+    ] },
+    { group: 'Technology', items: [
+      { question: 'Which devices do you personally own?', answer: 'Smartphone, Laptop' },
+      { question: 'How often do you shop online?', answer: 'At least once a week' },
+    ] },
+  ],
+  transactions: [
+    { id: 't-1', created: '2019-10-15 08:27:59', type: 'MyVoice Survey', amount: 0, status: 'QT', projectNo: '8072', surveyNo: '664', token: '-', clickDraw: '-' },
+    { id: 't-2', created: '2019-10-15 08:01:20', type: 'MyVoice Survey', amount: 0, status: 'Survey Closed', projectNo: '8072', surveyNo: '646', token: '-', clickDraw: '-' },
+    { id: 't-3', created: '2019-09-02 13:16:32', type: 'MyVoice Survey', amount: 0, status: 'Survey Closed', projectNo: '7376', surveyNo: '422', token: '-', clickDraw: '-' },
+  ],
+  consents: CONSENT_NAMES.map((name) => ({ name, option: 'Yes' as const, collected: '2026-06-15 14:29:13' })),
+  messages: [],
+};
+
+// Deterministic detail for any non-34 member (no Date(), no randomness).
+const TXN_TIMES = ['2026-05-14 09:12:03', '2026-04-02 15:40:21', '2026-02-19 11:05:48', '2025-12-30 18:22:10'];
+function buildDetail(base: Member): MemberDetail {
+  const n = base.id;
+  const txnCount = 2 + (n % 3); // 2..4
+  const transactions: MemberTransaction[] = Array.from({ length: txnCount }, (_, i) => ({
+    id: `t-${n}-${i}`,
+    created: TXN_TIMES[i % TXN_TIMES.length],
+    type: TXN_TYPES[(n + i) % TXN_TYPES.length],
+    amount: (n + i) % 4 === 0 ? 10 : 0,
+    status: TXN_STATUSES[(n + i * 2) % TXN_STATUSES.length],
+    projectNo: String(7000 + ((n + i) % 1500)),
+    surveyNo: String(400 + ((n * 3 + i) % 600)),
+    token: '-', clickDraw: '-',
+  }));
+  const stamp = '2026-06-15 14:29:13';
+  return {
+    ...base,
+    panel: '1', cintId: String(1_100_000_000 + (n % 90_000_000)),
+    created: '2019-01-23 00:00:00', lastSent: 'N/A', lastAnswered: stamp, lastUpdated: stamp, lastAction: stamp,
+    walletAmount: n % 5 === 0 ? 10 : 0, recruitmentSource: n % 4 === 0 ? 'Google' : '', emailVerified: n % 7 !== 0,
+    resetPasswordLink: `https://www.myvoice-surveys.com/password_reset/${((n * 2654435761) >>> 0).toString(36)}Mock`,
+    memberIdField: '0', mobile: '', daysBetweenMailouts: '',
+    firstName: '', lastName: '', username: '', ssn: '', bankClearing: '', bankAccount: '', streetAddress: '', secondaryEmail: '', paypalEmail: '', metaUpdatedOn: '',
+    panelQuestions: [
+      { group: 'Household', items: [{ question: 'How many people live in the household?', answer: ['1', '2', '3', '4 or more', 'Prefer not to say'][n % 5] }] },
+      { group: 'Occupation', items: OCCUPATION_QA.slice(0, 4) },
+      { group: 'Auto', items: [{ question: 'Do you own or lease a car?', answer: n % 2 === 0 ? 'Own' : 'No car' }] },
+    ],
+    transactions,
+    consents: CONSENT_NAMES.map((name) => ({ name, option: 'Yes' as const, collected: stamp })),
+    messages: [],
+  };
+}
+
+export function memberDetail(id: number): MemberDetail {
+  if (id === 34) return structuredClone(MEMBER_34);
+  const base = seed.members.find((m) => m.id === id);
+  if (base) return buildDetail(base);
+  // Fallback for an unknown id (keeps the page from crashing on a stray route).
+  return buildDetail({ id, email: `member${id}@example.com`, gender: 'Male', birthYear: 1990, postalCode: '000000', status: 'active', country: 'Romania Panel' });
+}
