@@ -118,7 +118,7 @@ export function MemberEditor({ id }: { id: number }) {
         <button
           type="button"
           onClick={() => awardPoints(d.id, Number(award) || 0, reason)}
-          className="rounded-xl bg-signal px-5 py-2.5 text-sm font-bold text-ink hover:brightness-95"
+          className="rounded-xl bg-yel px-5 py-2.5 text-sm font-bold text-ink hover:brightness-95"
         >
           Approve
         </button>
