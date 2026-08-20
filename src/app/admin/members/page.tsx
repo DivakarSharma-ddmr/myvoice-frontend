@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useAdmin } from '@/components/admin/AdminProvider';
 import { DataTable, type Column } from '@/components/admin/DataTable';
 import { StatusPill } from '@/components/admin/StatusPill';
@@ -17,7 +18,6 @@ const COUNTRY_OPTS = PANELS.map((p) => ({ value: p.name, label: p.name }));
 
 export default function MembersPage() {
   const { data, deleteMember } = useAdmin();
-  const [view, setView] = useState<Member | null>(null);
   const [login, setLogin] = useState<Member | null>(null);
   const [del, setDel] = useState<Member | null>(null);
 
@@ -32,7 +32,7 @@ export default function MembersPage() {
     {
       key: 'actions', header: 'Actions', align: 'center',
       render: (r) => (
-        <button type="button" onClick={() => setView(r)} className="rounded-lg border border-bd px-3 py-1.5 text-xs font-semibold text-teal hover:bg-lteal/40">View</button>
+        <Link href={`/admin/members/${r.id}`} className="inline-block rounded-lg border border-bd px-3 py-1.5 text-xs font-semibold text-teal hover:bg-lteal/40">View</Link>
       ),
     },
     {
@@ -52,21 +52,6 @@ export default function MembersPage() {
   return (
     <div>
       <DataTable columns={columns} rows={data.members} getRowId={(r) => r.id} totalOverride={TOTALS.members} />
-
-      <ConfirmDialog
-        open={view !== null} title={`Member #${view?.id ?? ''}`} confirmLabel="Close" cancelLabel="Dismiss"
-        onConfirm={() => setView(null)} onCancel={() => setView(null)}
-        body={view && (
-          <dl className="grid grid-cols-2 gap-y-2 pt-1 text-left text-sm">
-            <dt className="text-soft">Email</dt><dd className="text-ink">{view.email}</dd>
-            <dt className="text-soft">Gender</dt><dd className="text-ink">{view.gender}</dd>
-            <dt className="text-soft">Birth Year</dt><dd className="text-ink">{view.birthYear}</dd>
-            <dt className="text-soft">Postal Code</dt><dd className="text-ink">{view.postalCode}</dd>
-            <dt className="text-soft">Status</dt><dd><StatusPill status={view.status} /></dd>
-            <dt className="text-soft">Country</dt><dd className="text-ink">{view.country}</dd>
-          </dl>
-        )}
-      />
 
       <ConfirmDialog
         open={login !== null} title="Login as member?" confirmLabel="Login as member"
